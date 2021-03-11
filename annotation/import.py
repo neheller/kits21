@@ -96,7 +96,7 @@ def save_segmentation(case_id, region_type, delineation_path, n1img, in_test_set
     # Create name of destination file
     annotation_num = int(delineation_path.parent.name[-1])
     instance_num = int(delineation_path.parent.parent.name)
-    filename = "{}_instance-{}_annotation-{}.nii.gz".format(region_type, instance_num, annotation_num)
+    filename = "{}_instance-{}_annotation-{}.nii.gz".format(region_type, instance_num+1, annotation_num)
 
     # Get parent directory (create if necessary)
     destination_parent = TRAINING_DIR / case_id
@@ -132,25 +132,13 @@ def run_import(delineation_path):
     # Path to underlying CT scan stored as .nii.gz
     image_path = get_image_path(case_id, in_test_set)
 
-    print("Made it here for {}!".format(str(delineation_path)))
-    """
     # Compute and save segmentation based on delineation
-    seg_nib = delineation_to_seg(region_dir.name, image_path, delineation, localization)
-    save_segmentation(case_id, region_type, delineation, seg_nib, in_test_set)
-    """
-    return
+    seg_nib = delineation_to_seg(region_type, image_path, delineation_path, localization)
+    save_segmentation(case_id, region_type, delineation_path, seg_nib, in_test_set)
 
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--case", help="The index of the case to import", type=int)
-parser.add_argument("-r", "--region", help="The type of region to import", type=str)
-parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
-parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import (1, 2, or 3)", type=int)
-parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values", action="store_true")
-if __name__ == "__main__":
+def main(args):
     cache = load_json(CACHE_FILE)
-    args = parser.parse_args()
     cli = True
     if args.case is not None:
         case_dirs = [get_case_dir(args.case)]            
@@ -185,3 +173,14 @@ if __name__ == "__main__":
                         run_import(dln_file)
                         cache[cache_key] = dln_file.name
                         write_json(CACHE_FILE, cache)
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-c", "--case", help="The index of the case to import", type=int)
+parser.add_argument("-r", "--region", help="The type of region to import", type=str)
+parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
+parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import (1, 2, or 3)", type=int)
+parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values", action="store_true")
+if __name__ == "__main__":
+    args = parser.parse_args()
+    main(args)
