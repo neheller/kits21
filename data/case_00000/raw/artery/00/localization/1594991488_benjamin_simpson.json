@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "8aa54f7f-0d8f-4e3b-ac52-b2617c515066",
+      "new": true,
+      "parent_id": null,
+      "created_by": "benjamin_simpson",
+      "created_at": "2020-07-17T13:11:28Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          128.14208484086834,
+          196.72131147540983,
+          96.0
+        ],
+        [
+          379.50765861136017,
+          393.44262295081967,
+          377.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 3,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1594991488_benjamin_simpson.json"
+}
