@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw
 import torch
 import torch.nn.functional
 from scipy import signal
+from skimage import measure
 
 #pylint: disable=no-member
 
@@ -88,25 +89,112 @@ def generate_cropped_drawing_interior(cbox, dln):
                     draw.line(
                         [
                             (
-                                int(round((x[0] - cbox["xmin"])*10)), 
+                                int(round((x[0] - cbox["xmin"])*10)),
                                 int(round((x[1] - cbox["ymin"])*10))
                             ) 
                             for x in stroke["spatial_payload"]
                         ],
                         fill=128,
-                        width=int(round(stroke["line_size"]*10))
+                        width=int(round(stroke["line_size"]*10)),
+                        joint="curve"
+                    )
+                    srt = stroke["spatial_payload"][0]
+                    draw.ellipse(
+                        [
+                            (
+                                int(round((srt[0] - cbox["xmin"] - stroke["line_size"]/2)*10)),
+                                int(round((srt[1] - cbox["ymin"] - stroke["line_size"]/2)*10))
+                            ),
+                            (
+                                int(round((srt[0] - cbox["xmin"] + stroke["line_size"]/2)*10)),
+                                int(round((srt[1] - cbox["ymin"] + stroke["line_size"]/2)*10))
+                            )
+                        ],
+                        fill=128
+                    )
+                    end = stroke["spatial_payload"][-1]
+                    draw.ellipse(
+                        [
+                            (
+                                int(round((end[0] - cbox["xmin"] - stroke["line_size"]/2)*10)),
+                                int(round((end[1] - cbox["ymin"] - stroke["line_size"]/2)*10))
+                            ),
+                            (
+                                int(round((end[0] - cbox["xmin"] + stroke["line_size"]/2)*10)),
+                                int(round((end[1] - cbox["ymin"] + stroke["line_size"]/2)*10))
+                            )
+                        ],
+                        fill=128
                     )
             if drew:
                 rszd = im.resize((ret.shape[2], ret.shape[1]), Image.BILINEAR)
-                ImageDraw.floodfill(rszd, (0,0), 128, thresh=64.1)
-                ret[i,:,:] = np.less(np.array(rszd), 64.1).astype(np.int)
-    
+                ImageDraw.floodfill(rszd, (0,0), 128, thresh=63.5)
+                ret[i,:,:] = np.less(np.array(rszd), 63.9).astype(np.int)
+
     return ret
 
 
-def interpolate_drawings(cropped_drw, step):
+def interpolate_association(bef_bin, aft_bin, drw_c, bef_i, aft_i):
     # TODO
-    return cropped_drw
+    pass
+
+
+def interpolate_step(bef_i, aft_i, drw_c):
+    # Label connected components in each
+    bef_lbl = measure.label(drw_c[bef_i, :, :], background=0)
+    aft_lbl = measure.label(drw_c[aft_i, :, :], background=0)
+
+    # Associate connected components based on proximity and overlap
+    num_bef = np.max(bef_lbl)
+    num_aft = np.max(aft_lbl)
+
+    aft_cvg = [False for _ in range(num_aft)]
+
+    # Iterate over all pairs of blobs
+    for i in range(1, num_bef+1):
+        bef_bin = np.equal(bef_lbl, i).astype(np.int)
+        bef_cnt_y, bef_cnt_x = np.argwhere(bef_bin == 1).sum(0)/bef_bin.sum()
+        bef_covered = False
+        for j in range(1, num_aft+1):
+            aft_bin = np.equal(aft_lbl, j).astype(np.int)
+
+            # Get size of overlap
+            ovr_sz = np.multiply(bef_bin, aft_bin).sum()
+
+            # Get metrics describing blob proximity
+            aft_cnt_y, aft_cnt_x = np.argwhere(aft_bin == 1).sum(0)/aft_bin.sum()
+            cnt_dsp = [aft_cnt_y - bef_cnt_y, aft_cnt_x - bef_cnt_x]
+            cnt_dst_sq = cnt_dsp[0]**2 + cnt_dsp[1]**2
+
+            if ovr_sz > 0 or cnt_dst_sq < 15**2:
+                bef_covered = True
+                aft_cvg[j-1] = True
+                interpolate_association(bef_bin, aft_bin, drw_c, bef_i, aft_i)
+
+        if not bef_covered:
+            interpolate_association(bef_bin, None, drw_c, bef_i, aft_i)
+
+    for j, ac in enumerate(aft_cvg):
+        if not ac:
+            aft_bin = np.equal(aft_lbl, j+1).astype(np.int)
+            interpolate_association(None, aft_bin, drw_c, bef_i, aft_i)
+
+    return drw_c
+
+
+def interpolate_drawings(drw_c, step):
+    start = 0
+    while start < drw_c.shape[0]:
+        if np.sum(drw_c[start]) > 0:
+            break
+        else:
+            start += 1
+
+    while start < drw_c.shape[0] + step - 1:
+        drw_c = interpolate_step(max(start - step, 0), min(start, drw_c.shape[0] -1), drw_c)
+        start += step
+
+    return drw_c
 
 
 def get_blur_kernel_d(affine):
@@ -132,11 +220,11 @@ def add_renal_hilum(thresholded_d, blr_d, lzn):
 
 def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None):
     # Interpolate drawings
-    interpolated_drw = interpolate_drawings(cropped_drw, step)
+    cropped_drw = interpolate_drawings(cropped_drw, step)
 
     # Send tensors to GPU
     img_d = torch.from_numpy(cropped_img).to("cuda:0")
-    drw_d = torch.from_numpy(interpolated_drw).to("cuda:0")
+    drw_d = torch.from_numpy(cropped_drw).to("cuda:0")
 
     # Apply a 3d blur convolution
     blur_kernel_d = get_blur_kernel_d(affine)
