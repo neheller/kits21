@@ -14,7 +14,7 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ## News
 
-- **Mar 9, 2021**: A preliminary challenge homepage has been published at kits21.kits-challenge.org. You can keep tabs on the data annotation process there.
+- **Mar 9, 2021**: A preliminary challenge homepage has been published at [kits21.kits-challenge.org/browse](https://kits21.kits-challenge.org/browse). You can keep tabs on the data annotation process there.
 - **Mar 29, 2020**: A second edition of KiTS was accepted to be held in conjunction with MICCAI 2021 in Strasbourg! More information will be posted here and on the [discussion forum](https://discourse.kits-challenge.org/) when it becomes available.
 
 ## Usage
