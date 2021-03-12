@@ -4,6 +4,14 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 [Challenge Homepage](https://kits21.kits-challenge.org/) (draft)
 
+## Timeline
+
+- **Mar 1 - Jul 1**:	Annotation, Release, and Refinement of Training Data (*in progress*)
+- **Aug 9**:	Deadline for Intention to Submit & Required Paper
+- **Aug 16 - 30**:	Submissions Accepted
+- **Sep 1**:	Results Announced
+- **Sep 27 or Oct 1**:	Satellite Event at MICCAI 2021
+
 ## News
 
 - **Mar 9, 2021**: A preliminary challenge homepage has been published at kits21.kits-challenge.org. You can keep tabs on the data annotation process there.
