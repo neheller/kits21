@@ -9,6 +9,7 @@ import torch
 import torch.nn.functional
 from scipy import signal
 from skimage import measure
+import cv2
 
 #pylint: disable=no-member
 
@@ -84,6 +85,8 @@ def generate_cropped_drawing_interior(cbox, dln):
             draw = ImageDraw.Draw(im)
             drew = False
             for stroke in dln["annotations"]:
+                if stroke["deprecated"]:
+                    continue
                 if i + cbox["zmin"] == stroke["frame"]:
                     drew = True
                     draw.line(
@@ -95,19 +98,19 @@ def generate_cropped_drawing_interior(cbox, dln):
                             for x in stroke["spatial_payload"]
                         ],
                         fill=128,
-                        width=int(round(stroke["line_size"]*10)),
+                        width=int(round(stroke["line_size"]*10))+4,
                         joint="curve"
                     )
                     srt = stroke["spatial_payload"][0]
                     draw.ellipse(
                         [
                             (
-                                int(round((srt[0] - cbox["xmin"] - stroke["line_size"]/2)*10)),
-                                int(round((srt[1] - cbox["ymin"] - stroke["line_size"]/2)*10))
+                                int(round((srt[0] - cbox["xmin"] - stroke["line_size"]/2)*10))-2,
+                                int(round((srt[1] - cbox["ymin"] - stroke["line_size"]/2)*10))-2
                             ),
                             (
-                                int(round((srt[0] - cbox["xmin"] + stroke["line_size"]/2)*10)),
-                                int(round((srt[1] - cbox["ymin"] + stroke["line_size"]/2)*10))
+                                int(round((srt[0] - cbox["xmin"] + stroke["line_size"]/2)*10))+2,
+                                int(round((srt[1] - cbox["ymin"] + stroke["line_size"]/2)*10))+2
                             )
                         ],
                         fill=128
@@ -116,12 +119,12 @@ def generate_cropped_drawing_interior(cbox, dln):
                     draw.ellipse(
                         [
                             (
-                                int(round((end[0] - cbox["xmin"] - stroke["line_size"]/2)*10)),
-                                int(round((end[1] - cbox["ymin"] - stroke["line_size"]/2)*10))
+                                int(round((end[0] - cbox["xmin"] - stroke["line_size"]/2)*10))-2,
+                                int(round((end[1] - cbox["ymin"] - stroke["line_size"]/2)*10))-2
                             ),
                             (
-                                int(round((end[0] - cbox["xmin"] + stroke["line_size"]/2)*10)),
-                                int(round((end[1] - cbox["ymin"] + stroke["line_size"]/2)*10))
+                                int(round((end[0] - cbox["xmin"] + stroke["line_size"]/2)*10))+2,
+                                int(round((end[1] - cbox["ymin"] + stroke["line_size"]/2)*10))+2
                             )
                         ],
                         fill=128
@@ -134,12 +137,96 @@ def generate_cropped_drawing_interior(cbox, dln):
     return ret
 
 
-def interpolate_association(bef_bin, aft_bin, drw_c, bef_i, aft_i):
-    # TODO
-    pass
+def get_contour(bin_seg):
+    if bin_seg is None:
+        return None
+    contours, hierarchy = cv2.findContours(bin_seg.astype(np.uint8)*255, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    return contours[0]
 
 
-def interpolate_step(bef_i, aft_i, drw_c):
+def distance(p1, p2):
+    return (p1[0][0] - p2[0][0])*(p1[0][0] - p2[0][0]) + (p1[0][1] - p2[0][1])*(p1[0][1] - p2[0][1])
+
+            
+def find_nearest_neighbors_slow(lg_cntr, sm_cntr, mean_dsp):
+    matches = np.zeros_like(lg_cntr)
+    for i in range(lg_cntr.shape[0]):
+        minj = None
+        mind = np.inf
+        ipt = lg_cntr[i] + np.array([mean_dsp])
+        for j in range(sm_cntr.shape[0]):
+            dst = distance(ipt, sm_cntr[j])
+            if dst < mind:
+                minj = j
+                mind = dst
+        matches[i] = sm_cntr[minj]
+    return matches
+
+
+def find_nearest_neighbors(lg_cntr, sm_cntr, mean_dsp):
+    print(mean_dsp)
+
+
+def draw_filled_contour(ind, bef_i, aft_i, drw_c, bef_bin, aft_bin, float_contour):
+    blown_up = np.zeros((drw_c.shape[1]*10, drw_c.shape[2]*10), dtype=np.uint8)
+    points = np.round(float_contour*10).astype(np.int32) + 1
+    cv2.fillPoly(blown_up, pts=[points], color=128)
+    drw_c[ind,:,:] = np.logical_or(
+        drw_c[ind,:,:],
+        np.logical_or(
+            np.greater(cv2.resize(blown_up, (drw_c.shape[2], drw_c.shape[1]), cv2.INTER_LINEAR), 32),
+            np.multiply(bef_bin, aft_bin)
+        )
+    )
+
+
+def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cnt, aft_cnt, step):
+    # cnt <- center
+    # cntr <- contour
+    bef_cntr = get_contour(bef_bin)
+    aft_cntr = get_contour(aft_bin)
+    debug = False
+    if bef_cntr is None:
+        debug = True
+        start = bef_i
+        inc = 1
+        ref = bef_cntr
+        bef_cntr = np.array([
+            [bef_cnt]
+        ])
+        bef_bin = np.zeros_like(aft_bin)
+    elif aft_cntr is None:
+        debug = True
+        start = aft_i
+        inc = -1
+        ref = aft_cntr
+        aft_cntr = np.array([
+            [aft_cnt]
+        ])
+        aft_bin = np.zeros_like(bef_bin)
+    if bef_cntr.shape[0] > aft_cntr.shape[0]:
+        start = bef_i
+        inc = 1
+        ref = bef_cntr
+        matches = find_nearest_neighbors_slow(bef_cntr, aft_cntr, [aft_cnt[0] - bef_cnt[0], aft_cnt[1] - bef_cnt[1]])
+    else:
+        start = aft_i
+        inc = -1
+        ref = aft_cntr
+        matches = find_nearest_neighbors_slow(aft_cntr, bef_cntr, [bef_cnt[0] - aft_cnt[0], bef_cnt[1] - aft_cnt[1]])
+
+    for i in range(1, aft_i - bef_i):
+        # if debug:
+        #     print(ref, matches, i/step*matches + (step - i)/step*ref)
+
+        draw_filled_contour(
+            start + i*inc, bef_i, aft_i,
+            drw_c, bef_bin, aft_bin,
+            i/step*matches + (step - i)/step*ref
+        )
+
+
+def interpolate_step(bef_i, aft_i, drw_c, step):
     # Label connected components in each
     bef_lbl = measure.label(drw_c[bef_i, :, :], background=0)
     aft_lbl = measure.label(drw_c[aft_i, :, :], background=0)
@@ -150,11 +237,15 @@ def interpolate_step(bef_i, aft_i, drw_c):
 
     aft_cvg = [False for _ in range(num_aft)]
 
+    bef_to_aft = {}
+    aft_to_bef = {}
+
     # Iterate over all pairs of blobs
     for i in range(1, num_bef+1):
         bef_bin = np.equal(bef_lbl, i).astype(np.int)
-        bef_cnt_y, bef_cnt_x = np.argwhere(bef_bin == 1).sum(0)/bef_bin.sum()
+        bef_cnt_x, bef_cnt_y = np.argwhere(bef_bin == 1).sum(0)/bef_bin.sum()
         bef_covered = False
+        istr = "{}".format(i)
         for j in range(1, num_aft+1):
             aft_bin = np.equal(aft_lbl, j).astype(np.int)
 
@@ -162,22 +253,62 @@ def interpolate_step(bef_i, aft_i, drw_c):
             ovr_sz = np.multiply(bef_bin, aft_bin).sum()
 
             # Get metrics describing blob proximity
-            aft_cnt_y, aft_cnt_x = np.argwhere(aft_bin == 1).sum(0)/aft_bin.sum()
+            aft_cnt_x, aft_cnt_y = np.argwhere(aft_bin == 1).sum(0)/aft_bin.sum()
             cnt_dsp = [aft_cnt_y - bef_cnt_y, aft_cnt_x - bef_cnt_x]
             cnt_dst_sq = cnt_dsp[0]**2 + cnt_dsp[1]**2
 
-            if ovr_sz > 0 or cnt_dst_sq < 15**2:
+            if ovr_sz > 0 or cnt_dst_sq < 5**2:
+                jstr = "{}".format(j)
+                if istr not in bef_to_aft:
+                    bef_to_aft[istr] = []
+                bef_to_aft[istr] += [{
+                    "ind": j,
+                    "ovr_sz": ovr_sz,
+                    "cnt_dst_sq": cnt_dst_sq
+                }]
+                if jstr not in aft_to_bef:
+                    aft_to_bef[jstr] = []
+                aft_to_bef[jstr] += [{
+                    "ind": i,
+                    "ovr_sz": ovr_sz,
+                    "cnt_dst_sq": cnt_dst_sq
+                }]
                 bef_covered = True
                 aft_cvg[j-1] = True
-                interpolate_association(bef_bin, aft_bin, drw_c, bef_i, aft_i)
+                # interpolate_association(
+                #     bef_bin, aft_bin, drw_c, bef_i, aft_i,
+                #     [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
+                # )
 
         if not bef_covered:
-            interpolate_association(bef_bin, None, drw_c, bef_i, aft_i)
+            interpolate_simple_association(
+                bef_bin, None, drw_c, bef_i, aft_i,
+                [bef_cnt_y, bef_cnt_x], [bef_cnt_y, bef_cnt_x], step
+            )
 
     for j, ac in enumerate(aft_cvg):
         if not ac:
             aft_bin = np.equal(aft_lbl, j+1).astype(np.int)
-            interpolate_association(None, aft_bin, drw_c, bef_i, aft_i)
+            aft_cnt_x, aft_cnt_y = np.argwhere(aft_bin == 1).sum(0)/aft_bin.sum()
+            interpolate_simple_association(
+                None, aft_bin, drw_c, bef_i, aft_i,
+                [aft_cnt_y, aft_cnt_x], [aft_cnt_y, aft_cnt_x], step
+            )
+
+
+    for istr in bef_to_aft:
+        if len(bef_to_aft[istr]) == 1 and len(aft_to_bef[str(bef_to_aft[istr][0]["ind"])]) == 1:
+            bef_bin = np.equal(bef_lbl, int(istr)).astype(np.int)
+            aft_bin = np.equal(aft_lbl, bef_to_aft[istr][0]["ind"]).astype(np.int)
+            aft_cnt_x, aft_cnt_y = np.argwhere(aft_bin == 1).sum(0)/aft_bin.sum()
+            bef_cnt_x, bef_cnt_y = np.argwhere(bef_bin == 1).sum(0)/bef_bin.sum()
+            interpolate_simple_association(
+                bef_bin, aft_bin, drw_c, bef_i, aft_i,
+                [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
+            )
+        else: # More complex decision...
+            pass
+
 
     return drw_c
 
@@ -191,7 +322,7 @@ def interpolate_drawings(drw_c, step):
             start += 1
 
     while start < drw_c.shape[0] + step - 1:
-        drw_c = interpolate_step(max(start - step, 0), min(start, drw_c.shape[0] -1), drw_c)
+        drw_c = interpolate_step(max(start - step, 0), min(start, drw_c.shape[0] -1), drw_c, step)
         start += step
 
     return drw_c
@@ -229,7 +360,7 @@ def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=
     # Apply a 3d blur convolution
     blur_kernel_d = get_blur_kernel_d(affine)
     blr_d = torch.nn.functional.conv3d(
-        img_d.reshape((1,1)+cropped_img.shape), 
+        img_d.reshape((1,1)+cropped_img.shape),
         blur_kernel_d, stride=1, padding=2
     ).reshape(cropped_img.shape)
 

@@ -155,7 +155,7 @@ def main(args):
 
         for region_dir in region_dirs:
             if cli and args.instance is not None:
-                instance_dirs = [get_instance_dir(region_dir, args.instance)]
+                instance_dirs = [get_instance_dir(region_dir, args.instance - 1)]
             else:
                 cli = False
                 instance_dirs = get_all_instance_dirs(region_dir)
