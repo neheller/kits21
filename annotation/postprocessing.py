@@ -201,6 +201,149 @@ def draw_filled_contour(ind, bef_i, aft_i, drw_c, bef_bin, aft_bin, float_contou
     )
 
 
+def get_group(istr, bef_to_aft, aft_to_bef):
+    bef_grp = set([istr])
+    aft_grp = set([])
+    bef_ln = len(bef_grp)
+    aft_ln = len(aft_grp)
+    while True:
+        for ai in aft_grp:
+            for atb in aft_to_bef[ai]:
+                if atb["ovr_sz"] > 0:
+                    bef_grp.add(str(atb["ind"]))
+        for bi in bef_grp:
+            for bta in bef_to_aft[bi]:
+                if bta["ovr_sz"] > 0:
+                    aft_grp.add(str(bta["ind"]))
+        if len(bef_grp) != bef_ln or len(aft_grp) != aft_ln:
+            bef_ln = len(bef_grp)
+            aft_ln = len(aft_grp)
+        else:
+            break
+    return list(bef_grp), list(aft_grp)
+
+
+def splice_contour(spliced, stretches, cntr, cur_sz, ctr_ind):
+    # Get nearest pair
+    mini = None
+    minj = None
+    mind = np.inf
+    for i in range(cur_sz):
+        for j in range(cntr.shape[0]):
+            dst = distance(spliced[i], cntr[j])
+            if dst < mind:
+                mini = i
+                minj = j
+                mind = dst
+                                
+    ret_sp = spliced.copy()
+    ret_sp[mini+1:mini+cntr.shape[0]+1] = cntr
+    ret_sp[mini+cntr.shape[0]+1:cur_sz+cntr.shape[0]] = spliced[mini+1:cur_sz]
+
+    ret_st = stretches.copy()
+    ret_st[mini+1:mini+cntr.shape[0]+1] = ctr_ind*np.ones((cntr.shape[0], 1))
+    ret_st[mini+cntr.shape[0]+1:cur_sz+cntr.shape[0]] = stretches[mini+1:cur_sz]
+    
+    return ret_sp, ret_st
+    
+
+def splice_contours(cntrs):
+    lengths = [cr.shape[0] for cr in cntrs]
+    stretches = -1*np.ones(
+        (sum(lengths),1),
+        dtype=np.int32
+    )
+    
+    spliced = np.zeros(
+        (sum(lengths),) + cntrs[0].shape[1:],
+        dtype=cntrs[0].dtype
+    )
+    spliced[0:cntrs[0].shape[0]] = cntrs[0].copy()
+    stretches[0:cntrs[0].shape[0]] = np.zeros((cntrs[0].shape[0], 1))
+    for i in range(1, len(cntrs)):
+        spliced, stretches = splice_contour(spliced, stretches, cntrs[i], sum(lengths[:i]), i)
+
+    return spliced, stretches
+
+
+def slice_matches(matches, splice_inds):
+    ret = []
+    for i in range(np.max(splice_inds)+1):
+        ret += [matches[splice_inds == i,:].reshape((-1,1,2))]
+    
+    return ret 
+
+
+def interpolate_merge_association(bef_grp, aft_grp, bef_lbl, aft_lbl, drw_c, bef_i, aft_i, step):
+    # Get composites for each
+    tot_bef_bin = np.zeros_like(bef_lbl)
+    for lbl in bef_grp:
+        tot_bef_bin = np.logical_or(
+            tot_bef_bin,
+            np.equal(bef_lbl, int(lbl))
+        )
+    tot_aft_bin = np.zeros_like(aft_lbl)
+    for lbl in aft_grp:
+        tot_aft_bin = np.logical_or(
+            tot_aft_bin,
+            np.equal(aft_lbl, int(lbl))
+        )
+
+    # Get centers for each
+    tot_bef_cnt_x, tot_bef_cnt_y = np.argwhere(tot_bef_bin == 1).sum(0)/tot_bef_bin.sum()
+    tot_aft_cnt_x, tot_aft_cnt_y = np.argwhere(tot_aft_bin == 1).sum(0)/tot_aft_bin.sum()
+        
+    # Get individual values
+    bef_bins = [
+        np.equal(bef_lbl, int(x))
+        for x in bef_grp
+    ]
+    aft_bins = [
+        np.equal(aft_lbl, int(x))
+        for x in aft_grp
+    ]
+    bef_cntrs = [
+        get_contour(bef_bin)
+        for bef_bin in bef_bins
+    ]
+    aft_cntrs = [
+        get_contour(aft_bin)
+        for aft_bin in aft_bins
+    ]
+    bef_ref = True
+    if len(bef_grp) > len(aft_grp):
+        bef_ref = False
+        nonref_cntrs = bef_cntrs
+        spliced_nonref, splice_inds = splice_contours(bef_cntrs)
+        ref_cntrs = aft_cntrs
+        start = aft_i
+        inc = -1
+    else:
+        nonref_cntrs = aft_cntrs
+        spliced_nonref, splice_inds = splice_contours(aft_cntrs)
+        ref_cntrs = bef_cntrs
+        start = bef_i
+        inc = 1
+
+    for ref_cntr in ref_cntrs:
+        matches = find_nearest_neighbors_slow_v2(ref_cntr, spliced_nonref, None)
+        rev_matches = find_nearest_neighbors_slow_v2(spliced_nonref, ref_cntr, None)
+        sliced_matches = slice_matches(rev_matches, splice_inds)
+        for i in range(1, int(np.ceil((aft_i - bef_i)/2))):
+            draw_filled_contour(
+                start + i*inc, bef_i, aft_i,
+                drw_c, tot_bef_bin, tot_aft_bin,
+                i/step*matches + (step - i)/step*ref_cntr
+            )
+        for nonref_frag, ref_frag in zip(nonref_cntrs, sliced_matches):
+            for i in range(int(np.ceil((aft_i - bef_i)/2)), aft_i - bef_i):
+                draw_filled_contour(
+                    start + i*inc, bef_i, aft_i,
+                    drw_c, tot_bef_bin, tot_aft_bin,
+                    i/step*nonref_frag + (step - i)/step*ref_frag
+                )
+        
+
 def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cnt, aft_cnt, step):
     # cnt <- center
     # cntr <- contour
@@ -245,7 +388,6 @@ def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cn
             drw_c, bef_bin, aft_bin,
             i/step*matches + (step - i)/step*ref
         )
-
 
 
 def interpolate_step(bef_i, aft_i, drw_c, step):
@@ -297,10 +439,11 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                 }]
                 bef_covered = True
                 aft_cvg[j-1] = True
-                interpolate_simple_association(
-                    bef_bin, aft_bin, drw_c, bef_i, aft_i,
-                    [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
-                )
+                # TODO remove this when uncomment the below
+                # interpolate_simple_association(
+                #     bef_bin, aft_bin, drw_c, bef_i, aft_i,
+                #     [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
+                # )
 
         if not bef_covered:
             interpolate_simple_association(
@@ -317,7 +460,6 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                 [aft_cnt_y, aft_cnt_x], [aft_cnt_y, aft_cnt_x], step
             )
 
-    """
     # If each only has one candidate, that's easy
     for istr in bef_to_aft:
         if len(bef_to_aft[istr]) == 1 and len(aft_to_bef[str(bef_to_aft[istr][0]["ind"])]) == 1:
@@ -331,9 +473,14 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
             )
         else: # More complex decision...
             strict_bta = [x for x in bef_to_aft[istr] if x["ovr_sz"] > 0]
+            strict_atb = []
+            for k in range(len(strict_bta)):
+                strict_atb += [
+                    x for x in aft_to_bef[str(strict_bta[k]["ind"])] 
+                    if x["ovr_sz"] > 0
+                ]
             handled = False
             if len(strict_bta) == 1:
-                strict_atb = [x for x in aft_to_bef[str(strict_bta[0]["ind"])] if x["ovr_sz"] > 0]
                 if len(strict_atb) == 1:
                     handled = True
                     bef_bin = np.equal(bef_lbl, int(istr)).astype(np.int)
@@ -345,25 +492,11 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                         [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
                     )
             if not handled: # Need to do a group merge
-                meta = {
-                    "istr": istr,
-                    "step": step
-                }
-                # afters = [str(x["ind"]) for x in strict_bta]
-                # befores = [str(strict_atb[x]["ind"]) for x in afters]
-                dst = Path("/home/helle246/code/repos/sandbox/interpolation/data") / "{}_{}".format(bef_i, aft_i)
-                dst.mkdir(exist_ok=True)
-                np.save(str(dst / "bef_lbl.npy"), bef_lbl)
-                np.save(str(dst / "aft_lbl.npy"), aft_lbl)
-                with (dst / "meta.json").open('w') as f:
-                    f.write(json.dumps(meta))
-                with (dst / "bef_to_aft.json").open('w') as f:
-                    f.write(json.dumps(bef_to_aft))
-                with (dst / "aft_to_bef.json").open('w') as f:
-                    f.write(json.dumps(aft_to_bef))
+                bef_grp, aft_grp = get_group(istr, bef_to_aft, aft_to_bef)
+                interpolate_merge_association(
+                    bef_grp, aft_grp, bef_lbl, aft_lbl, drw_c, bef_i, aft_i, step
+                )
 
-
-    """
     return drw_c
 
 
@@ -398,12 +531,128 @@ def get_threshold(region_type):
     return -30
 
 
-def add_renal_hilum(thresholded_d, blr_d, lzn):
-    # TODO
-    return thresholded_d
+def find_hilum_in_slice(thresh, side):
+    # TODO use custom if available
+    thresh = thresh.astype(np.uint8)
+    (
+        nb_components, output, stats, centroids
+    ) = cv2.connectedComponentsWithStats(thresh, connectivity=4)
+    sizes = stats[:, -1]
+
+    max_label = 0
+    max_size = 0
+    for i in range(1, nb_components):
+        if sizes[i] > max_size:
+            max_label = i
+            max_size = sizes[i]
+
+    thresh[output != max_label] = 0
+    centroid = np.array(tuple(centroids[max_label]))
+
+    contours, _ = cv2.findContours(
+        thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+    )
+
+    if (len(contours) == 0):
+        return None
+
+    primary_contour = contours[0]
+    hull = cv2.convexHull(primary_contour, returnPoints=False)
+    defects = cv2.convexityDefects(primary_contour, hull)
+
+    # Choose from defects
+    distances = []
+    scores = []
+    criteria = []
+    depths = []
+
+    if defects is None:
+        return None
+
+    for i in range(defects.shape[0]):
+        s, e, f, d = defects[i, 0]
+        start = np.array(tuple(primary_contour[s][0]))
+        end = np.array(tuple(primary_contour[e][0]))
+        furthest = np.array(tuple(primary_contour[f][0]))
+        defect_center = (start + end)/2
+        depth = np.linalg.norm(furthest - defect_center)
+        centroid_offset = centroid - defect_center
+        distance = np.linalg.norm(start - end, ord=2)
+        # print(centroid, defect_center, centroid_offset, distance)
+        if side == "left":
+            score = 1*centroid_offset[0] + centroid_offset[1]
+        elif side == "right":
+            score = -1*centroid_offset[0] + centroid_offset[1]
+        distance = np.linalg.norm(start - end, ord=2)
+        scores = scores + [score]
+        distances = distances + [distance]
+        depths = depths + [depth]
+        criteria = criteria + [int(score>0)*(distance+3*depth)]
+
+    if np.sum(criteria) > 1e-2:
+        winner = np.argmax(criteria)
+        s, e, f, d = defects[winner, 0]
+        start = tuple(primary_contour[s][0])
+        end = tuple(primary_contour[e][0])
+        hlm = [start, end]
+    else:
+        hlm = None
+
+    return hlm
 
 
-def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None):
+def apply_hilum_to_slice(thresholded_c, blur_c, threshold, ind, hlm):
+    if hlm is None:
+        return
+
+    cv2.line(thresholded_c[ind], hlm[0], hlm[1], 1, 2)
+    abuse_slc = thresholded_c[ind].copy()
+    mask = np.zeros((thresholded_c.shape[1]+2, thresholded_c.shape[2]+2), np.uint8)
+    cv2.floodFill(abuse_slc, mask, (0,0), 1)
+    thresholded_c[ind] = np.logical_and(
+        (np.equal(abuse_slc, 0) | thresholded_c[ind]).astype(thresholded_c[ind].dtype),
+        np.greater(blur_c[ind], threshold)
+    )
+
+
+# TODO allow for custom hilums to be specified in dln
+def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
+    first_hilum_slice = None
+    last_hilum_slice = None
+    for ann in lzn["annotations"]:
+        if ann["spatial_type"] == "whole-image":
+            bound = None
+            for cp in ann["classification_payloads"]:
+                if cp["confidence"] > 0.5:
+                    if cp["class_id"] == 7:
+                        bound = "sup"
+                    elif cp["class_id"] == 8:
+                        bound = "inf"
+            if bound is None:
+                continue
+            frame = ann["frame"]
+            if bound == "sup":
+                if first_hilum_slice is None or frame < first_hilum_slice:
+                    first_hilum_slice = frame - cbox["zmin"]
+            elif bound == "inf":
+                if last_hilum_slice is None or frame > last_hilum_slice:
+                    last_hilum_slice = frame - cbox["zmin"]
+
+    for ind in range(first_hilum_slice, last_hilum_slice+1):
+        # TODO send dln here and use custom hilum if possible
+        hlm = find_hilum_in_slice(thresholded_c[ind].copy(), side)
+        apply_hilum_to_slice(thresholded_c, blr_c, threshold, ind, hlm)
+
+    return thresholded_c
+
+
+def get_side(cbox):
+    if cbox["xmin"] + cbox["xmax"] > cbox["xdim"]:
+        return "left"
+    return "right"
+
+
+def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None, cbox=None):
     # Interpolate drawings
     cropped_drw = interpolate_drawings(cropped_drw, step)
 
@@ -424,14 +673,16 @@ def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=
         torch.greater(blr_d, threshold),
         torch.greater(drw_d, 0)
     ).int()
-    # thresholded_d = torch.greater(drw_d, 0)
 
     # If region is kidney, add hilum, redraw, and get new threshold
+    thresholded_c = thresholded_d.to("cpu").numpy()
+    blr_c = blr_d.to("cpu").numpy()
     if region_type == "kidney":
-        thresholded_d = add_renal_hilum(thresholded_d, blr_d, lzn)
+        side = get_side(cbox)
+        thresholded_c = add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox)
 
     # Bring result back to cpu memory
-    return thresholded_d.to("cpu").numpy()
+    return thresholded_c
 
 
 def inflate_seg_to_image_size(cbox, cropped_seg):
@@ -464,7 +715,7 @@ def delineation_to_seg(region_type, image_path, delineation_path, localization_p
 
     # Apply heuristics to infer segmentation based on drawing and image
     cropped_seg = generate_segmentation(
-        region_type, cropped_img, cropped_drw, cbox["step"], img_nib.affine, lzn
+        region_type, cropped_img, cropped_drw, cbox["step"], img_nib.affine, lzn, cbox
     )
 
     # Undo cropping to get final segmentation
