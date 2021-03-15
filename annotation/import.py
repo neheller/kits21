@@ -5,6 +5,7 @@ import os
 import json
 import shutil
 
+import numpy as np
 import nibabel as nib
 
 from annotation.postprocessing import delineation_to_seg, load_json, write_json 
@@ -137,6 +138,70 @@ def run_import(delineation_path):
     save_segmentation(case_id, region_type, delineation_path, seg_nib, in_test_set)
 
 
+def aggregate_case(case_id):
+    agg = None
+    affine = None
+    for seg_file in (Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations").glob("ureter*.nii.gz"):
+        seg_nib = nib.load(str(seg_file))
+        if agg is None:
+            agg = 2*np.asanyarray(seg_nib.dataobj)
+            affine = seg_nib.affine
+        else:
+            dat = np.asanyarray(seg_nib.dataobj)
+            agg = np.where(np.equal(agg, 0), 2*dat, agg)
+
+    for seg_file in (Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations").glob("vein*.nii.gz"):
+        seg_nib = nib.load(str(seg_file))
+        if agg is None:
+            agg = 4*np.asanyarray(seg_nib.dataobj)
+            affine = seg_nib.affine
+        else:
+            dat = np.asanyarray(seg_nib.dataobj)
+            agg = np.where(np.greater(dat, 0), 4*dat, agg)
+ 
+    for seg_file in (Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations").glob("artery*.nii.gz"):
+        seg_nib = nib.load(str(seg_file))
+        if agg is None:
+            agg = 3*np.asanyarray(seg_nib.dataobj)
+            affine = seg_nib.affine
+        else:
+            dat = np.asanyarray(seg_nib.dataobj)
+            agg = np.where(np.greater(dat, 0), 3*dat, agg)
+
+    for seg_file in (Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations").glob("kidney*.nii.gz"):
+        seg_nib = nib.load(str(seg_file))
+        if agg is None:
+            agg = np.asanyarray(seg_nib.dataobj)
+            affine = seg_nib.affine
+        else:
+            dat = np.asanyarray(seg_nib.dataobj)
+            agg = np.where(np.greater(dat, 0), dat, agg)
+
+    for seg_file in (Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations").glob("cyst*.nii.gz"):
+        seg_nib = nib.load(str(seg_file))
+        if agg is None:
+            agg = 5*np.asanyarray(seg_nib.dataobj)
+            affine = seg_nib.affine
+        else:
+            dat = np.asanyarray(seg_nib.dataobj)
+            agg = np.where(np.greater(dat, 0), 5*dat, agg)
+
+    for seg_file in (Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations").glob("tumor*.nii.gz"):
+        seg_nib = nib.load(str(seg_file))
+        if agg is None:
+            agg = 6*np.asanyarray(seg_nib.dataobj)
+            affine = seg_nib.affine
+        else:
+            dat = np.asanyarray(seg_nib.dataobj)
+            agg = np.where(np.greater(dat, 0), 6*dat, agg)
+
+    if agg is not None:
+        nib.save(
+            nib.Nifti1Image(agg.astype(np.int32), affine),
+            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_seg.nii.gz")
+        )
+
+
 def main(args):
     cache = load_json(CACHE_FILE)
     cli = True
@@ -173,6 +238,8 @@ def main(args):
                         run_import(dln_file)
                         cache[cache_key] = dln_file.name
                         write_json(CACHE_FILE, cache)
+        
+        aggregate_case(case_dir.name)
 
 
 parser = argparse.ArgumentParser()

@@ -163,6 +163,27 @@ def find_nearest_neighbors_slow(lg_cntr, sm_cntr, mean_dsp):
     return matches
 
 
+def find_nearest_neighbors_slow_v2(lg_cntr, sm_cntr, mean_dsp):
+    matches = np.zeros_like(lg_cntr)
+    step = sm_cntr.shape[0]/lg_cntr.shape[0]
+    mini = None
+    mind = np.inf
+    # ipt = lg_cntr[i] + np.array([mean_dsp])
+    for i in range(lg_cntr.shape[0]):
+        candidate_matches = np.zeros_like(lg_cntr)
+        offset = i*step
+        for j in range(lg_cntr.shape[0]):
+            candidate_matches[j] = sm_cntr[int(np.round(offset + j*step)) % sm_cntr.shape[0]]
+
+        dist = np.square(lg_cntr - candidate_matches).sum()
+        if dist < mind:
+            mini = i
+            matches = candidate_matches.copy()
+            mind = dist
+            
+    return matches
+
+
 def find_nearest_neighbors(lg_cntr, sm_cntr, mean_dsp):
     print(mean_dsp)
 
@@ -208,12 +229,12 @@ def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cn
         start = bef_i
         inc = 1
         ref = bef_cntr
-        matches = find_nearest_neighbors_slow(bef_cntr, aft_cntr, [aft_cnt[0] - bef_cnt[0], aft_cnt[1] - bef_cnt[1]])
+        matches = find_nearest_neighbors_slow_v2(bef_cntr, aft_cntr, [aft_cnt[0] - bef_cnt[0], aft_cnt[1] - bef_cnt[1]])
     else:
         start = aft_i
         inc = -1
         ref = aft_cntr
-        matches = find_nearest_neighbors_slow(aft_cntr, bef_cntr, [bef_cnt[0] - aft_cnt[0], bef_cnt[1] - aft_cnt[1]])
+        matches = find_nearest_neighbors_slow_v2(aft_cntr, bef_cntr, [bef_cnt[0] - aft_cnt[0], bef_cnt[1] - aft_cnt[1]])
 
     for i in range(1, aft_i - bef_i):
         # if debug:
@@ -224,6 +245,7 @@ def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cn
             drw_c, bef_bin, aft_bin,
             i/step*matches + (step - i)/step*ref
         )
+
 
 
 def interpolate_step(bef_i, aft_i, drw_c, step):
@@ -263,22 +285,22 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                     bef_to_aft[istr] = []
                 bef_to_aft[istr] += [{
                     "ind": j,
-                    "ovr_sz": ovr_sz,
+                    "ovr_sz": int(ovr_sz),
                     "cnt_dst_sq": cnt_dst_sq
                 }]
                 if jstr not in aft_to_bef:
                     aft_to_bef[jstr] = []
                 aft_to_bef[jstr] += [{
                     "ind": i,
-                    "ovr_sz": ovr_sz,
+                    "ovr_sz": int(ovr_sz),
                     "cnt_dst_sq": cnt_dst_sq
                 }]
                 bef_covered = True
                 aft_cvg[j-1] = True
-                # interpolate_association(
-                #     bef_bin, aft_bin, drw_c, bef_i, aft_i,
-                #     [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
-                # )
+                interpolate_simple_association(
+                    bef_bin, aft_bin, drw_c, bef_i, aft_i,
+                    [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
+                )
 
         if not bef_covered:
             interpolate_simple_association(
@@ -295,7 +317,8 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                 [aft_cnt_y, aft_cnt_x], [aft_cnt_y, aft_cnt_x], step
             )
 
-
+    """
+    # If each only has one candidate, that's easy
     for istr in bef_to_aft:
         if len(bef_to_aft[istr]) == 1 and len(aft_to_bef[str(bef_to_aft[istr][0]["ind"])]) == 1:
             bef_bin = np.equal(bef_lbl, int(istr)).astype(np.int)
@@ -307,9 +330,40 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                 [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
             )
         else: # More complex decision...
-            pass
+            strict_bta = [x for x in bef_to_aft[istr] if x["ovr_sz"] > 0]
+            handled = False
+            if len(strict_bta) == 1:
+                strict_atb = [x for x in aft_to_bef[str(strict_bta[0]["ind"])] if x["ovr_sz"] > 0]
+                if len(strict_atb) == 1:
+                    handled = True
+                    bef_bin = np.equal(bef_lbl, int(istr)).astype(np.int)
+                    aft_bin = np.equal(aft_lbl, strict_bta[0]["ind"]).astype(np.int)
+                    aft_cnt_x, aft_cnt_y = np.argwhere(aft_bin == 1).sum(0)/aft_bin.sum()
+                    bef_cnt_x, bef_cnt_y = np.argwhere(bef_bin == 1).sum(0)/bef_bin.sum()
+                    interpolate_simple_association(
+                        bef_bin, aft_bin, drw_c, bef_i, aft_i,
+                        [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
+                    )
+            if not handled: # Need to do a group merge
+                meta = {
+                    "istr": istr,
+                    "step": step
+                }
+                # afters = [str(x["ind"]) for x in strict_bta]
+                # befores = [str(strict_atb[x]["ind"]) for x in afters]
+                dst = Path("/home/helle246/code/repos/sandbox/interpolation/data") / "{}_{}".format(bef_i, aft_i)
+                dst.mkdir(exist_ok=True)
+                np.save(str(dst / "bef_lbl.npy"), bef_lbl)
+                np.save(str(dst / "aft_lbl.npy"), aft_lbl)
+                with (dst / "meta.json").open('w') as f:
+                    f.write(json.dumps(meta))
+                with (dst / "bef_to_aft.json").open('w') as f:
+                    f.write(json.dumps(bef_to_aft))
+                with (dst / "aft_to_bef.json").open('w') as f:
+                    f.write(json.dumps(aft_to_bef))
 
 
+    """
     return drw_c
 
 
@@ -370,6 +424,7 @@ def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=
         torch.greater(blr_d, threshold),
         torch.greater(drw_d, 0)
     ).int()
+    # thresholded_d = torch.greater(drw_d, 0)
 
     # If region is kidney, add hilum, redraw, and get new threshold
     if region_type == "kidney":
