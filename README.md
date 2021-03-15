@@ -2,6 +2,8 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
+<img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
+
 [Challenge Homepage](https://kits21.kits-challenge.org/) (draft)
 
 ## Timeline
