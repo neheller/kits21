@@ -86,6 +86,13 @@ def get_localization(delineation_path):
     return get_most_recent_save(delineation_path.parent.parent / "localization")
 
 
+def get_artery_localization(delineation_path):
+    pth = delineation_path.parent.parent.parent.parent / "artery" / "00" / "localization"
+    if not pth.exists():
+        return None
+    return get_most_recent_save(pth)
+
+
 def get_image_path(case_id, in_test_set):
     if in_test_set:
         return (TESTING_DIR / case_id / "imaging.nii.gz").resolve(strict=True)
@@ -129,7 +136,7 @@ def run_import(delineation_path):
     localization = None
     if region_type == "kidney":
         localization = get_localization(delineation_path)
-    
+
     # Path to underlying CT scan stored as .nii.gz
     image_path = get_image_path(case_id, in_test_set)
 

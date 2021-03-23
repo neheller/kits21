@@ -51,13 +51,15 @@ def get_containing_box(dln, shape):
             min_step = afrm - last
         last = afrm
 
+    abs_zmin = 0
+    abs_zmax = shape[0] - 1
     return {
         "xmin": max(0, int(np.floor(mins[0] - max_sz))),
-        "xmax": min(shape[2], int(np.ceil(maxs[0] + max_sz))),
+        "xmax": min(shape[2] - 1, int(np.ceil(maxs[0] + max_sz))),
         "ymin": max(0, int(np.floor(mins[1] - max_sz))),
-        "ymax": min(shape[1], int(np.ceil(maxs[1] + max_sz))),
-        "zmin": max(0, min(afrms) - min_step),
-        "zmax": min(shape[0], max(afrms) + min_step),
+        "ymax": min(shape[1] - 1, int(np.ceil(maxs[1] + max_sz))),
+        "zmin": max(abs_zmin, min(afrms) - min_step),
+        "zmax": min(abs_zmax, max(afrms) + min_step),
         "step": min_step,
         "xdim": shape[2],
         "ydim": shape[1],
@@ -500,16 +502,28 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
     return drw_c
 
 
-def interpolate_drawings(drw_c, step):
+def interpolate_drawings(drw_c, step, arb_bdry):
+    # Get inclusive start and end frames
     start = 0
     while start < drw_c.shape[0]:
         if np.sum(drw_c[start]) > 0:
             break
         else:
             start += 1
+    end = drw_c.shape[0] - 1
+    while end > start:
+        if np.sum(drw_c[end]) > 0:
+            break
+        else:
+            end -= 1
 
-    while start < drw_c.shape[0] + step - 1:
-        drw_c = interpolate_step(max(start - step, 0), min(start, drw_c.shape[0] -1), drw_c, step)
+
+    if arb_bdry:
+        start += step
+        end -= step
+
+    while start < end + step + 1:
+        drw_c = interpolate_step(max(start - step, 0), min(start, drw_c.shape[0] - 1), drw_c, step)
         start += step
 
     return drw_c
@@ -616,6 +630,7 @@ def apply_hilum_to_slice(thresholded_c, blur_c, threshold, ind, hlm):
 
 
 # TODO allow for custom hilums to be specified in dln
+# Polygons will be allowed for logged-in users
 def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
     first_hilum_slice = None
     last_hilum_slice = None
@@ -654,7 +669,7 @@ def get_side(cbox):
 
 def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None, cbox=None):
     # Interpolate drawings
-    cropped_drw = interpolate_drawings(cropped_drw, step)
+    cropped_drw = interpolate_drawings(cropped_drw, step, region_type in ["artery", "vein", "ureter"])
 
     # Send tensors to GPU
     img_d = torch.from_numpy(cropped_img).to("cuda:0")
