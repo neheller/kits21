@@ -1,5 +1,4 @@
-import sys
-from pathlib import Path
+"""Code for turning user delineations into dense segmentations."""
 import json
 
 import numpy as np
@@ -149,28 +148,12 @@ def get_contour(bin_seg):
 def distance(p1, p2):
     return (p1[0][0] - p2[0][0])*(p1[0][0] - p2[0][0]) + (p1[0][1] - p2[0][1])*(p1[0][1] - p2[0][1])
 
-            
-def find_nearest_neighbors_slow(lg_cntr, sm_cntr, mean_dsp):
-    matches = np.zeros_like(lg_cntr)
-    for i in range(lg_cntr.shape[0]):
-        minj = None
-        mind = np.inf
-        ipt = lg_cntr[i] + np.array([mean_dsp])
-        for j in range(sm_cntr.shape[0]):
-            dst = distance(ipt, sm_cntr[j])
-            if dst < mind:
-                minj = j
-                mind = dst
-        matches[i] = sm_cntr[minj]
-    return matches
 
-
-def find_nearest_neighbors_slow_v2(lg_cntr, sm_cntr, mean_dsp):
+def find_nearest_neighbors_slow_v2(lg_cntr, sm_cntr):
     matches = np.zeros_like(lg_cntr)
     step = sm_cntr.shape[0]/lg_cntr.shape[0]
     mini = None
     mind = np.inf
-    # ipt = lg_cntr[i] + np.array([mean_dsp])
     for i in range(lg_cntr.shape[0]):
         candidate_matches = np.zeros_like(lg_cntr)
         offset = i*step
@@ -184,10 +167,6 @@ def find_nearest_neighbors_slow_v2(lg_cntr, sm_cntr, mean_dsp):
             mind = dist
             
     return matches
-
-
-def find_nearest_neighbors(lg_cntr, sm_cntr, mean_dsp):
-    print(mean_dsp)
 
 
 def draw_filled_contour(ind, bef_i, aft_i, drw_c, bef_bin, aft_bin, float_contour):
@@ -290,10 +269,6 @@ def interpolate_merge_association(bef_grp, aft_grp, bef_lbl, aft_lbl, drw_c, bef
             tot_aft_bin,
             np.equal(aft_lbl, int(lbl))
         )
-
-    # Get centers for each
-    tot_bef_cnt_x, tot_bef_cnt_y = np.argwhere(tot_bef_bin == 1).sum(0)/tot_bef_bin.sum()
-    tot_aft_cnt_x, tot_aft_cnt_y = np.argwhere(tot_aft_bin == 1).sum(0)/tot_aft_bin.sum()
         
     # Get individual values
     bef_bins = [
@@ -312,9 +287,7 @@ def interpolate_merge_association(bef_grp, aft_grp, bef_lbl, aft_lbl, drw_c, bef
         get_contour(aft_bin)
         for aft_bin in aft_bins
     ]
-    bef_ref = True
     if len(bef_grp) > len(aft_grp):
-        bef_ref = False
         nonref_cntrs = bef_cntrs
         spliced_nonref, splice_inds = splice_contours(bef_cntrs)
         ref_cntrs = aft_cntrs
@@ -328,8 +301,8 @@ def interpolate_merge_association(bef_grp, aft_grp, bef_lbl, aft_lbl, drw_c, bef
         inc = 1
 
     for ref_cntr in ref_cntrs:
-        matches = find_nearest_neighbors_slow_v2(ref_cntr, spliced_nonref, None)
-        rev_matches = find_nearest_neighbors_slow_v2(spliced_nonref, ref_cntr, None)
+        matches = find_nearest_neighbors_slow_v2(ref_cntr, spliced_nonref)
+        rev_matches = find_nearest_neighbors_slow_v2(spliced_nonref, ref_cntr)
         sliced_matches = slice_matches(rev_matches, splice_inds)
         for i in range(1, int(np.ceil((aft_i - bef_i)/2))):
             draw_filled_contour(
@@ -344,16 +317,14 @@ def interpolate_merge_association(bef_grp, aft_grp, bef_lbl, aft_lbl, drw_c, bef
                     drw_c, tot_bef_bin, tot_aft_bin,
                     i/step*nonref_frag + (step - i)/step*ref_frag
                 )
-        
+
 
 def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cnt, aft_cnt, step):
     # cnt <- center
     # cntr <- contour
     bef_cntr = get_contour(bef_bin)
     aft_cntr = get_contour(aft_bin)
-    debug = False
     if bef_cntr is None:
-        debug = True
         start = bef_i
         inc = 1
         ref = bef_cntr
@@ -362,7 +333,6 @@ def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cn
         ])
         bef_bin = np.zeros_like(aft_bin)
     elif aft_cntr is None:
-        debug = True
         start = aft_i
         inc = -1
         ref = aft_cntr
@@ -374,17 +344,14 @@ def interpolate_simple_association(bef_bin, aft_bin, drw_c, bef_i, aft_i, bef_cn
         start = bef_i
         inc = 1
         ref = bef_cntr
-        matches = find_nearest_neighbors_slow_v2(bef_cntr, aft_cntr, [aft_cnt[0] - bef_cnt[0], aft_cnt[1] - bef_cnt[1]])
+        matches = find_nearest_neighbors_slow_v2(bef_cntr, aft_cntr)
     else:
         start = aft_i
         inc = -1
         ref = aft_cntr
-        matches = find_nearest_neighbors_slow_v2(aft_cntr, bef_cntr, [bef_cnt[0] - aft_cnt[0], bef_cnt[1] - aft_cnt[1]])
+        matches = find_nearest_neighbors_slow_v2(aft_cntr, bef_cntr)
 
     for i in range(1, aft_i - bef_i):
-        # if debug:
-        #     print(ref, matches, i/step*matches + (step - i)/step*ref)
-
         draw_filled_contour(
             start + i*inc, bef_i, aft_i,
             drw_c, bef_bin, aft_bin,
@@ -441,11 +408,6 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
                 }]
                 bef_covered = True
                 aft_cvg[j-1] = True
-                # TODO remove this when uncomment the below
-                # interpolate_simple_association(
-                #     bef_bin, aft_bin, drw_c, bef_i, aft_i,
-                #     [bef_cnt_y, bef_cnt_x], [aft_cnt_y, aft_cnt_x], step
-                # )
 
         if not bef_covered:
             interpolate_simple_association(
@@ -567,7 +529,7 @@ def find_hilum_in_slice(thresh, side):
         thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
     )
 
-    if (len(contours) == 0):
+    if len(contours) == 0:
         return None
 
     primary_contour = contours[0]
@@ -669,7 +631,7 @@ def get_side(cbox):
 
 def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None, cbox=None):
     # Interpolate drawings
-    cropped_drw = interpolate_drawings(cropped_drw, step, region_type in ["artery", "vein", "ureter"])
+    cropped_drw = interpolate_drawings(cropped_drw, step, region_type in ["artery","vein","ureter"])
 
     # Send tensors to GPU
     img_d = torch.from_numpy(cropped_img).to("cuda:0")
