@@ -2,11 +2,14 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-[Challenge Homepage](https://kits21.kits-challenge.org/) (draft)
+<img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
+
+[Challenge Homepage](https://kits21.kits-challenge.org/)
 
 ## News
 
-- **Mar 9, 2021**: A preliminary challenge homepage has been published at kits21.kits-challenge.org. You can keep tabs on the data annotation process there.
+- **Mar 23, 2021**: A draft of the postprocessing code and some preliminary data has been merged into the master branch.
+- **Mar 9, 2021**: A preliminary challenge homepage has been published at [kits-challenge.org](https://kits21.kits-challenge.org). You can keep tabs on the data annotation process there.
 - **Mar 29, 2020**: A second edition of KiTS was accepted to be held in conjunction with MICCAI 2021 in Strasbourg! More information will be posted here and on the [discussion forum](https://discourse.kits-challenge.org/) when it becomes available.
 
 ## Usage
@@ -72,3 +75,18 @@ This folder contains code used to process and import data from the annotation pl
 ## Challenge Information
 
 This challenge will feature significantly more data, several annotations per case, and a number of additional annotated regions. The accepted proposal can be found [on Zenodo](https://doi.org/10.5281/zenodo.3714971), but the most up-to-date information about the challenge can be found on [the KiTS21 homepage](https://kits21.kits-challenge.org/).
+
+## Previous KiTS Challenges
+
+KiTS was first held in conjunction with MICCAI 2019 in Shenzhen. A paper describing that challenge was published in Medical Image Analysis \[[html](https://www.sciencedirect.com/science/article/abs/pii/S1361841520301857)\] \[[pdf](https://arxiv.org/pdf/1912.01054.pdf)\].
+
+```bibtex
+@article{heller2020state,
+  title={The state of the art in kidney and kidney tumor segmentation in contrast-enhanced CT imaging: Results of the KiTS19 Challenge},
+  author={Heller, Nicholas and Isensee, Fabian and Maier-Hein, Klaus H and Hou, Xiaoshuai and Xie, Chunmei and Li, Fengyi and Nan, Yang and Mu, Guangrui and Lin, Zhiyong and Han, Miofei and others},
+  journal={Medical Image Analysis},
+  pages={101821},
+  year={2020},
+  publisher={Elsevier}
+}
+```
