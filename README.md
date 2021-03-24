@@ -6,6 +6,14 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 [Challenge Homepage](https://kits21.kits-challenge.org/)
 
+## Timeline
+
+- **Mar 1 - Jul 1**: Annotation, Release, and Refinement of Training Data (*in progress*)
+- **Aug 9**: Deadline for Intention to Submit & Required Paper
+- **Aug 16 - 30**: Submissions Accepted
+- **Sep 1**: Results Announced
+- **Sep 27 or Oct 1**: Satellite Event at MICCAI 2021
+
 ## News
 
 - **Mar 23, 2021**: A draft of the postprocessing code and some preliminary data has been merged into the master branch.
@@ -30,7 +38,7 @@ If you would like to request another implementation of `get_imaging`, please [su
 
 **NOTE** at present, no data has been imported yet, but the imaging for the first 300 training cases can still be retrieved using any of the `get_imaging` scripts.
 
-```
+```text
 data/
 ├── case_00000/
 |   ├── raw/
