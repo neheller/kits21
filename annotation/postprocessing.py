@@ -131,8 +131,8 @@ def generate_cropped_drawing_interior(cbox, dln):
                         fill=128
                     )
             if drew:
+                ImageDraw.floodfill(im, (0,0), 128, thresh=63.5)
                 rszd = im.resize((ret.shape[2], ret.shape[1]), Image.BILINEAR)
-                ImageDraw.floodfill(rszd, (0,0), 128, thresh=63.5)
                 ret[i,:,:] = np.less(np.array(rszd), 63.9).astype(np.int)
 
     return ret
