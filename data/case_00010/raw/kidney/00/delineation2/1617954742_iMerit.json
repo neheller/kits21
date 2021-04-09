@@ -1,0 +1,95 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "b26e28c6-dd02-4933-93cb-3ce063cc3ffd",
+      "new": true,
+      "parent_id": null,
+      "created_by": "guest",
+      "created_at": "2021-04-09T07:52:09.128Z",
+      "deprecated": true,
+      "spatial_type": "contour",
+      "spatial_payload": [
+        [
+          197.29914874918248,
+          308.8408068999346
+        ],
+        [
+          197.29914874918248,
+          308.8408068999346
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2.6792636532463083,
+      "containing_box": {
+        "tlx": 197.29914874918248,
+        "tly": 308.8408068999346,
+        "brx": 197.29914874918248,
+        "bry": 308.8408068999346,
+        "tlz": 0,
+        "brz": 0
+      },
+      "frame": 14,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "a75d07c3-0e8c-4054-95bf-65fe4054a332",
+      "new": true,
+      "parent_id": null,
+      "created_by": "guest",
+      "created_at": "2021-04-09T07:52:17.788Z",
+      "deprecated": false,
+      "spatial_type": "contour",
+      "spatial_payload": [
+        [
+          201.1500316792021,
+          305.8270724329627
+        ],
+        [
+          201.1500316792021,
+          305.8270724329627
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 1.1362693343337218,
+      "containing_box": {
+        "tlx": 201.1500316792021,
+        "tly": 305.8270724329627,
+        "brx": 201.1500316792021,
+        "bry": 305.8270724329627,
+        "tlz": 0,
+        "brz": 0
+      },
+      "frame": 14,
+      "text_payload": "",
+      "annotation_meta": {}
+    }
+  ]
+}
