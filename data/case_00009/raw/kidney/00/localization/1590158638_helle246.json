@@ -1,0 +1,101 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "ed85f09e-3052-4109-8813-972fa448b4dc",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2020-05-22T14:43:58Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          106.60305343511449,
+          252.13740458015263,
+          31.0
+        ],
+        [
+          223.62595419847327,
+          362.1755725190839,
+          66.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    },
+    {
+      "id": "b1d5ae42-7a01-4cc7-92d0-3058cbc54930",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2020-05-22T14:43:58Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": 41,
+      "text_payload": ""
+    },
+    {
+      "id": "7272757d-5105-4e57-b7dd-7abfd16c10dd",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2020-05-22T14:43:58Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": 53,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1590158638_helle246.json"
+}
