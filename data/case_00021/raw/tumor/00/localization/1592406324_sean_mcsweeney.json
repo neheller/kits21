@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "0885c668-596d-496c-bbaf-8937c970e902",
+      "new": true,
+      "parent_id": null,
+      "created_by": "sean_mcsweeney",
+      "created_at": "2020-06-17T15:05:24Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          7.0,
+          109.0,
+          12.0
+        ],
+        [
+          512.0,
+          458.5,
+          19.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 6,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1592406324_sean_mcsweeney.json"
+}
