@@ -2,6 +2,13 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
+## [0.0.8] - April 29, 2021
+
+- Full annotations for
+  - `case_00005`
+  - `case_00023`
+  - `case_00024`
+
 ## [0.0.7] - April 15, 2021
 
 - Full annotations for
