@@ -46,19 +46,25 @@ data/
 ├── case_00000/
 |   ├── raw/
 |   ├── segmentations/
-|   ├── aggregated_seg.nii.gz
-|   └── imaging.nii.gz
+|   ├── imaging.nii.gz
+|   ├── aggregated_OR_seg.nii.gz
+|   ├── aggregated_AND_seg.nii.gz
+|   └── aggregated_MAJ_seg.nii.gz
 ├── case_00001/
 |   ├── raw/
 |   ├── segmentations/
-|   ├── aggregated_seg.nii.gz
-|   └── imaging.nii.gz
+|   ├── imaging.nii.gz
+|   ├── aggregated_OR_seg.nii.gz
+|   ├── aggregated_AND_seg.nii.gz
+|   └── aggregated_MAJ_seg.nii.gz
 ...
 ├── case_00209/
 |   ├── raw/
 |   ├── segmentations/
-|   ├── aggregated_seg.nii.gz
-|   └── imaging.nii.gz
+|   ├── imaging.nii.gz
+|   ├── aggregated_OR_seg.nii.gz
+|   ├── aggregated_AND_seg.nii.gz
+|   └── aggregated_MAJ_seg.nii.gz
 └── clinical_data.json
 ```
 
@@ -73,7 +79,11 @@ Consider the "kidney" label in a scan: most patients have two kidneys (i.e., two
 - `kidney_instance-2_annotation-2.nii.gz`
 - `kidney_instance-2_annotation-3.nii.gz`
 
-along with similar collections for `ureter`, `artery`, `vein`, `cyst`, and `tumor` regions. The `aggregated_seg.nii.gz` file is a result of combining all of these files via simple voxelwise majority voting.
+along with similar collections for `ureter`, `artery`, `vein`, `cyst`, and `tumor` regions. The `aggregated_<X>_seg.nii.gz` file is a result of aggregating all of these files by various methods indicated by \<X\>:
+
+- **OR**: A voxel-wise "or" or "union" operator
+- **AND**: A voxel-wise "and" or "intersection" operator
+- **MAJ**: Voxel-wise majority voting
 
 ### `starter_code/`
 
