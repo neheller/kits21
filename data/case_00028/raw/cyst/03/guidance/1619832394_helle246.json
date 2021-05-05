@@ -1,0 +1,153 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "78d3f5a0-fe07-42d4-abc5-2af41da869e8",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-01T01:26:01.710Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          130.0369330269764,
+          307.78384818313333
+        ],
+        [
+          130.18943068675006,
+          308.1977704025189
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1
+        }
+      ],
+      "line_size": 0.34856272147640793,
+      "containing_box": {
+        "tlx": 128.99124486254718,
+        "tly": 306.7381600187041,
+        "brx": 131.2351188511793,
+        "bry": 309.24345856694816,
+        "tlz": 2,
+        "brz": 2
+      },
+      "frame": 47,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "88c01561-e1fa-4356-8b81-979b78d60c09",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-01T01:26:02.773Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          126.85627300845779,
+          304.4942581166456
+        ],
+        [
+          126.31163850926623,
+          304.2981896969366
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1
+        }
+      ],
+      "line_size": 0.34856272147640793,
+      "containing_box": {
+        "tlx": 125.26595034483701,
+        "tly": 303.2525015325074,
+        "brx": 127.90196117288701,
+        "bry": 305.53994628107483,
+        "tlz": 2,
+        "brz": 2
+      },
+      "frame": 47,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "69e2c2b1-b1d4-4d3d-b3dc-7a8246d67395",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-01T01:26:04.798Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          129.0130201684963,
+          302.0325078716705
+        ],
+        [
+          128.88230788869032,
+          301.53144413241426
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1
+        }
+      ],
+      "line_size": 0.34856272147640793,
+      "containing_box": {
+        "tlx": 127.8366197242611,
+        "tly": 300.485755967985,
+        "brx": 130.05870833292553,
+        "bry": 303.0781960360997,
+        "tlz": 2,
+        "brz": 2
+      },
+      "frame": 47,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "1cc0e589-6071-4ab6-9509-e356dd9f433b",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-01T01:26:05.806Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          131.34405582503618,
+          305.16960258701386
+        ],
+        [
+          131.75797804442175,
+          305.2131733469492
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1
+        }
+      ],
+      "line_size": 0.34856272147640793,
+      "containing_box": {
+        "tlx": 130.29836766060694,
+        "tly": 304.1239144225846,
+        "brx": 132.80366620885098,
+        "bry": 306.2588615113784,
+        "tlz": 2,
+        "brz": 2
+      },
+      "frame": 47,
+      "text_payload": "",
+      "annotation_meta": {}
+    }
+  ]
+}
