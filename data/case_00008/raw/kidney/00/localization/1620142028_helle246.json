@@ -1,0 +1,109 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "f3b71f91-a5bd-457b-8a90-1f80eb0fcb8c",
+      "new": false,
+      "parent_id": null,
+      "created_by": "ed_walczak",
+      "created_at": "2020-06-09T20:12:36Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          8.873239436619718,
+          146.40845070422534,
+          114
+        ],
+        [
+          326.40845070422534,
+          347.53521126760563,
+          170
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": {
+        "tlx": -3.126760563380282,
+        "tly": 134.40845070422534,
+        "brx": 338.40845070422534,
+        "bry": 359.53521126760563,
+        "tlz": 114,
+        "brz": 170
+      },
+      "frame": null,
+      "text_payload": ""
+    },
+    {
+      "id": "9474b956-cc31-426e-83c6-54761d66c21f",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-04T15:26:57.573Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 141,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "f4c676c3-7724-4ce0-98f0-a1bb1cf0167a",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-04T15:27:05.985Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 159,
+      "text_payload": "",
+      "annotation_meta": {}
+    }
+  ]
+}

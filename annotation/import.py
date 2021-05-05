@@ -143,69 +143,92 @@ def run_import(delineation_path):
     save_segmentation(case_id, region_type, delineation_path, seg_nib, in_test_set)
 
 
+def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
+
+    seg_files = [x for x in parent.glob("{}*.nii.gz".format(region))]
+    instances = [int(x.stem.split("_")[1].split("-")[1]) for x in seg_files]
+    unq_insts = sorted(list(set(instances)))
+
+    reg_agg = None
+    for inst in unq_insts:
+        inst_agg = None
+        n_anns = 0
+        for tins, tfnm in zip(instances, seg_files):
+            if tins != inst:
+                continue
+            seg_nib = nib.load(str(tfnm))
+            n_anns += 1
+            if inst_agg is None:
+                inst_agg = np.asanyarray(seg_nib.dataobj)
+                affine = seg_nib.affine
+            else:
+                inst_agg = inst_agg + np.asanyarray(seg_nib.dataobj)
+
+        if agtype == "maj":
+            inst = np.greater(inst_agg, n_anns/2).astype(inst_agg.dtype)
+        elif agtype == "or":
+            inst = np.greater(inst_agg, 0).astype(inst_agg.dtype)
+        elif agtype == "and":
+            inst = np.equal(inst_agg, n_anns).astype(inst_agg.dtype)
+
+        if reg_agg is None:
+            reg_agg = np.copy(inst)
+        else:
+            reg_agg = np.logical_or(reg_agg, inst).astype(reg_agg.dtype)
+
+    # If no info here, just return what we started with
+    if reg_agg is None:
+        return agg, affine
+
+    if agg is None:
+        agg = idnum*reg_agg
+    else:
+        agg = np.where(np.logical_not(np.equal(reg_agg, 0)), idnum*reg_agg, agg)
+
+    return agg, affine
+
+
+
 def aggregate_case(case_id):
-    # TODO this currently takes a union approach rather than majority voting
-    agg = None
-    affine = None
     segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
-    for seg_file in segs.glob("ureter*.nii.gz"):
-        seg_nib = nib.load(str(seg_file))
-        if agg is None:
-            agg = 2*np.asanyarray(seg_nib.dataobj)
-            affine = seg_nib.affine
-        else:
-            dat = np.asanyarray(seg_nib.dataobj)
-            agg = np.where(np.equal(agg, 0), 2*dat, agg)
 
-    for seg_file in segs.glob("vein*.nii.gz"):
-        seg_nib = nib.load(str(seg_file))
-        if agg is None:
-            agg = 4*np.asanyarray(seg_nib.dataobj)
-            affine = seg_nib.affine
-        else:
-            dat = np.asanyarray(seg_nib.dataobj)
-            agg = np.where(np.greater(dat, 0), 4*dat, agg)
- 
-    for seg_file in segs.glob("artery*.nii.gz"):
-        seg_nib = nib.load(str(seg_file))
-        if agg is None:
-            agg = 3*np.asanyarray(seg_nib.dataobj)
-            affine = seg_nib.affine
-        else:
-            dat = np.asanyarray(seg_nib.dataobj)
-            agg = np.where(np.greater(dat, 0), 3*dat, agg)
+    ord_id = [
+        ("ureter", 2),
+        ("vein", 4),
+        ("artery", 3),
+        ("kidney", 1),
+        ("cyst", 5),
+        ("tumor", 6)
+    ]
 
-    for seg_file in segs.glob("kidney*.nii.gz"):
-        seg_nib = nib.load(str(seg_file))
-        if agg is None:
-            agg = np.asanyarray(seg_nib.dataobj)
-            affine = seg_nib.affine
-        else:
-            dat = np.asanyarray(seg_nib.dataobj)
-            agg = np.where(np.greater(dat, 0), dat, agg)
-
-    for seg_file in segs.glob("cyst*.nii.gz"):
-        seg_nib = nib.load(str(seg_file))
-        if agg is None:
-            agg = 5*np.asanyarray(seg_nib.dataobj)
-            affine = seg_nib.affine
-        else:
-            dat = np.asanyarray(seg_nib.dataobj)
-            agg = np.where(np.greater(dat, 0), 5*dat, agg)
-
-    for seg_file in segs.glob("tumor*.nii.gz"):
-        seg_nib = nib.load(str(seg_file))
-        if agg is None:
-            agg = 6*np.asanyarray(seg_nib.dataobj)
-            affine = seg_nib.affine
-        else:
-            dat = np.asanyarray(seg_nib.dataobj)
-            agg = np.where(np.greater(dat, 0), 6*dat, agg)
-
+    affine = None
+    agg = None
+    for oi in ord_id:
+        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="or")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
-            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_seg.nii.gz")
+            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_OR_seg.nii.gz")
+        )
+
+    affine = None
+    agg = None
+    for oi in ord_id:
+        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="and")
+    if agg is not None:
+        nib.save(
+            nib.Nifti1Image(agg.astype(np.int32), affine),
+            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_AND_seg.nii.gz")
+        )
+
+    affine = None
+    agg = None
+    for oi in ord_id:
+        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="maj")
+    if agg is not None:
+        nib.save(
+            nib.Nifti1Image(agg.astype(np.int32), affine),
+            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_MAJ_seg.nii.gz")
         )
 
 
@@ -213,12 +236,14 @@ def main(args):
     cache = load_json(CACHE_FILE)
     cli = True
     if args.case is not None:
-        case_dirs = [get_case_dir(args.case)]            
+        case_dirs = [get_case_dir(args.case)]
     else:
         cli = False
         case_dirs = get_all_case_dirs()
 
     for case_dir in case_dirs:
+        print(case_dir.name)
+        reaggregate = args.reaggregate
         if cli and args.region is not None:
             region_dirs = [get_region_dir(case_dir, args.region)]
         else:
@@ -245,8 +270,10 @@ def main(args):
                         run_import(dln_file)
                         cache[cache_key] = dln_file.name
                         write_json(CACHE_FILE, cache)
+                        reaggregate = True
 
-        aggregate_case(case_dir.name)
+        if reaggregate:
+            aggregate_case(case_dir.name)
 
 
 parser = argparse.ArgumentParser()
@@ -255,6 +282,7 @@ parser.add_argument("-r", "--region", help="The type of region to import", type=
 parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
 parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import (1, 2, or 3)", type=int)
 parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values", action="store_true")
+parser.add_argument("--reaggregate", help="Reaggregate segmentations regardless of whether it was changed", action="store_true")
 if __name__ == "__main__":
     cl_args = parser.parse_args()
     main(cl_args)

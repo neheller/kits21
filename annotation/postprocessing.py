@@ -597,7 +597,7 @@ def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
     first_hilum_slice = None
     last_hilum_slice = None
     for ann in lzn["annotations"]:
-        if ann["spatial_type"] == "whole-image":
+        if ann["spatial_type"] == "whole-image" and not ann["deprecated"]:
             bound = None
             for cp in ann["classification_payloads"]:
                 if cp["confidence"] > 0.5:
