@@ -1,0 +1,101 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "b409aa15-e814-4c7b-b616-b770b7f65f91",
+      "new": true,
+      "parent_id": null,
+      "created_by": "safa_abdulkadir",
+      "created_at": "2020-07-07T23:15:44Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          89.14285714285715,
+          212.7857142857143,
+          21.0
+        ],
+        [
+          311.78571428571433,
+          383.5714285714286,
+          48.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    },
+    {
+      "id": "affcda3e-8c15-43c4-babe-86c966ab2f6e",
+      "new": true,
+      "parent_id": null,
+      "created_by": "safa_abdulkadir",
+      "created_at": "2020-07-07T23:15:44Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": 26,
+      "text_payload": ""
+    },
+    {
+      "id": "526350e5-bd50-4f5d-868b-6153b9731a28",
+      "new": true,
+      "parent_id": null,
+      "created_by": "safa_abdulkadir",
+      "created_at": "2020-07-07T23:15:44Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": 39,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1594163744_safa_abdulkadir.json"
+}
