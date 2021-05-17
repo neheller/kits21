@@ -19,14 +19,11 @@ def _convert_xy_to_idx(x, y, shape_x):
 def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
     num_metrics = 6
     n_labels = len(KITS_HEC_LABEL_MAPPING)
-    segmentation_files = subfiles(folder_with_segmentations, suffix='.nii.gz', join=True)
+    segmentation_files = subfiles(folder_with_segmentations, suffix='.nii.gz', join=True)[:4]
     num_segs = len(segmentation_files)
 
     p = Pool(num_processes)
 
-    # metrics matrix is (n_randomly_drawn_segmentations x n_randomly_drawn_segmentations x n_labels x n_metrics). To make multiprocessing easier we use shape
-    # (n_randomly_drawn_segmentations**2 x n_labels x n_metrics)
-    metrics = np.zeros((num_segs * num_segs, n_labels, num_metrics))
     indexes = []
     results = []
     for seg_source in range(num_segs):
@@ -41,15 +38,15 @@ def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
     p.join()
 
     # now assign results to correct index
+    metrics = np.zeros((num_segs, num_segs, n_labels, num_metrics))
     for i, r in zip(indexes, results):
-        x, y = _convert_idx_to_xy(i, n_labels)
-        assert x < y  # follows from above
+        x, y = _convert_idx_to_xy(i, num_segs)
         for j, k in enumerate(KITS_HEC_LABEL_MAPPING.keys()):
-            metrics[x, y, j] = r[k]
-            metrics[y, x, j] = r[k]
+            metrics[x, y, j] = r[0][k]
+            metrics[y, x, j] = r[0][k]
 
     # delta has shape (n_segmentations x n_labels x n_metrics)
     deltas = np.zeros((num_segs, n_labels, num_metrics))
     for n in range(num_segs):
-        idx = [i for i in range(num_segs) if i != n]
-        deltas[n] = np.mean(metrics[n][idx], axis=0)
+        deltas[n] = np.sum(metrics[n], axis=0) / (num_segs - 1)
+    return deltas
