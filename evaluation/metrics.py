@@ -66,6 +66,8 @@ def compute_metrics(segmentation_predicted: np.ndarray, segmentation_reference: 
     # rmsd does not seem to use capped distances?
     rmsd = np.sqrt(np.sum(dist_pred_to_gt ** 2) + np.sum(dist_gt_to_pred ** 2)) / \
            (len(dist_pred_to_gt_capped) + len(dist_gt_to_pred_capped))
+    # I believe that this should be the correct formula. Website says the one above is it. Let's discuss
+    # rmsd = np.sqrt((np.sum(dist_pred_to_gt ** 2) + np.sum(dist_gt_to_pred ** 2)) / (len(dist_pred_to_gt_capped) + len(dist_gt_to_pred_capped)))
     return dice, jaccard, srvd, avd, assd, rmsd
 
 
