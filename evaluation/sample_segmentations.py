@@ -43,7 +43,8 @@ def _get_instances(list_of_fnames):
 
 
 def generate_segmentations(kits_data_base_dir: str, num_segmentations: int = 100,
-                           n_processes: int = 8) -> None:
+                           n_processes: int = 8,
+                           skip_existing: bool = False) -> None:
     p = Pool(n_processes)
     results = []
     case_dirs = subdirs(kits_data_base_dir, join=False, prefix='case_')
@@ -97,6 +98,8 @@ def generate_segmentations(kits_data_base_dir: str, num_segmentations: int = 100
         maybe_mkdir_p(output_folder)
         for i in range(num_segmentations):
             output_file = join(output_folder, 'sample_%04d.nii.gz' % i)
+            if isfile(output_file) and skip_existing:
+                continue
             results.append(p.starmap_async(build_segmentation,
                                            (([rs.choice(i) for i in kidney_files_per_instance],
                                              [rs.choice(i) for i in artery_files_per_instance] if len(artery_files_per_instance) > 0 else [],
@@ -115,5 +118,5 @@ def generate_segmentations(kits_data_base_dir: str, num_segmentations: int = 100
 if __name__ == "__main__":
     kits_data_base_dir = '/home/fabian/http_git/kits21/data'
     num_segmentations = 100
-    n_processes = 6
-    generate_segmentations(kits_data_base_dir, num_segmentations, n_processes)
+    n_processes = 5
+    generate_segmentations(kits_data_base_dir, num_segmentations, n_processes, skip_existing=True)
