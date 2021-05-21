@@ -59,9 +59,10 @@ def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
 
 
 def compute_all_deltas(data_directory: str, num_processes: int = 8):
-    case_folders = subfiles(data_directory, prefix='case_', join=True)
+    case_folders = subdirs(data_directory, prefix='case_', join=True)
     for c in case_folders:
-        compute_deltas(c, num_processes)
+        deltas = compute_deltas(join(c, 'segmentation_samples'), num_processes)
+        np.savez_compressed(join(c, 'segmentation_samples', 'deltas.npz'), deltas=deltas)
 
 
 if __name__ == '__main__':
