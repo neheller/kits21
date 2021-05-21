@@ -58,12 +58,14 @@ def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
     return deltas
 
 
-def compute_all_deltas(data_directory: str, num_processes: int = 8):
+def compute_all_deltas(data_directory: str, num_processes: int = 8, overwrite: bool = False):
     case_folders = subdirs(data_directory, prefix='case_', join=True)
     for c in case_folders:
-        deltas = compute_deltas(join(c, 'segmentation_samples'), num_processes)
-        np.savez_compressed(join(c, 'segmentation_samples', 'deltas.npz'), deltas=deltas)
+        delta_file = join(c, 'segmentation_samples', 'deltas.npz')
+        if not isfile(delta_file) or overwrite:
+            deltas = compute_deltas(join(c, 'segmentation_samples'), num_processes)
+            np.savez_compressed(delta_file, deltas=deltas)
 
 
 if __name__ == '__main__':
-    compute_all_deltas(TRAINING_DIR, 4)
+    compute_all_deltas(TRAINING_DIR, 3)
