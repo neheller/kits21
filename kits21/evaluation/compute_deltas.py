@@ -2,8 +2,8 @@ import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import *
 from multiprocessing import Pool
 
-from configuration import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
-from evaluation.metrics import evaluate_case
+from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
+from kits21.evaluation.metrics import evaluate_case
 
 
 def _convert_idx_to_xy(idx, shape_x):

@@ -1,14 +1,14 @@
+from kits21.configuration.paths import TRAINING_DIR
 from multiprocessing import Pool
 from typing import Callable
 
 import SimpleITK as sitk
 import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import *
-from nnunet.dataset_conversion.Task134_cryoET import flood_fill_hull, morphology_valid_region
 from skimage.morphology import binary_closing, ball
 from skimage.transform import resize
 
-from configuration import HEC_CONSTRUCTION_ORDER
+from kits21.configuration.labels import HEC_CONSTRUCTION_ORDER
 
 
 def build_segmentation_replace_ureter_with_kidney_label_in_convhull(kidney_files, tumor_files, cyst_files, ureter_files,
@@ -26,6 +26,8 @@ def build_segmentation_replace_ureter_with_kidney_label_in_convhull(kidney_files
     :param output_file:
     :return:
     """
+    from nnunet.dataset_conversion.Task134_cryoET import flood_fill_hull, morphology_valid_region
+
     labelid_files_mapping = {
         i: j if j is not None else list() for i, j in {
             1: kidney_files,
@@ -108,6 +110,7 @@ def build_segmentation_replace_ureter_with_kidney_label_in_closed_kidney(kidney_
     print(kidney_files[0].split('/')[-3], kidney_files[0].split('/')[-1], spacing, strel.shape, np.unique(strel))
 
     kidneys = [sitk.GetArrayFromImage(sitk.ReadImage(f)).astype(np.uint8) for f in kidney_files]
+    from nnunet.dataset_conversion.Task134_cryoET import morphology_valid_region
     kidney_closed = [morphology_valid_region(i, strel, binary_closing)[None] for i in kidneys]
     kidney_closed = np.vstack(kidney_closed).sum(0) > 0
     del kidneys
@@ -362,7 +365,7 @@ def generate_segmentations(kits_data_base_dir: str,
 
 
 if __name__ == "__main__":
-    kits_data_base_dir = '/data'
-    num_segmentations = 100
-    n_processes = 6
-    generate_segmentations(kits_data_base_dir, num_segmentations, n_processes, skip_existing=False, verbose=True)
+    num_segmentations = 10
+    n_processes = 4
+    generate_segmentations(TRAINING_DIR, num_segmentations, n_processes, skip_existing=False, verbose=True,
+                           segmentation_build_fn=build_segmentation_default)

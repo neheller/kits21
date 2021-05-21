@@ -1,13 +1,3 @@
-from pathlib import Path
-import os
-
-TRAINING_DIR = Path(__file__).parent / "data"
-TESTING_DIR = Path(os.environ["KITS21_TEST_DIR"]).resolve(strict=True) if "KITS21_TEST_DIR" in os.environ.keys() else \
-    None
-SRC_DIR = Path(os.environ["KITS21_SERVER_DATA"]).resolve(strict=True) if "KITS21_SERVER_DATA" in os.environ.keys() \
-    else None
-CACHE_FILE = Path(__file__).parent / "annotation" / "cache.json"
-
 # This is how we construct the hec regions from the labels. (1, 5, 6) means that labels 1, 5 and 6 will be merged and
 # evaluated jointly in the corresponding hec region
 KITS_HEC_LABEL_MAPPING = {

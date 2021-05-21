@@ -5,8 +5,10 @@ import shutil
 import numpy as np
 import nibabel as nib
 
-from annotation.postprocessing import delineation_to_seg, load_json, write_json
-from configuration import TESTING_DIR, SRC_DIR, TRAINING_DIR, CACHE_FILE, KITS_LABEL_NAMES, HEC_CONSTRUCTION_ORDER
+from kits21.annotation.postprocessing import delineation_to_seg, load_json, write_json
+from kits21.configuration.labels import KITS_LABEL_NAMES, HEC_CONSTRUCTION_ORDER
+from kits21.configuration.paths import TESTING_DIR, SRC_DIR, TRAINING_DIR, CACHE_FILE
+
 
 
 def _check_testing_dir_available() -> None:
