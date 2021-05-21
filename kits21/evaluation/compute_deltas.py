@@ -43,11 +43,10 @@ def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
     metrics = np.zeros((num_segs, num_segs, n_labels, num_metrics))
     for i, r in zip(indexes, results):
         x, y = _convert_idx_to_xy(i, num_segs)
-        for j, k in enumerate(HEC_NAME_LIST):
-            assert np.sum(metrics[x, y, j]) == 0
-            assert np.sum(metrics[y, x, j]) == 0
-            metrics[x, y, j] = r[0][k]
-            metrics[y, x, j] = r[0][k]
+        assert np.sum(metrics[x, y]) == 0
+        assert np.sum(metrics[y, x]) == 0
+        metrics[x, y] = r[0]
+        metrics[y, x] = r[0]
 
     # delta has shape (n_segmentations x n_labels x n_metrics)
     # metrics can be np.nan if both pred and ref correctly predicted an empty label. Only sum over non-nan entries
