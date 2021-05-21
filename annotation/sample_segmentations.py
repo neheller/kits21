@@ -66,10 +66,10 @@ def build_segmentation_replace_ureter_with_kidney_label_in_convhull(kidney_files
     sitk.WriteImage(seg, output_file)
 
 
-def build_segmentation_replace_ureter_with_kidney_label_in_closedKidney(kidney_files, tumor_files, cyst_files,
-                                                                        ureter_files, artery_files, vein_files,
-                                                                        output_file: str,
-                                                                        radius: int = 11) -> None:
+def build_segmentation_replace_ureter_with_kidney_label_in_closed_kidney(kidney_files, tumor_files, cyst_files,
+                                                                         ureter_files, artery_files, vein_files,
+                                                                         output_file: str,
+                                                                         radius: int = 11) -> None:
     """
     perform morphological closing on the kidney labels (with sphere of given radius, radius is in mm(!)). Then replace
     all ureter pixels within the closed kidney label with kidney. (closed kidney label is only used to convert
@@ -133,9 +133,9 @@ def build_segmentation_replace_ureter_with_kidney_label_in_closedKidney(kidney_f
     sitk.WriteImage(seg, output_file)
 
 
-def build_segmentation_ureterOnTopOfKidney(kidney_files, tumor_files, cyst_files, ureter_files, artery_files,
-                                           vein_files, output_file: str
-                                           ) -> None:
+def build_segmentation_ureter_on_top_of_kidney(kidney_files, tumor_files, cyst_files, ureter_files, artery_files,
+                                               vein_files, output_file: str
+                                               ) -> None:
     """
     the default replaces ureter label with the kidney segmentation by placing kidney after ureter has been set. Here
     the manual ureter segmentations are retained and instead overwrite existing kidney voxels
@@ -362,7 +362,7 @@ def generate_segmentations(kits_data_base_dir: str,
 
 
 if __name__ == "__main__":
-    kits_data_base_dir = '/home/fabian/http_git/kits21/data'
+    kits_data_base_dir = '/data'
     num_segmentations = 100
     n_processes = 6
     generate_segmentations(kits_data_base_dir, num_segmentations, n_processes, skip_existing=False, verbose=True)
