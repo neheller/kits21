@@ -1,0 +1,101 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "5e9e252c-2ec9-4364-8405-9ab7aaea737e",
+      "new": true,
+      "parent_id": null,
+      "created_by": "sarah_peterson",
+      "created_at": "2020-06-22T23:06:30Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          261.878453038674,
+          254.80663657847032,
+          25.0
+        ],
+        [
+          438.1218232044199,
+          347.8455868547134,
+          52.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    },
+    {
+      "id": "79be60c7-24ae-40cf-91ff-9345f1d837a2",
+      "new": true,
+      "parent_id": null,
+      "created_by": "sarah_peterson",
+      "created_at": "2020-06-22T23:06:30Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": 35,
+      "text_payload": ""
+    },
+    {
+      "id": "67213c97-6125-4913-a3dc-fd7f40d19e1a",
+      "new": true,
+      "parent_id": null,
+      "created_by": "sarah_peterson",
+      "created_at": "2020-06-22T23:06:30Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": 42,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1592867190_sarah_peterson.json"
+}

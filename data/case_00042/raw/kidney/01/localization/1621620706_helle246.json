@@ -1,0 +1,110 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "25b2226d-ff7d-4dae-974b-2eadeeb4590a",
+      "new": false,
+      "parent_id": null,
+      "created_by": "devante_delbrune",
+      "created_at": "2021-05-12T22:07:38.775Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          101.81968057702215,
+          242.67903142709943,
+          125
+        ],
+        [
+          237.93096342091707,
+          393.0345182895415,
+          225
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 4.219938307688954,
+      "containing_box": {
+        "tlx": 89.1598656539553,
+        "tly": 230.01921650403256,
+        "brx": 250.59077834398394,
+        "bry": 405.69433321260834,
+        "tlz": 125,
+        "brz": 225
+      },
+      "frame": null,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "6a9e21e6-cf16-4d72-b9ba-7d461a155907",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-21T18:11:21.746Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 149,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "0ed71326-18b6-43e9-9fef-9e7ed69d581a",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-21T18:11:30.283Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 189,
+      "text_payload": "",
+      "annotation_meta": {}
+    }
+  ]
+}
