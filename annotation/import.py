@@ -59,7 +59,7 @@ def get_most_recent_save(parent_dir):
     except Exception as e:
         print()
         print("Error finding most recent save in", str(parent_dir))
-        raise(e)
+        raise e
 
 
 def update_raw(delineation_path, case_id, in_test_set):
@@ -188,7 +188,6 @@ def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
     return agg, affine
 
 
-
 def aggregate_case(case_id):
     segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
 
@@ -276,13 +275,17 @@ def main(args):
             aggregate_case(case_dir.name)
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--case", help="The index of the case to import", type=int)
-parser.add_argument("-r", "--region", help="The type of region to import", type=str)
-parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
-parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import (1, 2, or 3)", type=int)
-parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values", action="store_true")
-parser.add_argument("--reaggregate", help="Reaggregate segmentations regardless of whether it was changed", action="store_true")
-if __name__ == "__main__":
-    cl_args = parser.parse_args()
-    main(cl_args)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--case", help="The index of the case to import", type=int)
+    parser.add_argument("-r", "--region", help="The type of region to import", type=str)
+    parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
+    parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import "
+                                                    "(1, 2, or 3)", type=int)
+    parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values",
+                        action="store_true")
+    parser.add_argument("--reaggregate", help="Reaggregate segmentations regardless of whether it was changed",
+                        action="store_true")
+    if __name__ == "__main__":
+        cl_args = parser.parse_args()
+        main(cl_args)
