@@ -2,7 +2,8 @@ import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import *
 from multiprocessing import Pool
 
-from evaluation.metrics import KITS_HEC_LABEL_MAPPING, evaluate_case
+from annotation.label_information import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
+from evaluation.metrics import evaluate_case
 
 
 def _convert_idx_to_xy(idx, shape_x):
@@ -19,7 +20,7 @@ def _convert_xy_to_idx(x, y, shape_x):
 def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
     num_metrics = 6
     n_labels = len(KITS_HEC_LABEL_MAPPING)
-    segmentation_files = subfiles(folder_with_segmentations, suffix='.nii.gz', join=True)[:4]
+    segmentation_files = subfiles(folder_with_segmentations, suffix='.nii.gz', join=True)[:10]
     num_segs = len(segmentation_files)
 
     p = Pool(num_processes)
@@ -41,12 +42,26 @@ def compute_deltas(folder_with_segmentations: str, num_processes: int = 8):
     metrics = np.zeros((num_segs, num_segs, n_labels, num_metrics))
     for i, r in zip(indexes, results):
         x, y = _convert_idx_to_xy(i, num_segs)
-        for j, k in enumerate(KITS_HEC_LABEL_MAPPING.keys()):
+        for j, k in enumerate(HEC_NAME_LIST):
+            assert np.sum(metrics[x, y, j]) == 0
+            assert np.sum(metrics[y, x, j]) == 0
             metrics[x, y, j] = r[0][k]
             metrics[y, x, j] = r[0][k]
 
     # delta has shape (n_segmentations x n_labels x n_metrics)
+    # metrics can be np.nan if both pred and ref correctly predicted an empty label. Only sum over non-nan entries
     deltas = np.zeros((num_segs, n_labels, num_metrics))
     for n in range(num_segs):
-        deltas[n] = np.sum(metrics[n], axis=0) / (num_segs - 1)
+        num_nans = np.sum(np.isnan(metrics[n]), axis=0)
+        deltas[n] = np.nansum(metrics[n], axis=0) / (num_segs - num_nans - 1)
     return deltas
+
+
+def compute_all_deltas(data_directory: str, num_processes: int = 8):
+    case_folders = subfiles(data_directory, prefix='case_', join=True)
+    for c in case_folders:
+        compute_deltas(c, num_processes)
+
+
+if __name__ == '__main__':
+    compute_all_deltas('/home/fabian/http_git/kits21/data', 4)
