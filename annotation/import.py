@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 import os
 import shutil
+import sys
 
 import numpy as np
 import nibabel as nib
@@ -54,12 +55,17 @@ def get_all_delineations(instance_dir):
 
 
 def get_most_recent_save(parent_dir):
+    # Get latest file and list of remainder
     try:
-        return sorted([s for s in parent_dir.glob("*")])[-1]
+        srt_files = sorted([s for s in parent_dir.glob("*")])
+        latest = srt_files[-1]
     except Exception as e:
         print()
         print("Error finding most recent save in", str(parent_dir))
         raise(e)
+
+    return latest
+    
 
 
 def update_raw(delineation_path, case_id, in_test_set):
@@ -232,6 +238,19 @@ def aggregate_case(case_id):
         )
 
 
+def cleanup(case_dir):
+    case_dir = Path(__file__).parent.parent / "data" / case_dir.name / "raw"
+    region_dirs = get_all_region_dirs(case_dir)
+    for region_dir in region_dirs:
+        instance_dirs = get_all_instance_dirs(region_dir)
+        for instance_dir in instance_dirs:
+            sessions = [x for x in instance_dir.glob("*")]
+            for sess in sessions:
+                srt_files = sorted([s for s in sess.glob("*")])
+                for f in srt_files[:-1]:
+                    f.unlink()
+
+
 def main(args):
     cache = load_json(CACHE_FILE)
     cli = True
@@ -274,6 +293,9 @@ def main(args):
 
         if reaggregate:
             aggregate_case(case_dir.name)
+        
+        # Clean up all unused raw files
+        cleanup(case_dir)
 
 
 parser = argparse.ArgumentParser()
