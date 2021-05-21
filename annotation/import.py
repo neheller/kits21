@@ -1,21 +1,26 @@
 import argparse
 from pathlib import Path
-import os
 import shutil
 
 import numpy as np
 import nibabel as nib
 
 from annotation.postprocessing import delineation_to_seg, load_json, write_json
+from configuration import TESTING_DIR, SRC_DIR, TRAINING_DIR, CACHE_FILE, KITS_LABEL_NAMES, HEC_CONSTRUCTION_ORDER
 
 
-TRAINING_DIR = Path(__file__).parent.parent / "data"
-TESTING_DIR = Path(os.environ["KITS21_TEST_DIR"]).resolve(strict=True)
-SRC_DIR = Path(os.environ["KITS21_SERVER_DATA"]).resolve(strict=True)
-CACHE_FILE = Path(__file__).parent / "cache.json"
+def _check_testing_dir_available() -> None:
+    assert TESTING_DIR is not None, "KITS21_TEST_DIR does not exist on your system. You are probably not supposed " \
+                                    "to run this code :-)"
+
+
+def _check_src_dir_available() -> None:
+    assert SRC_DIR is not None, "KITS21_SERVER_DATA does not exist on your system. You are probably not supposed " \
+                                "to run this code :-)"
 
 
 def get_case_dir(case):
+    _check_src_dir_available()
     # TODO remove hardcoding -- test both to find it
     page = int(case // 50)
     tst = "training_data"
@@ -66,6 +71,7 @@ def update_raw(delineation_path, case_id, in_test_set):
     # Get parent directory (create if necessary)
     destination_parent = TRAINING_DIR / case_id
     if in_test_set:
+        _check_testing_dir_available()
         destination_parent = TESTING_DIR / case_id
     if not destination_parent.exists():
         destination_parent.mkdir()
@@ -93,6 +99,7 @@ def get_artery_localization(delineation_path):
 
 def get_image_path(case_id, in_test_set):
     if in_test_set:
+        _check_testing_dir_available()
         return (TESTING_DIR / case_id / "imaging.nii.gz").resolve(strict=True)
     else:
         return (TRAINING_DIR / case_id / "imaging.nii.gz").resolve(strict=True)
@@ -107,6 +114,7 @@ def save_segmentation(case_id, region_type, delineation_path, n1img, in_test_set
     # Get parent directory (create if necessary)
     destination_parent = TRAINING_DIR / case_id
     if in_test_set:
+        _check_testing_dir_available()
         destination_parent = TESTING_DIR / case_id
     if not destination_parent.exists():
         destination_parent.mkdir()
@@ -191,19 +199,11 @@ def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
 def aggregate_case(case_id):
     segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
 
-    ord_id = [
-        ("ureter", 2),
-        ("vein", 4),
-        ("artery", 3),
-        ("kidney", 1),
-        ("cyst", 5),
-        ("tumor", 6)
-    ]
-
     affine = None
     agg = None
-    for oi in ord_id:
-        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="or")
+    for labelid in HEC_CONSTRUCTION_ORDER:
+        label_name = KITS_LABEL_NAMES[labelid]
+        agg, affine = aggregate(segs, label_name, labelid, agg, affine, agtype="or")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
@@ -212,8 +212,9 @@ def aggregate_case(case_id):
 
     affine = None
     agg = None
-    for oi in ord_id:
-        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="and")
+    for labelid in HEC_CONSTRUCTION_ORDER:
+        label_name = KITS_LABEL_NAMES[labelid]
+        agg, affine = aggregate(segs, label_name, labelid, agg, affine, agtype="and")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
@@ -222,8 +223,9 @@ def aggregate_case(case_id):
 
     affine = None
     agg = None
-    for oi in ord_id:
-        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="maj")
+    for labelid in HEC_CONSTRUCTION_ORDER:
+        label_name = KITS_LABEL_NAMES[labelid]
+        agg, affine = aggregate(segs, label_name, labelid, agg, affine, agtype="maj")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),

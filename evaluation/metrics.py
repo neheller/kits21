@@ -5,7 +5,7 @@ import numpy as np
 from medpy.metric import dc, jc
 from medpy.metric.binary import __surface_distances
 
-from annotation.label_information import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
+from configuration import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
 
 
 def compute_metrics(segmentation_predicted: np.ndarray, segmentation_reference: np.ndarray,

@@ -2,7 +2,7 @@ import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import *
 from multiprocessing import Pool
 
-from annotation.label_information import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
+from configuration import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
 from evaluation.metrics import evaluate_case
 
 

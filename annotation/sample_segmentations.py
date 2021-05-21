@@ -8,7 +8,7 @@ from nnunet.dataset_conversion.Task134_cryoET import flood_fill_hull, morphology
 from skimage.morphology import binary_closing, ball
 from skimage.transform import resize
 
-from annotation.label_information import HEC_CONSTRUCTION_ORDER
+from configuration import HEC_CONSTRUCTION_ORDER
 
 
 def build_segmentation_replace_ureter_with_kidney_label_in_convhull(kidney_files, tumor_files, cyst_files, ureter_files,
