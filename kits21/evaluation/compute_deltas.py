@@ -3,6 +3,7 @@ from batchgenerators.utilities.file_and_folder_operations import *
 from multiprocessing import Pool
 
 from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
+from kits21.configuration.paths import TRAINING_DIR
 from kits21.evaluation.metrics import evaluate_case
 
 
@@ -64,4 +65,4 @@ def compute_all_deltas(data_directory: str, num_processes: int = 8):
 
 
 if __name__ == '__main__':
-    compute_all_deltas('/home/fabian/http_git/kits21/data', 4)
+    compute_all_deltas(TRAINING_DIR, 4)

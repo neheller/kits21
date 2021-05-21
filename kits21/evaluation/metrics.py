@@ -83,7 +83,7 @@ def compute_metrics(segmentation_predicted: np.ndarray, segmentation_reference: 
     return 1 - dice, 1 - jaccard, srvd, avd, assd, rmsd
 
 
-def evaluate_case(fname_pred: str, fname_ref: str) -> Dict[str, Tuple[float, float, float, float, float, float]]:
+def evaluate_case(fname_pred: str, fname_ref: str) -> np.ndarray:
     """
     Takes two .nii.gz segmentation maps and computes the KiTS metrics for all HECs. The return value of this function
     is a dictionoary mapping each HEC (by its name as defined in KITS_HEC_LABEL_MAPPING) to a tuple of metrics.

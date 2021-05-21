@@ -10,7 +10,6 @@ from kits21.configuration.labels import KITS_LABEL_NAMES, HEC_CONSTRUCTION_ORDER
 from kits21.configuration.paths import TESTING_DIR, SRC_DIR, TRAINING_DIR, CACHE_FILE
 
 
-
 def _check_testing_dir_available() -> None:
     assert TESTING_DIR is not None, "KITS21_TEST_DIR does not exist on your system. You are probably not supposed " \
                                     "to run this code :-)"
