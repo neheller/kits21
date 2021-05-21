@@ -2,7 +2,7 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-**Current dataset version: `1.0.2`** (see [changelog](changelog.md))
+**Current dataset version: `1.0.3`** (see [changelog](changelog.md))
 
 <img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
 
@@ -35,14 +35,24 @@ Start by cloning this repository, but note that **the imaging is not stored here
 
 If you would like to request another implementation of `get_imaging`, please [submit an issue](https://github.com/neheller/kits21/issues/new).
 
+### Installation
+
+In order to use this repository you need to install it. Please run 
+
+`pip install -e .` 
+
+in the main directory 
+(the one that has the setup.py file in it). Please do not omit `-e`! This is important to ensure that the 
+data is being downloaded in the correct location.
+
 ## Folder Structure
 
-### `data/`
+### `kits21/data/`
 
 **NOTE** at present, no data has been imported yet, but the imaging for the first 300 training cases can still be retrieved using any of the `get_imaging` scripts.
 
 ```text
-data/
+kits21/data/
 ├── case_00000/
 |   ├── raw/
 |   ├── segmentations/
@@ -85,11 +95,11 @@ along with similar collections for `ureter`, `artery`, `vein`, `cyst`, and `tumo
 - **AND**: A voxel-wise "and" or "intersection" operator
 - **MAJ**: Voxel-wise majority voting
 
-### `starter_code/`
+### `kits21/starter_code/`
 
 This folder holds code snippets for viewing and manipulating the data. See [Usage](#Usage) for more information.
 
-### `annotation/`
+### `kits21/annotation/`
 
 This folder contains code used to process and import data from the annotation platform. As a participant, there's no reason you should need to run this code, it's only meant to serve as a reference.
 
