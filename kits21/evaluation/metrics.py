@@ -2,14 +2,16 @@ from multiprocessing import Pool
 from typing import Tuple, Union, Dict
 import SimpleITK as sitk
 import numpy as np
+from batchgenerators.utilities.file_and_folder_operations import isdir, subfiles, join
+from kits21.configuration.paths import TRAINING_DIR
 from medpy.metric import dc, jc
 from medpy.metric.binary import __surface_distances
 
 from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST
 
 
-def compute_metrics(segmentation_predicted: np.ndarray, segmentation_reference: np.ndarray,
-                    label: Union[int, Tuple[int, ...]], spacing: Tuple[float, float, float] = (1, 1, 1)) \
+def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_reference: np.ndarray,
+                              label: Union[int, Tuple[int, ...]], spacing: Tuple[float, float, float] = (1, 1, 1)) \
         -> Tuple[float, float, float, float, float, float]:
     """
 
@@ -83,7 +85,7 @@ def compute_metrics(segmentation_predicted: np.ndarray, segmentation_reference: 
     return 1 - dice, 1 - jaccard, srvd, avd, assd, rmsd
 
 
-def evaluate_case(fname_pred: str, fname_ref: str) -> np.ndarray:
+def compute_metrics_for_case(fname_pred: str, fname_ref: str) -> np.ndarray:
     """
     Takes two .nii.gz segmentation maps and computes the KiTS metrics for all HECs. The return value of this function
     is a dictionoary mapping each HEC (by its name as defined in KITS_HEC_LABEL_MAPPING) to a tuple of metrics.
@@ -115,7 +117,7 @@ def evaluate_case(fname_pred: str, fname_ref: str) -> np.ndarray:
 
     metrics = np.zeros((6, 6), dtype=float)
     for i, hec in enumerate(HEC_NAME_LIST):
-        metrics[i] = compute_metrics(img_pred_npy, img_gt_npy, KITS_HEC_LABEL_MAPPING[hec], tuple(spacing_pred))
+        metrics[i] = compute_metrics_for_label(img_pred_npy, img_gt_npy, KITS_HEC_LABEL_MAPPING[hec], tuple(spacing_pred))
 
     return metrics
 
@@ -126,8 +128,35 @@ def compute_gauged_score(computed_metrics: np.ndarray, corresponding_deltas: np.
     assert all(i == j for i, j in zip((6, 6), computed_metrics.shape[1:])), "computed_metrics must have shape " \
                                                                             "(N, 6, 6) (n_references x labels x metrics)"
     scaled_errors = computed_metrics / corresponding_deltas
-    gauged_score = 100 - 10 * np.mean(scaled_errors)
+    gauged_score = 100 - 10 * scaled_errors
     return gauged_score
+
+
+def evaluate_case(predicted_segmentation: str, folder_with_samples: str, num_processes: int = 3):
+    assert isdir(folder_with_samples)
+    samples = subfiles(folder_with_samples, suffix='.nii.gz')
+    p = Pool(num_processes)
+    results = p.starmap(compute_metrics_for_case, zip([predicted_segmentation] * len(samples), samples))
+    p.close()
+    p.join()
+    metrics = np.vstack([i[None] for i in results])
+    deltas = np.load(join(folder_with_samples, 'deltas.npz'))['deltas']
+    score = compute_gauged_score(metrics, deltas)
+    return score
+
+
+def evaluate_predictions(folder_with_predictions: str, num_processes: int = 3):
+    folder_with_predictions = '/home/fabian/temp/135_3d_fullres_dasha'
+    caseids = [i[:-7] for i in subfiles(folder_with_predictions, suffix='.nii.gz', join=False)]
+    scores = []
+    for c in caseids:
+        scores.append(evaluate_case(
+            join(folder_with_predictions, c + '.nii.gz'),
+            join(TRAINING_DIR, c, 'segmentation_samples'),
+            num_processes)
+        )
+    return np.mean(scores)
+
 
 
 if __name__ == '__main__':
@@ -139,7 +168,7 @@ if __name__ == '__main__':
     start = time()
     for ref_id in range(10):
         img_ref = '/home/fabian/http_git/kits21/data/case_00000/segmentation_samples/sample_%04.0d.nii.gz' % ref_id
-        res.append(p.starmap_async(evaluate_case, ((
+        res.append(p.starmap_async(compute_metrics_for_case, ((
             img_pred, img_ref
                                                    ), )))
     res = np.vstack([np.array(i.get()) for i in res])
