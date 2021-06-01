@@ -699,4 +699,4 @@ def delineation_to_seg(region_type, image_path, delineation_path, localization_p
     seg = inflate_seg_to_image_size(cbox, cropped_seg)
 
     # Return the seg in nifti format
-    return nib.Nifti1Image(seg, img_nib.affine)
+    return nib.Nifti1Image(seg.astype(np.uint8), img_nib.affine)

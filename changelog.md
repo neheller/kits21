@@ -4,7 +4,7 @@ This file is meant to keep track of which annotations were changed in each datas
 
 ## [1.0.3] - May 21, 2021
 
-- Full annotations for 
+- Full annotations for
   - `case_00036`
   - `case_00037`
   - `case_00038`
