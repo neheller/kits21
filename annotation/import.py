@@ -199,12 +199,9 @@ def aggregate_case(case_id):
     segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
 
     ord_id = [
-        ("ureter", 2),
-        ("vein", 4),
-        ("artery", 3),
         ("kidney", 1),
-        ("cyst", 5),
-        ("tumor", 6)
+        ("cyst", 3),
+        ("tumor", 2)
     ]
 
     affine = None
@@ -270,6 +267,9 @@ def main(args):
             region_dirs = get_all_region_dirs(case_dir)
 
         for region_dir in region_dirs:
+            # Skip regions no longer being used
+            if region_dir.name in ["artery", "vein", "ureter"]:
+                continue
             if cli and args.instance is not None:
                 instance_dirs = [get_instance_dir(region_dir, args.instance - 1)]
             else:

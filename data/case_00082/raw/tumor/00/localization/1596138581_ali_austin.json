@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "e1d50700-339e-4a16-b391-85419fe3fd66",
+      "new": true,
+      "parent_id": null,
+      "created_by": "ali_austin",
+      "created_at": "2020-07-30T19:49:41Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          256.9207317073171,
+          279.6036585365854,
+          25.0
+        ],
+        [
+          373.9939024390244,
+          361.5548780487805,
+          34.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 6,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1596138581_ali_austin.json"
+}
