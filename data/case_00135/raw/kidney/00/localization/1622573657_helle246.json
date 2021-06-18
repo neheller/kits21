@@ -1,0 +1,263 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "593718a9-195d-4af7-84a4-18b838dc1f63",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-27T19:30:53Z",
+      "deprecated": true,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          136.1717988226486,
+          278.05442430467144,
+          86
+        ],
+        [
+          242.44557569532859,
+          388.5,
+          331
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": null,
+      "text_payload": "",
+      "containing_box": {
+        "tlx": 130.1717988226486,
+        "tly": 272.05442430467144,
+        "brx": 248.44557569532859,
+        "bry": 394.5,
+        "tlz": 86,
+        "brz": 331
+      }
+    },
+    {
+      "id": "af8fa1eb-bd20-4ff4-a647-6fea639419ff",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-27T19:30:53Z",
+      "deprecated": true,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": 0,
+      "text_payload": ""
+    },
+    {
+      "id": "5529ffbe-355b-43d5-a906-9d2fcccf4e22",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-05-27T19:30:53Z",
+      "deprecated": true,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": 2,
+      "frame": 0,
+      "text_payload": ""
+    },
+    {
+      "id": "929597f4-c942-4a3e-881e-4e17e8f656e6",
+      "new": true,
+      "parent_id": "5529ffbe-355b-43d5-a906-9d2fcccf4e22",
+      "created_by": "helle246",
+      "created_at": "2021-05-27T19:30:53Z",
+      "deprecated": true,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": 2,
+      "frame": 0,
+      "text_payload": ""
+    },
+    {
+      "id": "bec3b53f-acf2-4585-a75c-ce7a35d914c1",
+      "new": true,
+      "parent_id": "af8fa1eb-bd20-4ff4-a647-6fea639419ff",
+      "created_by": "helle246",
+      "created_at": "2021-05-27T19:30:53Z",
+      "deprecated": true,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": 0,
+      "text_payload": ""
+    },
+    {
+      "id": "762e37ce-96e1-491b-8be4-f5b45efeb7fe",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-01T18:51:23.524Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 154,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "6d69d82f-931c-416f-bf90-c2420dad1f8c",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-01T18:51:31.434Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 254,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "a8e35106-6423-4dc5-a9b5-6679a4f32d10",
+      "new": true,
+      "parent_id": "593718a9-195d-4af7-84a4-18b838dc1f63",
+      "created_by": "helle246",
+      "created_at": "2021-05-27T19:30:53Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          136.1717988226486,
+          278.05442430467144,
+          86
+        ],
+        [
+          244.5136668385766,
+          386.3104693140794,
+          325
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": null,
+      "text_payload": "",
+      "containing_box": {
+        "tlx": 130.1717988226486,
+        "tly": 272.05442430467144,
+        "brx": 250.5136668385766,
+        "bry": 392.3104693140794,
+        "tlz": 86,
+        "brz": 325
+      }
+    }
+  ]
+}
