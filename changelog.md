@@ -2,6 +2,12 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
+## [2.0.0] - June 17, 2021
+
+- Changed import and aggregation code to ignore ureter, artery, and vein regions
+- Deleted existing ureter, artery, and vein instances that were segmented
+- New annotations for cases 50 - 92
+
 ## [1.0.3] - May 21, 2021
 
 - Full annotations for
