@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "bf44db12-2a3f-4771-951d-c8adbf5cf63c",
+      "new": true,
+      "parent_id": null,
+      "created_by": "ben_byun",
+      "created_at": "2020-08-06T19:23:06Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          67.5,
+          199.28571428571428,
+          75.0
+        ],
+        [
+          317.67857142857144,
+          400.98214285714283,
+          129.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 2,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1596741786_ben_byun.json"
+}

@@ -1,0 +1,34 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "e8fdd769-9419-41a9-8e01-157c27db7604",
+      "new": true,
+      "parent_id": null,
+      "created_by": "ed_walczak",
+      "created_at": "2021-01-10T17:40:54Z",
+      "deprecated": false,
+      "spatial_type": "global",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 9,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 10,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 11,
+          "confidence": 0.0
+        }
+      ],
+      "text_payload": "",
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null
+    }
+  ],
+  "import_fname": "1610300454_ed_walczak.json"
+}

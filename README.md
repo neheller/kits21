@@ -2,7 +2,7 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-**Current dataset version: `1.0.3`** (see [changelog](changelog.md))
+**Current dataset version: `2.0.0`** (see [changelog](changelog.md))
 
 <img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
 
@@ -18,6 +18,7 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ## News
 
+- **June 17, 2021**: We've changed the set of classes for the challenge. See [this forum post](https://discourse.kits-challenge.org/t/kits21-challenge-update/354) for details
 - **Apr 7, 2021**: We've started using tags and a changelog to keep track of the dataset version
 - **Mar 23, 2021**: A draft of the postprocessing code and some preliminary data has been merged into the master branch.
 - **Mar 9, 2021**: A preliminary challenge homepage has been published at [kits-challenge.org](https://kits21.kits-challenge.org). You can keep tabs on the data annotation process there.

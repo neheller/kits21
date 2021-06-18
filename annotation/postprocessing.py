@@ -464,7 +464,7 @@ def interpolate_step(bef_i, aft_i, drw_c, step):
     return drw_c
 
 
-def interpolate_drawings(drw_c, step, arb_bdry):
+def interpolate_drawings(drw_c, step, arb_bdry=False):
     # Get inclusive start and end frames
     start = 0
     while start < drw_c.shape[0]:
@@ -501,9 +501,7 @@ def get_blur_kernel_d(affine):
 
 
 def get_threshold(region_type):
-    # TODO tune this
-    if region_type == "ureter":
-        return -50
+    # This seems to work -- no need to adjust based on region now that ureter is gone
     return -30
 
 
@@ -607,7 +605,7 @@ def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
                         bound = "inf"
             if bound is None:
                 continue
-            frame = ann["frame"]
+            frame = int(ann["frame"])
             if bound == "sup":
                 if first_hilum_slice is None or frame < first_hilum_slice:
                     first_hilum_slice = frame - cbox["zmin"]
@@ -615,10 +613,16 @@ def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
                 if last_hilum_slice is None or frame > last_hilum_slice:
                     last_hilum_slice = frame - cbox["zmin"]
 
-    for ind in range(first_hilum_slice, last_hilum_slice+1):
-        # TODO send dln here and use custom hilum if possible
-        hlm = find_hilum_in_slice(thresholded_c[ind].copy(), side)
-        apply_hilum_to_slice(thresholded_c, blr_c, threshold, ind, hlm)
+    if first_hilum_slice is not None and last_hilum_slice is not None:
+        for ind in range(max(first_hilum_slice, 0), min(last_hilum_slice+1, thresholded_c.shape[0]-1)):
+            # TODO send dln here and use custom hilum if possible
+            hlm = find_hilum_in_slice(thresholded_c[ind].copy(), side)
+            apply_hilum_to_slice(thresholded_c, blr_c, threshold, ind, hlm)
+    else:
+        if first_hilum_slice is None:
+            print("First hilum slice could not be determined")
+        if last_hilum_slice is None:
+            print("Last hilum slice could not be determined")
 
     return thresholded_c
 
@@ -631,7 +635,7 @@ def get_side(cbox):
 
 def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None, cbox=None):
     # Interpolate drawings
-    cropped_drw = interpolate_drawings(cropped_drw, step, region_type in ["artery","vein","ureter"])
+    cropped_drw = interpolate_drawings(cropped_drw, step)
 
     # Send tensors to GPU
     img_d = torch.from_numpy(cropped_img).to("cuda:0")
@@ -699,4 +703,4 @@ def delineation_to_seg(region_type, image_path, delineation_path, localization_p
     seg = inflate_seg_to_image_size(cbox, cropped_seg)
 
     # Return the seg in nifti format
-    return nib.Nifti1Image(seg, img_nib.affine)
+    return nib.Nifti1Image(seg.astype(np.uint8), img_nib.affine)
