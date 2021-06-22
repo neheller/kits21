@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "2b74516d-2e79-46af-bffc-2e05632cf850",
+      "new": true,
+      "parent_id": null,
+      "created_by": "david_wu",
+      "created_at": "2020-07-24T17:04:42Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          32.69230842590332,
+          171.1538578913762,
+          61.0
+        ],
+        [
+          369.2317315028264,
+          413.84203096829924,
+          87.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 3,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595610282_david_wu.json"
+}

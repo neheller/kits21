@@ -1,0 +1,93 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "4cda3c98-d6c7-4989-b09f-829fcab9331b",
+      "new": true,
+      "parent_id": null,
+      "created_by": "keenan_moore",
+      "created_at": "2020-07-21T19:37:37Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          354.47368421052636,
+          257.8421052631579
+        ],
+        [
+          354.3157894736842,
+          251.6842105263158
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 1.8947368421052633,
+      "containing_box": null,
+      "frame": 75,
+      "text_payload": ""
+    },
+    {
+      "id": "7af1cc1c-ef3a-473f-99ad-1e55b9297bdb",
+      "new": true,
+      "parent_id": null,
+      "created_by": "keenan_moore",
+      "created_at": "2020-07-21T19:37:37Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          358.2413793103448,
+          264.4137931034483
+        ],
+        [
+          361.55172413793105,
+          266.89655172413796
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 1.2413793103448276,
+      "containing_box": null,
+      "frame": 75,
+      "text_payload": ""
+    },
+    {
+      "id": "824a82a8-bf03-483b-90c2-228b6d3a451b",
+      "new": true,
+      "parent_id": null,
+      "created_by": "keenan_moore",
+      "created_at": "2020-07-21T19:37:37Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          352.448275862069,
+          265.2413793103448
+        ],
+        [
+          351.0,
+          268.65517241379314
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 1.2413793103448276,
+      "containing_box": null,
+      "frame": 75,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595360257_keenan_moore.json"
+}

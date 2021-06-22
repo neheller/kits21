@@ -1,0 +1,34 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "b4b999f8-b08d-4fa7-b40a-49d460de22d9",
+      "new": true,
+      "parent_id": null,
+      "created_by": "mark_austin",
+      "created_at": "2021-02-05T18:41:29Z",
+      "deprecated": false,
+      "spatial_type": "global",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 9,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 10,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 11,
+          "confidence": 0.0
+        }
+      ],
+      "text_payload": "",
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null
+    }
+  ],
+  "import_fname": "1612550489_mark_austin.json"
+}

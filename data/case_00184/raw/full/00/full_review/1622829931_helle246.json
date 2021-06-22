@@ -1,0 +1,33 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "8b1fbdcd-3408-4a51-8538-db9244712656",
+      "new": false,
+      "parent_id": null,
+      "created_by": "sue_austin",
+      "created_at": "2021-02-02T18:01:22Z",
+      "deprecated": false,
+      "spatial_type": "global",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 9,
+          "confidence": 0
+        },
+        {
+          "class_id": 10,
+          "confidence": 1
+        },
+        {
+          "class_id": 11,
+          "confidence": 0
+        }
+      ],
+      "text_payload": "",
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null
+    }
+  ]
+}

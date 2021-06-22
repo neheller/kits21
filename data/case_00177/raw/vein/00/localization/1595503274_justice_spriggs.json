@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "018d0b7b-81c5-4017-b758-41ca774bb004",
+      "new": true,
+      "parent_id": null,
+      "created_by": "justice_spriggs",
+      "created_at": "2020-07-23T11:21:14Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          135.56603773584905,
+          210.28301886792454,
+          16.0
+        ],
+        [
+          384.62264150943395,
+          383.49056603773585,
+          54.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 4,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595503274_justice_spriggs.json"
+}

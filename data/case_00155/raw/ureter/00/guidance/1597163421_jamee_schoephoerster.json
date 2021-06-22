@@ -1,0 +1,35 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "79589b9a-dfb9-426c-b04e-9348e66bc5f0",
+      "new": true,
+      "parent_id": null,
+      "created_by": "jamee_schoephoerster",
+      "created_at": "2020-08-11T16:30:21Z",
+      "deprecated": false,
+      "spatial_type": "tbar",
+      "spatial_payload": [
+        [
+          333.8235294117647,
+          293.2352941176471
+        ],
+        [
+          332.3529411764706,
+          280.5882352941177
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 2,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 3.5294117647058822,
+      "containing_box": null,
+      "frame": 247,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1597163421_jamee_schoephoerster.json"
+}

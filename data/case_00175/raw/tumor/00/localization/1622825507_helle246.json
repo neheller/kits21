@@ -1,0 +1,44 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "393d79cb-22ec-4f99-803e-aedb1ddef2ad",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-04T16:51:28.831Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          319.2808988764045,
+          315.028822667318,
+          42
+        ],
+        [
+          394.69272105520275,
+          379.56033219345386,
+          52
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 6,
+          "confidence": 1
+        }
+      ],
+      "line_size": 2.0009179353455626,
+      "containing_box": {
+        "tlx": 313.27814507036777,
+        "tly": 309.0260688612813,
+        "brx": 400.69547486123946,
+        "bry": 385.56308599949057,
+        "tlz": 42,
+        "brz": 52
+      },
+      "frame": null,
+      "text_payload": "",
+      "annotation_meta": {}
+    }
+  ]
+}
