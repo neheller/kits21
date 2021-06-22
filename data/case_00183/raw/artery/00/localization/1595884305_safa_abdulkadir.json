@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "f632bb39-49a3-4995-9827-d698978fdad0",
+      "new": true,
+      "parent_id": null,
+      "created_by": "safa_abdulkadir",
+      "created_at": "2020-07-27T21:11:45Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          0.0,
+          104.11764705882354,
+          81.0
+        ],
+        [
+          445.14705882352945,
+          449.11764705882354,
+          168.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 3,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595884305_safa_abdulkadir.json"
+}
