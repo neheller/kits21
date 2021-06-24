@@ -2,6 +2,61 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
+## [2.0.3] - June 23, 2021
+
+- Full annotations for cases 200 - 225
+- Incomplete revisions for
+  - `case_00017`
+  - `case_00019`
+  - `case_00021`
+  - `case_00023`
+  - `case_00026`
+  - `case_00033`
+  - `case_00051`
+  - `case_00056`
+  - `case_00057`
+  - `case_00058`
+  - `case_00060`
+  - `case_00065`
+  - `case_00066`
+  - `case_00068`
+  - `case_00071`
+  - `case_00150`
+- Complete revisions for
+  - `case_00016`
+  - `case_00018`
+  - `case_00020`
+  - `case_00022`
+  - `case_00024`
+  - `case_00025`
+  - `case_00027`
+  - `case_00028`
+  - `case_00029`
+  - `case_00030`
+  - `case_00031`
+  - `case_00032`
+  - `case_00034`
+  - `case_00035`
+  - `case_00036`
+  - `case_00038`
+  - `case_00039`
+  - `case_00042`
+  - `case_00050`
+  - `case_00052`
+  - `case_00053`
+  - `case_00054`
+  - `case_00055`
+  - `case_00059`
+  - `case_00061`
+  - `case_00062`
+  - `case_00064`
+  - `case_00067`
+  - `case_00069`
+  - `case_00070`
+  - `case_00072`
+  - `case_00073`
+  - `case_00074`
+
 ## [2.0.2] - June 22, 2021
 
 - Full annotations for cases 150 - 199

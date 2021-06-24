@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "4aa3e4f6-0b9a-4b07-a7a9-a13331f6ff7d",
+      "new": true,
+      "parent_id": null,
+      "created_by": "bailey_abernathy",
+      "created_at": "2020-07-28T18:21:09Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          231.45833333333334,
+          257.70833333333337,
+          36.0
+        ],
+        [
+          448.125,
+          422.08333333333337,
+          45.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 5,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595960469_bailey_abernathy.json"
+}
