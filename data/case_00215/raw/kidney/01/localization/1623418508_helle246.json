@@ -1,0 +1,207 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "e5fbb6d1-5fa5-441e-8718-a410c17af604",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:47:59Z",
+      "deprecated": true,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          292.95526680779795,
+          243.5,
+          36
+        ],
+        [
+          390.5,
+          338.75,
+          68
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": null,
+      "text_payload": "",
+      "containing_box": {
+        "tlx": 286.95526680779795,
+        "tly": 237.5,
+        "brx": 396.5,
+        "bry": 344.75,
+        "tlz": 36,
+        "brz": 68
+      }
+    },
+    {
+      "id": "b67c4829-40bb-4fc2-9d5e-48b0305378dd",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:47:59Z",
+      "deprecated": true,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": 46,
+      "text_payload": ""
+    },
+    {
+      "id": "28f0558a-d7c8-46ea-9076-d12e14b7c4cd",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:47:59Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": 2,
+      "frame": 57,
+      "text_payload": ""
+    },
+    {
+      "id": "d040b220-9ead-4d83-b230-58e4ea98e58f",
+      "new": true,
+      "parent_id": "b67c4829-40bb-4fc2-9d5e-48b0305378dd",
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:47:59Z",
+      "deprecated": true,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": 46,
+      "text_payload": ""
+    },
+    {
+      "id": "002e21b8-716e-4406-a9c6-5eb091f2772d",
+      "new": true,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-11T13:34:54.119Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": null,
+      "containing_box": null,
+      "frame": 47,
+      "text_payload": "",
+      "annotation_meta": {}
+    },
+    {
+      "id": "20434dab-ef4c-4c39-af7e-591e08cf7fef",
+      "new": true,
+      "parent_id": "e5fbb6d1-5fa5-441e-8718-a410c17af604",
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:47:59Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          294.7878787878788,
+          244.7946127946128,
+          36
+        ],
+        [
+          390.5,
+          338.75,
+          66
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": null,
+      "text_payload": "",
+      "containing_box": {
+        "tlx": 288.7878787878788,
+        "tly": 238.7946127946128,
+        "brx": 396.5,
+        "bry": 344.75,
+        "tlz": 36,
+        "brz": 66
+      }
+    }
+  ]
+}

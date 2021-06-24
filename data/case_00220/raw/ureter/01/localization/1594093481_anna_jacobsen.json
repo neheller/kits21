@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "b425ac58-5fd1-4958-ba47-39f0d5f5de14",
+      "new": true,
+      "parent_id": null,
+      "created_by": "anna_jacobsen",
+      "created_at": "2020-07-07T03:44:41Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          213.21428571428572,
+          205.17857142857142,
+          56.0
+        ],
+        [
+          458.0357142857143,
+          402.05357142857144,
+          92.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 2,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1594093481_anna_jacobsen.json"
+}
