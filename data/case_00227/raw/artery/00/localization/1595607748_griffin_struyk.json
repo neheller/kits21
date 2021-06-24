@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "8a1e8a9b-ecfb-4e50-8e09-0611d80391d0",
+      "new": true,
+      "parent_id": null,
+      "created_by": "griffin_struyk",
+      "created_at": "2020-07-24T16:22:28Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          34.285714285714285,
+          155.86466165413532,
+          33.0
+        ],
+        [
+          422.25563909774434,
+          374.4360902255639,
+          78.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 3,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595607748_griffin_struyk.json"
+}
