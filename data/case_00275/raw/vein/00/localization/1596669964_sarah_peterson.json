@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "d4b8ecd0-ca86-4bf2-9934-345b5fc9182d",
+      "new": true,
+      "parent_id": null,
+      "created_by": "sarah_peterson",
+      "created_at": "2020-08-05T23:26:04Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          157.45222929936307,
+          242.42037439042596,
+          26.0
+        ],
+        [
+          360.6372611464968,
+          355.7964890401075,
+          52.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 4,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1596669964_sarah_peterson.json"
+}

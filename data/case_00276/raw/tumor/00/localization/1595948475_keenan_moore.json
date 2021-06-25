@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "43290f29-4767-4939-9f88-48792187563b",
+      "new": true,
+      "parent_id": null,
+      "created_by": "keenan_moore",
+      "created_at": "2020-07-28T15:01:15Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          95.7983193277311,
+          227.39495798319328,
+          198.0
+        ],
+        [
+          202.94117647058823,
+          316.38655462184875,
+          251.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 6,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1595948475_keenan_moore.json"
+}

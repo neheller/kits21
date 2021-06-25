@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "c15ca6f3-f5ee-4958-adbd-f771eecc9f2d",
+      "new": true,
+      "parent_id": null,
+      "created_by": "chris_hornung",
+      "created_at": "2020-08-05T19:02:00Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          81.97183098591549,
+          159.7183098591549,
+          40.0
+        ],
+        [
+          396.76056338028167,
+          346.056338028169,
+          73.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 3,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1596654120_chris_hornung.json"
+}
