@@ -1,0 +1,34 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "60be85de-1ab6-4b9f-8e5b-3a3981295b73",
+      "new": true,
+      "parent_id": null,
+      "created_by": "sue_austin",
+      "created_at": "2021-01-11T15:58:39Z",
+      "deprecated": false,
+      "spatial_type": "global",
+      "spatial_payload": [],
+      "classification_payloads": [
+        {
+          "class_id": 9,
+          "confidence": 0.0
+        },
+        {
+          "class_id": 10,
+          "confidence": 1.0
+        },
+        {
+          "class_id": 11,
+          "confidence": 0.0
+        }
+      ],
+      "text_payload": "",
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null
+    }
+  ],
+  "import_fname": "1610380719_sue_austin.json"
+}

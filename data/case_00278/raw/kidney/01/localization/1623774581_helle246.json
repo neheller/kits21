@@ -1,0 +1,105 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "3b4de576-5546-4298-aef8-18be5f158b5c",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:53:31Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          291,
+          190.25562456933366,
+          33
+        ],
+        [
+          459.0777087639997,
+          360.16666666666663,
+          91
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 1
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": null,
+      "text_payload": "",
+      "containing_box": {
+        "tlx": 285,
+        "tly": 184.25562456933366,
+        "brx": 465.0777087639997,
+        "bry": 366.16666666666663,
+        "tlz": 33,
+        "brz": 91
+      }
+    },
+    {
+      "id": "fc5310f6-208d-47d1-a2d2-342594ec647b",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:53:31Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 1
+        },
+        {
+          "class_id": 8,
+          "confidence": 0
+        }
+      ],
+      "line_size": 2,
+      "frame": 54,
+      "text_payload": ""
+    },
+    {
+      "id": "2cb77cb8-8196-4fb5-9b01-090debf93f28",
+      "new": false,
+      "parent_id": null,
+      "created_by": "helle246",
+      "created_at": "2021-06-03T11:53:31Z",
+      "deprecated": false,
+      "spatial_type": "whole-image",
+      "spatial_payload": null,
+      "classification_payloads": [
+        {
+          "class_id": 1,
+          "confidence": 0
+        },
+        {
+          "class_id": 7,
+          "confidence": 0
+        },
+        {
+          "class_id": 8,
+          "confidence": 1
+        }
+      ],
+      "line_size": 2,
+      "frame": 74,
+      "text_payload": ""
+    }
+  ]
+}
