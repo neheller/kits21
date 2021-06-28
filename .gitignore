@@ -1,2 +1,9 @@
-data/*/imaging.nii.gz
+kits21/data/*/imaging.nii.gz
 *__pycache__*
+
+.idea
+
+kits21/data/*/segmentation_samples*
+
+*.egg-info
+*.vscode*
