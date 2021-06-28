@@ -2,6 +2,9 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
+## [2.1] - June 28, 2021
+- make kits21 a python package
+
 ## [2.0.6] - June 26, 2021
 
 - Full Annotations for cases 277 - 299
