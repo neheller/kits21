@@ -26,3 +26,13 @@ KITS_LABEL_NAMES = {
     5: "cyst",
     6: "tumor"
 }
+
+# values are not final!
+HEC_NSD_TOLERANCES_MM = {
+    'kidney_and_mass': 2,
+    'mass': 2,
+    'tumor': 2,
+}
+
+# this determines which reference file we use for evaluation
+GT_SEGM_FNAME = 'aggregated_MAJ_seg.nii.gz'
