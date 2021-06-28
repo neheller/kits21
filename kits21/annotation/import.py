@@ -6,6 +6,7 @@ import nibabel as nib
 import numpy as np
 
 from kits21.annotation.postprocessing import delineation_to_seg, load_json, write_json
+from kits21.configuration.labels import KITS_LABEL_NAMES, LABEL_AGGREGATION_ORDER
 from kits21.configuration.paths import SRC_DIR, TRAINING_DIR, TESTING_DIR, CACHE_FILE
 
 
@@ -190,16 +191,10 @@ def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
 def aggregate_case(case_id):
     segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
 
-    ord_id = [
-        ("kidney", 1),
-        ("cyst", 3),
-        ("tumor", 2)
-    ]
-
     affine = None
     agg = None
-    for oi in ord_id:
-        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="or")
+    for label_id in LABEL_AGGREGATION_ORDER:
+        agg, affine = aggregate(segs, KITS_LABEL_NAMES[label_id], label_id, agg, affine, agtype="or")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
@@ -208,8 +203,8 @@ def aggregate_case(case_id):
 
     affine = None
     agg = None
-    for oi in ord_id:
-        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="and")
+    for label_id in LABEL_AGGREGATION_ORDER:
+        agg, affine = aggregate(segs, KITS_LABEL_NAMES[label_id], label_id, agg, affine, agtype="and")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
@@ -218,8 +213,8 @@ def aggregate_case(case_id):
 
     affine = None
     agg = None
-    for oi in ord_id:
-        agg, affine = aggregate(segs, oi[0], oi[1], agg, affine, agtype="maj")
+    for label_id in LABEL_AGGREGATION_ORDER:
+        agg, affine = aggregate(segs, KITS_LABEL_NAMES[label_id], label_id, agg, affine, agtype="maj")
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
