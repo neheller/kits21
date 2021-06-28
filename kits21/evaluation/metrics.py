@@ -1,3 +1,4 @@
+import os.path
 from multiprocessing import Pool
 from typing import Tuple, Union, Dict, List
 import SimpleITK as sitk
@@ -23,7 +24,7 @@ def construct_HEC_from_segmentation(segmentation: np.ndarray, label: Union[int, 
 
 def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_reference: np.ndarray,
                               label: Union[int, Tuple[int, ...]], spacing: Tuple[float, float, float],
-                              nsd_tolerance_mm: float) \
+                              nsd_tolerance_mm: Union[float, Tuple[float, ...]]) \
         -> Tuple[float, float]:
     """
     :param segmentation_predicted: segmentation map (np.ndarray) with int values representing the predicted segmentation
@@ -45,17 +46,30 @@ def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_r
 
     # dice and jaccard are not defined if both are empty ( 0/0 situation)
     if gt_empty and pred_empty:
-        dice = np.nan
+        dice = 1
     else:
         dice = dc(mask_pred, mask_gt)
 
     if gt_empty and pred_empty:
-        nsd = np.nan
+        nsds = [1]
     else:
         dist = compute_surface_distances(mask_gt, mask_pred, spacing)
-        nsd = compute_surface_dice_at_tolerance(dist, nsd_tolerance_mm)
+        distances_gt_to_pred = dist["distances_gt_to_pred"]
+        distances_pred_to_gt = dist["distances_pred_to_gt"]
+        surfel_areas_gt = dist["surfel_areas_gt"]
+        surfel_areas_pred = dist["surfel_areas_pred"]
+        if not isinstance(nsd_tolerance_mm, (tuple, list, np.ndarray)):
+            nsd_tolerance_mm = (nsd_tolerance_mm, )
+        nsds = []
+        for th in nsd_tolerance_mm:
+            overlap_gt = np.sum(surfel_areas_gt[distances_gt_to_pred <= th])
+            overlap_pred = np.sum(surfel_areas_pred[distances_pred_to_gt <= th])
+            nsds.append((overlap_gt + overlap_pred) / (np.sum(surfel_areas_gt) + np.sum(surfel_areas_pred)))
 
-    return dice, nsd
+    if len(nsds) == 1:
+        nsds = nsds[0]
+
+    return dice, nsds
 
 
 def compute_metrics_for_case(fname_pred: str, fname_ref: str) -> np.ndarray:
@@ -105,8 +119,8 @@ def evaluate_predictions(folder_with_predictions: str, num_processes: int = 3) \
     """
     p = Pool(num_processes)
 
-    predicted_segmentation_files = subfiles(folder_with_predictions, suffix='.nii.gz', join=False)
-    caseids = [i[:-7] for i in predicted_segmentation_files]
+    predicted_segmentation_files = subfiles(folder_with_predictions, suffix='.nii.gz', join=True)
+    caseids = [os.path.basename(i)[:-7] for i in predicted_segmentation_files]
 
     params = []
     for c in caseids:
