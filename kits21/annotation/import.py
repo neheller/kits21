@@ -1,22 +1,18 @@
 import argparse
-from pathlib import Path
-import os
 import shutil
-import sys
+from pathlib import Path
 
-import numpy as np
 import nibabel as nib
+import numpy as np
 
-from annotation.postprocessing import delineation_to_seg, load_json, write_json
-
-
-TRAINING_DIR = Path(__file__).parent.parent / "data"
-TESTING_DIR = Path(os.environ["KITS21_TEST_DIR"]).resolve(strict=True)
-SRC_DIR = Path(os.environ["KITS21_SERVER_DATA"]).resolve(strict=True)
-CACHE_FILE = Path(__file__).parent / "cache.json"
+from kits21.annotation.postprocessing import delineation_to_seg, load_json, write_json
+from kits21.configuration.paths import SRC_DIR, TRAINING_DIR, TESTING_DIR, CACHE_FILE
 
 
 def get_case_dir(case):
+    assert SRC_DIR is not None, "SRC_DIR was none, this is most likely due to KITS21_SERVER_DATA not being in your " \
+                                "environment variables. This functionality is intended to be used only by the " \
+                                "KiTS organizers."
     # TODO remove hardcoding -- test both to find it
     page = int(case // 50)
     tst = "training_data"
@@ -65,7 +61,6 @@ def get_most_recent_save(parent_dir):
         raise(e)
 
     return latest
-    
 
 
 def update_raw(delineation_path, case_id, in_test_set):
@@ -194,7 +189,6 @@ def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
     return agg, affine
 
 
-
 def aggregate_case(case_id):
     segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
 
@@ -298,13 +292,14 @@ def main(args):
         cleanup(case_dir)
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--case", help="The index of the case to import", type=int)
-parser.add_argument("-r", "--region", help="The type of region to import", type=str)
-parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
-parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import (1, 2, or 3)", type=int)
-parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values", action="store_true")
-parser.add_argument("--reaggregate", help="Reaggregate segmentations regardless of whether it was changed", action="store_true")
-if __name__ == "__main__":
-    cl_args = parser.parse_args()
-    main(cl_args)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--case", help="The index of the case to import", type=int)
+    parser.add_argument("-r", "--region", help="The type of region to import", type=str)
+    parser.add_argument("-i", "--instance", help="The index of the instance of that region to import", type=int)
+    parser.add_argument("-d", "--delineation", help="The index of the delineation of that instance to import (1, 2, or 3)", type=int)
+    parser.add_argument("--regenerate", help="Regenerate segmentations regardless of cached values", action="store_true")
+    parser.add_argument("--reaggregate", help="Reaggregate segmentations regardless of whether it was changed", action="store_true")
+    if __name__ == "__main__":
+        cl_args = parser.parse_args()
+        main(cl_args)
