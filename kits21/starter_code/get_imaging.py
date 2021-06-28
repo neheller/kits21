@@ -1,10 +1,10 @@
-from pathlib import Path
 import shutil
-import os
 import sys
-import time
+from pathlib import Path
 
 import requests
+
+from kits21.configuration.paths import TRAINING_DIR
 
 imaging_url = "https://kits19.sfo2.digitaloceanspaces.com/"
 imaging_name_tmplt = "master_{:05d}.nii.gz"
@@ -12,8 +12,7 @@ temp_f = Path(__file__).parent / "temp.tmp"
 
 
 def get_destination(i, create):
-    destination = Path(__file__).parent.parent /\
-        "data" / "case_{:05d}".format(i) / "imaging.nii.gz"
+    destination = TRAINING_DIR / "case_{:05d}".format(i) / "imaging.nii.gz"
     if create and not destination.parent.exists():
         destination.parent.mkdir()
     return destination
@@ -41,8 +40,8 @@ def download(cid):
 
 
 if __name__ == "__main__":
-    if not Path("data").exists():
-        Path("data").mkdir()
+    if not TRAINING_DIR.exists():
+        TRAINING_DIR.mkdir()
     left_to_download = []
     for i in range(300):
         dst = get_destination(i, False)
