@@ -4,9 +4,6 @@ KITS_HEC_LABEL_MAPPING = {
     'kidney_and_mass': (1, 2, 3),
     'mass': (2, 3),
     'tumor': (3, ),
-    # 'ureter_and_vessels': (2, 3, 4),
-    # 'vessels': (3, 4),
-    # 'arteries': (3, )
 }
 
 HEC_NAME_LIST = list(KITS_HEC_LABEL_MAPPING.keys())
