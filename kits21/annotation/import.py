@@ -10,6 +10,9 @@ from kits21.configuration.paths import SRC_DIR, TRAINING_DIR, TESTING_DIR, CACHE
 
 
 def get_case_dir(case):
+    assert SRC_DIR is not None, "SRC_DIR was none, this is most likely due to KITS21_SERVER_DATA not being in your " \
+                                "environment variables. This functionality is intended to be used only by the " \
+                                "KiTS organizers."
     # TODO remove hardcoding -- test both to find it
     page = int(case // 50)
     tst = "training_data"
@@ -184,7 +187,6 @@ def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
         agg = np.where(np.logical_not(np.equal(reg_agg, 0)), idnum*reg_agg, agg)
 
     return agg, affine
-
 
 
 def aggregate_case(case_id):
