@@ -2,6 +2,14 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
+## [2.1.1] - June 28, 2021
+
+- Complete revisions for
+  - 167 170 179 181 182 186 187 194-196 199-201 203-209 211 212 216-233 235 237 238 240-245 247 249 255 258-263 266 267 269 270 272 274-277 279 283-286 288 290 293 295
+- Incomplete revisions for
+  - 168 169 171-178 180 184 185 188-190 193 197-198 202 210 213 214 234 236 239 246 248 250-254 256 257 264 265 268 271 273 278 281 282 287 289 291 292 294 296 297
+- Crowd-workers completed incomplete revisions in cases 0 - 200
+
 ## [2.1.0]- June 28, 2021
 
 - Restructured the project as a python package for easier import
