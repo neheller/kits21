@@ -2,8 +2,97 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
-## [2.1] - June 28, 2021
-- make kits21 a python package
+## [2.1.1] - June 28, 2021
+
+- Complete revisions for
+  - `case_00167`
+  - `case_00170`
+  - `case_00179`
+  - `case_00181`
+  - `case_00182`
+  - `case_00186`
+  - `case_00187`
+  - cases 194-196
+  - cases 199-201
+  - cases 203-209
+  - `case_00211`
+  - `case_00212`
+  - cases 216-233
+  - `case_00235`
+  - `case_00237`
+  - `case_00238`
+  - cases 240-245
+  - `case_00247`
+  - `case_00249`
+  - `case_00255`
+  - cases 258-263
+  - `case_00266`
+  - `case_00267`
+  - `case_00269`
+  - `case_00270`
+  - `case_00272`
+  - cases 274-277
+  - `case_00279`
+  - `case_00280`
+  - cases 283-286
+  - `case_00288`
+  - `case_00290`
+  - `case_00293`
+  - `case_00295`
+  - `case_00299`
+- Incomplete revisions for
+  - `case_00168`
+  - `case_00169`
+  - cases 171-178
+  - `case_00180`
+  - `case_00184`
+  - `case_00185`
+  - cases 188-190
+  - `case_00193`
+  - cases 197-198
+  - `case_00202`
+  - `case_00210`
+  - `case_00213`
+  - `case_00214`
+  - `case_00234`
+  - `case_00236`
+  - `case_00239`
+  - `case_00246`
+  - `case_00248`
+  - `case_00278`
+  - `case_00281`
+  - `case_00282`
+  - `case_00287`
+  - `case_00289`
+  - `case_00291`
+  - `case_00292`
+  - `case_00294`
+  - `case_00296`
+  - `case_00297`
+- Crowd-workers completed incomplete revisions in cases 0 - 200
+  - cases 250-254
+  - `case_00256`
+  - `case_00257`
+  - `case_00264`
+  - `case_00265`
+  - `case_00268`
+  - `case_00271`
+  - `case_00273`
+  - `case_00278`
+  - `case_00281`
+  - `case_00282`
+  - `case_00287`
+  - `case_00289`
+  - `case_00291`
+  - `case_00292`
+  - `case_00294`
+  - `case_00296`
+  - `case_00297`
+- Crowd-workers completed incomplete revisions in cases 0 - 200
+
+## [2.1.0]- June 28, 2021
+
+- Restructured the project as a python package for easier import
 
 ## [2.0.6] - June 26, 2021
 
