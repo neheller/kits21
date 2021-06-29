@@ -59,6 +59,17 @@ This file is meant to keep track of which annotations were changed in each datas
   - `case_00239`
   - `case_00246`
   - `case_00248`
+  - `case_00278`
+  - `case_00281`
+  - `case_00282`
+  - `case_00287`
+  - `case_00289`
+  - `case_00291`
+  - `case_00292`
+  - `case_00294`
+  - `case_00296`
+  - `case_00297`
+- Crowd-workers completed incomplete revisions in cases 0 - 200
   - cases 250-254
   - `case_00256`
   - `case_00257`
