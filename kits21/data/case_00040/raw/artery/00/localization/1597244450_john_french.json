@@ -1,0 +1,37 @@
+{
+  "task_meta": {},
+  "annotations": [
+    {
+      "id": "bee31340-7022-4e30-8d3f-c384c34faf64",
+      "new": true,
+      "parent_id": null,
+      "created_by": "john_french",
+      "created_at": "2020-08-12T15:00:50Z",
+      "deprecated": false,
+      "spatial_type": "bbox3",
+      "spatial_payload": [
+        [
+          105.1851823594835,
+          130.49382527669272,
+          41.0
+        ],
+        [
+          458.88796013726125,
+          361.9135474989149,
+          140.0
+        ]
+      ],
+      "classification_payloads": [
+        {
+          "class_id": 3,
+          "confidence": 1.0
+        }
+      ],
+      "line_size": 4,
+      "containing_box": null,
+      "frame": null,
+      "text_payload": ""
+    }
+  ],
+  "import_fname": "1597244450_john_french.json"
+}
