@@ -5,9 +5,78 @@ This file is meant to keep track of which annotations were changed in each datas
 ## [2.1.1] - June 28, 2021
 
 - Complete revisions for
-  - 167 170 179 181 182 186 187 194-196 199-201 203-209 211 212 216-233 235 237 238 240-245 247 249 255 258-263 266 267 269 270 272 274-277 279 283-286 288 290 293 295
+  - `case_00167`
+  - `case_00170`
+  - `case_00179`
+  - `case_00181`
+  - `case_00182`
+  - `case_00186`
+  - `case_00187`
+  - cases 194-196
+  - cases 199-201
+  - cases 203-209
+  - `case_00211`
+  - `case_00212`
+  - cases 216-233
+  - `case_00235`
+  - `case_00237`
+  - `case_00238`
+  - cases 240-245
+  - `case_00247`
+  - `case_00249`
+  - `case_00255`
+  - cases 258-263
+  - `case_00266`
+  - `case_00267`
+  - `case_00269`
+  - `case_00270`
+  - `case_00272`
+  - cases 274-277
+  - `case_00279`
+  - `case_00280`
+  - cases 283-286
+  - `case_00288`
+  - `case_00290`
+  - `case_00293`
+  - `case_00295`
+  - `case_00299`
 - Incomplete revisions for
-  - 168 169 171-178 180 184 185 188-190 193 197-198 202 210 213 214 234 236 239 246 248 250-254 256 257 264 265 268 271 273 278 281 282 287 289 291 292 294 296 297
+  - `case_00168`
+  - `case_00169`
+  - cases 171-178
+  - `case_00180`
+  - `case_00184`
+  - `case_00185`
+  - cases 188-190
+  - `case_00193`
+  - cases 197-198
+  - `case_00202`
+  - `case_00210`
+  - `case_00213`
+  - `case_00214`
+  - `case_00234`
+  - `case_00236`
+  - `case_00239`
+  - `case_00246`
+  - `case_00248`
+  - cases 250-254
+  - `case_00256`
+  - `case_00257`
+  - `case_00264`
+  - `case_00265`
+  - `case_00268`
+  - `case_00271`
+  - `case_00273`
+  - `case_00278`
+  - `case_00281`
+  - `case_00282`
+  - `case_00287`
+  - `case_00289`
+  - `case_00291`
+  - `case_00292`
+  - `case_00294`
+  - `case_00296`
+  - `case_00297`
 - Crowd-workers completed incomplete revisions in cases 0 - 200
 
 ## [2.1.0]- June 28, 2021
