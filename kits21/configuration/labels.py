@@ -3,7 +3,7 @@
 KITS_HEC_LABEL_MAPPING = {
     'kidney_and_mass': (1, 2, 3),
     'mass': (2, 3),
-    'tumor': (3, ),
+    'tumor': (2, ),
 }
 
 HEC_NAME_LIST = list(KITS_HEC_LABEL_MAPPING.keys())
