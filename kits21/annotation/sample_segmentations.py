@@ -151,3 +151,7 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
     _ = [i.get() for i in res]
     p.close()
     p.join()
+
+
+if __name__ == '__main__':
+    generate_samples_for_all_cases(16, 5)
