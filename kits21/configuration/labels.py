@@ -21,12 +21,11 @@ KITS_LABEL_NAMES = {
     3: "cyst"
 }
 
-# values are determined on the inter-rater variability. The tolerances have been set such that the inter-rater NSD is
-# the same as the inter-rater Dice!
+# values are determined on the inter-rater variability
 HEC_NSD_TOLERANCES_MM = {
-    'kidney_and_mass': 1.7,
-    'mass': 1.3,
-    'tumor': 1.4,
+    'kidney_and_mass': 2.1780822681004897,
+    'mass': 1.3929527150618852,
+    'tumor': 1.5355767014649233,
 }
 
 # this determines which reference file we use for evaluation

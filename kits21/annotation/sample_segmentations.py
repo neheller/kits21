@@ -1,23 +1,12 @@
-import argparse
-import os
 import shutil
 from multiprocessing import Pool
 
-import decorator
+import SimpleITK as sitk
+import numpy as np
+from batchgenerators.utilities.file_and_folder_operations import *
 
 from kits21.configuration.labels import LABEL_AGGREGATION_ORDER
-import SimpleITK as sitk
-from batchgenerators.utilities.file_and_folder_operations import *
-import numpy as np
-
 from kits21.configuration.paths import TRAINING_DIR
-
-"""In order to find the inter rater variability we need to evaluate sampled segmentations against each other. The 
-problem with that is that annotation-X is not the same annotator between instances and labels, meaning that we need 
-to take care not to underestimate the inter-rater variability by comparing segmentations that contain the same intance 
-annotations. Example: a kidney label generated from instance-1_annotation-1 + instance-2_annotation-2 cannot be 
-evaluated against a label generated from instance-1_annotation-1 + instance-2_annotation-3 because the instance-1 
-annotator is reused, resulting in an underestimation of the inter-rater variability"""
 
 
 def get_number_of_instances(segmentations_folder: str, label_name: str = 'kidney'):
@@ -142,6 +131,8 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
                 shutil.rmtree(join(TRAINING_DIR, case, 'segmentation_samples'))
             if isfile(join(TRAINING_DIR, case, 'inter_rater_variability.json')):
                 os.remove(join(TRAINING_DIR, case, 'inter_rater_variability.json'))
+            if isfile(join(TRAINING_DIR, case, 'tolerances.json')):
+                os.remove(join(TRAINING_DIR, case, 'tolerances.json'))
             res.append(p.starmap_async(
                 generate_samples, ((join(TRAINING_DIR, case, 'segmentations'),
                                     join(TRAINING_DIR, case, 'segmentation_samples'),
@@ -154,4 +145,4 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
 
 
 if __name__ == '__main__':
-    generate_samples_for_all_cases(16, 5)
+    generate_samples_for_all_cases(8, 5)

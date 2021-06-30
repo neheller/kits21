@@ -51,7 +51,9 @@ def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_r
         dice = dc(mask_pred, mask_gt)
 
     if gt_empty and pred_empty:
-        nsds = [1]
+        nsds = [1] * len(nsd_tolerance_mm) if isinstance(nsd_tolerance_mm, (tuple, list, np.ndarray)) else 1
+    elif gt_empty or pred_empty:
+        nsds = [0] * len(nsd_tolerance_mm) if isinstance(nsd_tolerance_mm, (tuple, list, np.ndarray)) else 0
     else:
         dist = compute_surface_distances(mask_gt, mask_pred, spacing)
         distances_gt_to_pred = dist["distances_gt_to_pred"]
@@ -66,7 +68,7 @@ def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_r
             overlap_pred = np.sum(surfel_areas_pred[distances_pred_to_gt <= th])
             nsds.append((overlap_gt + overlap_pred) / (np.sum(surfel_areas_gt) + np.sum(surfel_areas_pred)))
 
-    if len(nsds) == 1:
+    if isinstance(nsds, (tuple, list, np.ndarray)) and len(nsds) == 1:
         nsds = nsds[0]
 
     return dice, nsds
