@@ -28,7 +28,7 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ### Installation
 1) Install dependency for normalized surface dice:\
-`pip install git+git://github.com/deepmind/surface-distance`
+`pip install git+https://github.com/JoHof/surface-distance.git` (the original DeepMind repository is currently broken...)
 2) Clone this repository
 3) Install this repository by running `pip install -e .` in the folder where the setup.py is located
    

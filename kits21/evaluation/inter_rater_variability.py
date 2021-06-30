@@ -1,7 +1,8 @@
 from multiprocessing import Pool
 
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import join, subfolders, subfiles, save_json
+from batchgenerators.utilities.file_and_folder_operations import join, subfolders, subfiles, save_json, isfile, \
+    load_json
 import SimpleITK as sitk
 
 from kits21.configuration.labels import HEC_NAME_LIST, KITS_HEC_LABEL_MAPPING
@@ -42,10 +43,61 @@ def compute_inter_rater_variability_for_case(case_folder) -> np.ndarray:
     save_json({"dice": dice_averages, "nsd": nsd_averages, "nsd_thresholds": list(thresholds)}, join(case_folder, 'inter_rater_variability.json'))
 
 
-def compute_all_inter_rater_variabilities(num_proceses: int = 10):
+def compute_all_inter_rater_variabilities(num_proceses: int = 10, overwrite_existing=False):
     p = Pool(num_proceses)
     case_folders = subfolders(TRAINING_DIR, prefix='case_')
+    if not overwrite_existing:
+        c = []
+        for cs in case_folders:
+            if not isfile(join(cs, 'inter_rater_variability.json')):
+                c.append(cs)
+        case_folders = c
     r = p.starmap_async(compute_inter_rater_variability_for_case, ([i] for i in case_folders))
     _ = r.get()
     p.close()
     p.join()
+
+
+def aggregate_inter_rater_variability():
+    case_folders = subfolders(TRAINING_DIR, prefix='case_')
+    dice_scores = {i: [] for i in HEC_NAME_LIST}
+    nsds = {i: [] for i in HEC_NAME_LIST}
+    nsd_thresholds = []
+    for c in case_folders:
+        if isfile(join(TRAINING_DIR, c, 'inter_rater_variability.json')):
+            inter_rater_variability = load_json(join(TRAINING_DIR, c, 'inter_rater_variability.json'))
+            for i, hec in enumerate(HEC_NAME_LIST):
+                dice_scores[hec].append(inter_rater_variability["dice"][hec])
+                nsds[hec].append(inter_rater_variability["nsd"][hec])
+            nsd_thresholds.append(inter_rater_variability["nsd_thresholds"])
+    dice = {i: np.mean(j) for i, j in dice_scores.items()}
+    nsd = {i: np.mean(j, 0) for i, j in nsds.items()}
+    nsd_thresholds = np.array(nsd_thresholds)
+    for i in range(nsd_thresholds.shape[1]):
+        assert(len(np.unique(nsd_thresholds[:, i])) == 1), "nsd thresholds ar enot all the same, please rerun " \
+                                                           "compute_all_inter_rater_variabilities"
+    return dice, nsd, nsd_thresholds[0]
+
+
+def find_nsd_threshold(dice, nsd, nsd_thresholds):
+    """
+    We are looking for an nsd tolerance that gives us the same
+
+    :param dice:
+    :param nsd:
+    :param nsd_thresholds:
+    :return:
+    """
+    thresholds = {}
+    for hec in HEC_NAME_LIST:
+        nsds = nsd[hec]
+        dc = dice[hec]
+        closest = np.argmin(np.abs(dc - nsds))
+        thresholds[hec] = nsd_thresholds[closest]
+    print(thresholds)
+
+
+if __name__ == '__main__':
+    compute_all_inter_rater_variabilities(16)
+    dice, nsd, nsd_thresholds = aggregate_inter_rater_variability()
+    find_nsd_threshold(dice, nsd, nsd_thresholds)

@@ -1,15 +1,15 @@
 import os.path
 from multiprocessing import Pool
-from typing import Tuple, Union, Dict, List
+from typing import Tuple, Union, List
+
 import SimpleITK as sitk
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import isdir, subfiles, join
-from kits21.configuration.paths import TRAINING_DIR
-from medpy.metric import dc, jc
-from medpy.metric.binary import __surface_distances
+from batchgenerators.utilities.file_and_folder_operations import subfiles, join
+from medpy.metric import dc
+from surface_distance import compute_surface_distances
 
 from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST, HEC_NSD_TOLERANCES_MM, GT_SEGM_FNAME
-from surface_distance import compute_surface_dice_at_tolerance, compute_surface_distances
+from kits21.configuration.paths import TRAINING_DIR
 
 
 def construct_HEC_from_segmentation(segmentation: np.ndarray, label: Union[int, Tuple[int, ...]]) -> np.ndarray:
