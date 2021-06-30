@@ -9,7 +9,7 @@ KITS_HEC_LABEL_MAPPING = {
 HEC_NAME_LIST = list(KITS_HEC_LABEL_MAPPING.keys())
 
 # just for you as a reference. This tells you which metric is at what index. This is not used anywhere
-METRIC_NAME_LIST = ["Dice", "NSD"]
+METRIC_NAME_LIST = ["Dice", "SD"]
 
 LABEL_AGGREGATION_ORDER = (1, 3, 2)  # this means that we first place the kidney, then the cyst and finally the tumor.
 # The order matters!
@@ -25,7 +25,7 @@ KITS_LABEL_NAMES = {
 HEC_NSD_TOLERANCES_MM = {
     'kidney_and_mass': 2.1780822681004897,
     'mass': 1.3929527150618852,
-    'tumor': 1.5355767014649233,
+    'tumor': 1.6697204261665635,
 }
 
 # this determines which reference file we use for evaluation
