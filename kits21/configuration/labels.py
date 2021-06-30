@@ -21,7 +21,7 @@ KITS_LABEL_NAMES = {
     3: "cyst"
 }
 
-# values are determined on the inter-rater variability
+# values are determined by kits21/evaluation/compute_tolerances.py
 HEC_NSD_TOLERANCES_MM = {
     'kidney_and_mass': 2.1780822681004897,
     'mass': 1.3929527150618852,

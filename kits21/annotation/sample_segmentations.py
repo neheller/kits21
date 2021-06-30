@@ -27,8 +27,8 @@ def build_segmentation(kidney_files, tumor_files, cyst_files, output_file: str) 
     labelid_files_mapping = {
         i: j if j is not None else list() for i, j in {
             1: kidney_files,
-            3: tumor_files,
-            2: cyst_files,
+            2: tumor_files,
+            3: cyst_files,
         }.items()}
 
     seg = None
