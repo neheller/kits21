@@ -148,6 +148,6 @@ if __name__ == '__main__':
     if __name__ == '__main__':
         import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('num_processes', required=False, default=12, type=int)
+    parser.add_argument('-num_processes', required=False, default=12, type=int)
     args = parser.parse_args()
     generate_samples_for_all_cases(args.num_processes, NUMBER_OF_GROUPS)

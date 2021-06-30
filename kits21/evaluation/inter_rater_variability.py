@@ -70,7 +70,7 @@ def aggregate_inter_rater_variability():
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('num_processes', required=False, default=12, type=int)
+    parser.add_argument('-num_processes', required=False, default=12, type=int)
     args = parser.parse_args()
     compute_all_inter_rater_variabilities(args.num_processes)
     dice, nsd = aggregate_inter_rater_variability()
