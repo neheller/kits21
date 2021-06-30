@@ -1,7 +1,7 @@
 from multiprocessing import Pool
 
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import join, subfolders, subfiles, save_json
+from batchgenerators.utilities.file_and_folder_operations import join, subfolders, subfiles, save_json, isfile, isdir
 import SimpleITK as sitk
 
 from kits21.configuration.labels import HEC_NAME_LIST, KITS_HEC_LABEL_MAPPING
@@ -9,7 +9,7 @@ from kits21.configuration.paths import TRAINING_DIR
 from kits21.evaluation.metrics import compute_metrics_for_case, compute_metrics_for_label
 
 
-def compute_inter_rater_variability_for_case(case_folder) -> np.ndarray:
+def compute_inter_rater_variability_for_case(case_folder):
     """
     We are running this with many tolerance thresholds so that we can determine a good tolerance for evaluating the
     test set
@@ -17,6 +17,8 @@ def compute_inter_rater_variability_for_case(case_folder) -> np.ndarray:
     :return:
     """
     segmentation_samples_folder = join(case_folder, 'segmentation_samples')
+    if not isdir(segmentation_samples_folder):
+        return
     thresholds = np.linspace(0.1, 5, 50)
     dice_scores = {i: [] for i in HEC_NAME_LIST}
     nsds = {i: [] for i in HEC_NAME_LIST}
@@ -42,9 +44,16 @@ def compute_inter_rater_variability_for_case(case_folder) -> np.ndarray:
     save_json({"dice": dice_averages, "nsd": nsd_averages, "nsd_thresholds": list(thresholds)}, join(case_folder, 'inter_rater_variability.json'))
 
 
-def compute_all_inter_rater_variabilities(num_proceses: int = 10):
+def compute_all_inter_rater_variabilities(num_proceses: int = 10, overwrite_existing=False):
     p = Pool(num_proceses)
     case_folders = subfolders(TRAINING_DIR, prefix='case_')
+    if not overwrite_existing:
+        c = []
+        for cs in case_folders:
+            if not isfile(join(cs, 'inter_rater_variability.json')):
+                c.append(cs)
+        print(len(c), 'out of', len(case_folders), 'to go...')
+        case_folders = c
     r = p.starmap_async(compute_inter_rater_variability_for_case, ([i] for i in case_folders))
     _ = r.get()
     p.close()

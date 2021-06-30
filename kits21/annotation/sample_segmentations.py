@@ -1,4 +1,5 @@
 import argparse
+import os
 import shutil
 from multiprocessing import Pool
 
@@ -139,6 +140,8 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
                 len(subfiles(join(TRAINING_DIR, case, 'segmentations'), suffix='.nii.gz')) > 0:
             if isdir(join(TRAINING_DIR, case, 'segmentation_samples')):
                 shutil.rmtree(join(TRAINING_DIR, case, 'segmentation_samples'))
+            if isfile(join(TRAINING_DIR, case, 'inter_rater_variability.json')):
+                os.remove(join(TRAINING_DIR, case, 'inter_rater_variability.json'))
             res.append(p.starmap_async(
                 generate_samples, ((join(TRAINING_DIR, case, 'segmentations'),
                                     join(TRAINING_DIR, case, 'segmentation_samples'),
