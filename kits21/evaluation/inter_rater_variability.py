@@ -32,7 +32,7 @@ def compute_inter_rater_variability_for_case(case_folder):
                     dice_scores[hec].append(metrics[i, 0])
                     nsds[hec].append(metrics[i, 1])
     dice_averages = {i: float(np.mean(j)) for i, j in dice_scores.items()}
-    nsd_averages = {i: list(np.mean(j).astype(float)) for i, j in nsds.items()}
+    nsd_averages = {i: np.mean(j) for i, j in nsds.items()}
     save_json({"dice": dice_averages, "nsd": nsd_averages}, join(case_folder, 'inter_rater_variability.json'))
 
 
