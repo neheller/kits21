@@ -96,4 +96,8 @@ def compute_tolerances_for_SD(num_proceses: int = 12, overwrite_existing=False):
 
 
 if __name__ == '__main__':
-    compute_tolerances_for_SD(12)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('num_processes', required=False, default=12, type=int)
+    args = parser.parse_args()
+    compute_tolerances_for_SD(args.num_processes)

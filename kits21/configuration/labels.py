@@ -30,3 +30,6 @@ HEC_NSD_TOLERANCES_MM = {
 
 # this determines which reference file we use for evaluation
 GT_SEGM_FNAME = 'aggregated_MAJ_seg.nii.gz'
+
+# how many groups of sampled segmentations?
+NUMBER_OF_GROUPS = 5

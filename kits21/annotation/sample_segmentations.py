@@ -5,7 +5,7 @@ import SimpleITK as sitk
 import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import *
 
-from kits21.configuration.labels import LABEL_AGGREGATION_ORDER
+from kits21.configuration.labels import LABEL_AGGREGATION_ORDER, NUMBER_OF_GROUPS
 from kits21.configuration.paths import TRAINING_DIR
 
 
@@ -145,4 +145,9 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
 
 
 if __name__ == '__main__':
-    generate_samples_for_all_cases(8, 5)
+    if __name__ == '__main__':
+        import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('num_processes', required=False, default=12, type=int)
+    args = parser.parse_args()
+    generate_samples_for_all_cases(args.num_processes, NUMBER_OF_GROUPS)
