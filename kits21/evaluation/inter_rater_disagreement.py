@@ -20,7 +20,7 @@ def compute_inter_rater_disagreement_for_case(case_folder):
     if not isdir(segmentation_samples_folder):
         return
     dice_scores = {i: [] for i in HEC_NAME_LIST}
-    nsds = {i: [] for i in HEC_NAME_LIST}
+    sds = {i: [] for i in HEC_NAME_LIST}
     groups = subfolders(segmentation_samples_folder, join=False, prefix='group')
     for g in groups:
         nii_files = subfiles(join(segmentation_samples_folder, g), suffix='.nii.gz')
@@ -30,10 +30,10 @@ def compute_inter_rater_disagreement_for_case(case_folder):
 
                 for i, hec in enumerate(HEC_NAME_LIST):
                     dice_scores[hec].append(metrics[i, 0])
-                    nsds[hec].append(metrics[i, 1])
+                    sds[hec].append(metrics[i, 1])
     dice_averages = {i: float(np.mean(j)) for i, j in dice_scores.items()}
-    nsd_averages = {i: np.mean(j) for i, j in nsds.items()}
-    save_json({"dice": dice_averages, "nsd": nsd_averages}, join(case_folder, 'inter_rater_disagreement.json'))
+    sd_averages = {i: np.mean(j) for i, j in sds.items()}
+    save_json({"dice": dice_averages, "sd": sd_averages}, join(case_folder, 'inter_rater_disagreement.json'))
 
 
 def compute_all_inter_rater_disagreement(num_proceses: int = 10, overwrite_existing=False):
@@ -55,16 +55,16 @@ def compute_all_inter_rater_disagreement(num_proceses: int = 10, overwrite_exist
 def aggregate_inter_rater_disagreement():
     case_folders = subfolders(TRAINING_DIR, prefix='case_')
     dice_scores = {i: [] for i in HEC_NAME_LIST}
-    nsds = {i: [] for i in HEC_NAME_LIST}
+    sds = {i: [] for i in HEC_NAME_LIST}
     for c in case_folders:
         if isfile(join(TRAINING_DIR, c, 'inter_rater_disagreement.json')):
             inter_rater_disagreement = load_json(join(TRAINING_DIR, c, 'inter_rater_disagreement.json'))
             for i, hec in enumerate(HEC_NAME_LIST):
                 dice_scores[hec].append(inter_rater_disagreement["dice"][hec])
-                nsds[hec].append(inter_rater_disagreement["nsd"][hec])
+                sds[hec].append(inter_rater_disagreement["sd"][hec])
     dice = {i: np.mean(j) for i, j in dice_scores.items()}
-    nsd = {i: np.mean(j) for i, j in nsds.items()}
-    return dice, nsd
+    sd = {i: np.mean(j) for i, j in sds.items()}
+    return dice, sd
 
 
 if __name__ == '__main__':
@@ -73,5 +73,5 @@ if __name__ == '__main__':
     parser.add_argument('-num_processes', required=False, default=12, type=int)
     args = parser.parse_args()
     compute_all_inter_rater_disagreement(args.num_processes)
-    dice, nsd = aggregate_inter_rater_disagreement()
-    print(dice, nsd)
+    dice, sd = aggregate_inter_rater_disagreement()
+    print(dice, sd)

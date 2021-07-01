@@ -22,7 +22,7 @@ KITS_LABEL_NAMES = {
 }
 
 # values are determined by kits21/evaluation/compute_tolerances.py
-HEC_NSD_TOLERANCES_MM = {
+HEC_SD_TOLERANCES_MM = {
     'kidney_and_mass': 2.1780822681004897,
     'mass': 1.3929527150618852,
     'tumor': 1.536272517110166,

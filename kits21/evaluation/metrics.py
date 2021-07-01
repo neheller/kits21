@@ -8,7 +8,7 @@ from batchgenerators.utilities.file_and_folder_operations import subfiles, join,
 from medpy.metric import dc
 from surface_distance import compute_surface_distances
 
-from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST, HEC_NSD_TOLERANCES_MM, GT_SEGM_FNAME
+from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST, HEC_SD_TOLERANCES_MM, GT_SEGM_FNAME
 from kits21.configuration.paths import TRAINING_DIR
 from time import time
 
@@ -25,14 +25,14 @@ def construct_HEC_from_segmentation(segmentation: np.ndarray, label: Union[int, 
 
 def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_reference: np.ndarray,
                               label: Union[int, Tuple[int, ...]], spacing: Tuple[float, float, float],
-                              nsd_tolerance_mm: Union[float, Tuple[float, ...]]) \
+                              sd_tolerance_mm: Union[float, Tuple[float, ...]]) \
         -> Tuple[float, float]:
     """
     :param segmentation_predicted: segmentation map (np.ndarray) with int values representing the predicted segmentation
     :param segmentation_reference:  segmentation map (np.ndarray) with int values representing the gt segmentation
     :param label: can be int or tuple of ints. If tuple of ints, a HEC is constructed from the labels in the tuple.
     :param spacing: important to know for volume and surface distance computation
-    :param nsd_tolerance_mm
+    :param sd_tolerance_mm
     :return:
     """
     assert all([i == j] for i, j in zip(segmentation_predicted.shape, segmentation_reference.shape)), \
@@ -52,27 +52,27 @@ def compute_metrics_for_label(segmentation_predicted: np.ndarray, segmentation_r
         dice = dc(mask_pred, mask_gt)
 
     if gt_empty and pred_empty:
-        nsds = [1] * len(nsd_tolerance_mm) if isinstance(nsd_tolerance_mm, (tuple, list, np.ndarray)) else 1
+        sds = [1] * len(sd_tolerance_mm) if isinstance(sd_tolerance_mm, (tuple, list, np.ndarray)) else 1
     elif gt_empty or pred_empty:
-        nsds = [0] * len(nsd_tolerance_mm) if isinstance(nsd_tolerance_mm, (tuple, list, np.ndarray)) else 0
+        sds = [0] * len(sd_tolerance_mm) if isinstance(sd_tolerance_mm, (tuple, list, np.ndarray)) else 0
     else:
         dist = compute_surface_distances(mask_gt, mask_pred, spacing)
         distances_gt_to_pred = dist["distances_gt_to_pred"]
         distances_pred_to_gt = dist["distances_pred_to_gt"]
         surfel_areas_gt = dist["surfel_areas_gt"]
         surfel_areas_pred = dist["surfel_areas_pred"]
-        if not isinstance(nsd_tolerance_mm, (tuple, list, np.ndarray)):
-            nsd_tolerance_mm = (nsd_tolerance_mm, )
-        nsds = []
-        for th in nsd_tolerance_mm:
+        if not isinstance(sd_tolerance_mm, (tuple, list, np.ndarray)):
+            sd_tolerance_mm = (sd_tolerance_mm, )
+        sds = []
+        for th in sd_tolerance_mm:
             overlap_gt = np.sum(surfel_areas_gt[distances_gt_to_pred <= th])
             overlap_pred = np.sum(surfel_areas_pred[distances_pred_to_gt <= th])
-            nsds.append((overlap_gt + overlap_pred) / (np.sum(surfel_areas_gt) + np.sum(surfel_areas_pred)))
+            sds.append((overlap_gt + overlap_pred) / (np.sum(surfel_areas_gt) + np.sum(surfel_areas_pred)))
 
-    if isinstance(nsds, (tuple, list, np.ndarray)) and len(nsds) == 1:
-        nsds = nsds[0]
+    if isinstance(sds, (tuple, list, np.ndarray)) and len(sds) == 1:
+        sds = sds[0]
 
-    return dice, nsds
+    return dice, sds
 
 
 def compute_metrics_for_case(fname_pred: str, fname_ref: str) -> np.ndarray:
@@ -105,7 +105,7 @@ def compute_metrics_for_case(fname_pred: str, fname_ref: str) -> np.ndarray:
     metrics = np.zeros((len(HEC_NAME_LIST), 2), dtype=float)
     for i, hec in enumerate(HEC_NAME_LIST):
         metrics[i] = compute_metrics_for_label(img_pred_npy, img_gt_npy, KITS_HEC_LABEL_MAPPING[hec],
-                                               tuple(spacing_pred), nsd_tolerance_mm=HEC_NSD_TOLERANCES_MM[hec])
+                                               tuple(spacing_pred), sd_tolerance_mm=HEC_SD_TOLERANCES_MM[hec])
     return metrics
 
 
