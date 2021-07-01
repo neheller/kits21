@@ -15,14 +15,14 @@ if __name__ == '__main__':
     parser.add_argument('-num_processes', required=False, default=4, type=int,
                         help="Number of CPU cores to be used for evaluation. We recommend to use as many as your "
                              "System supports. Default: 4")
-    parser.add_argument('--use_samples', required=False, action='store_true',
-                        help="Set this flag to evaluate against sampled ground truth segmentations rather than the "
-                             "majority voted segmentations (aggregated_MAJ_seg.nii.gz). Experimental. Will take much "
-                             "longer to compute. You need to run kits21/annotation/sample_segmentations.py "
-                             "first before you can set this flag. IMPORTANT: In case there was a dataset update you "
-                             "need to rerun sample_segmentations!")
+    parser.add_argument('--use_maj_voting_as_gt', required=False, action='store_true',
+                        help="Set this flag to evaluate against the "
+                             "majority voted segmentations (aggregated_MAJ_seg.nii.gz). This will be faster than "
+                             "evaluating against the sampled segmentations, but keep in mind that this is not the way "
+                             "the test set will be evaluated. For the test set evaluation we will be unsing the "
+                             "samples as reference annotations.")
     args = parser.parse_args()
-    if args.use_samples:
-        evaluate_predictions_on_samples(args.folder_with_predictions, args.num_processes)
-    else:
+    if args.use_maj_voting_as_gt:
         evaluate_predictions(args.folder_with_predictions, args.num_processes)
+    else:
+        evaluate_predictions_on_samples(args.folder_with_predictions, args.num_processes)

@@ -19,12 +19,59 @@ cause a single test case to dominate the performance of an algorithm (imagine ha
 a single case with very large ASSD (>100))).
 
 ## Ranking procedure
-Compute Dice and Surface Dice for each test case and HEC, average over all test cases. This will give three Dice and three 
-Surface Dice values for each algorithm (one per HEC). Then, all algorithms are ranked for these 6 values independently.
-The winner will be determined as the algorithm with the lowest average rank.
+We will be comparing your test set predictions against realistic ground truth segmentations that were sampled from the 
+individual annotations (see [below](#sampling-realistic-segmentations-from-individual-annotations)). The Dice and 
+Surface Dice will be computed between your predictions and 
+and all corresponding samples (resulting in `num_cases x num_samples x num_HECs x num_metrics` values). Then, each 
+metric will be averaged over all cases, samples and HECs such 
+that we end up with one average Dice and one average SD value per submission. Finally, we rank the algorithms 
+independently for each of the metrics, resulting in two ranks per algorithm. The winner will be determined as the 
+algorithm with the lowest average rank.
+
+
+## Sampling realistic segmentations from individual annotations
+Each kidney/cyst/tumor instance has been annotated multiple times by different annotators. We use these multiple annotations
+to generate plausible complete annotations for each patient. These plausible annotations will be used to evaluate your 
+test set submission (also see [above](#ranking-procedure)) and we thus recommend you use them for evaluating your 
+models during development as well.
+As a point of reference for human performance we will also be computing the inter-rater disagreement between these 
+samples. In order to not underestimate the inter-rater disagreement, we need to sample the segmentations carefully. 
+The following procedure is not strictly necessary for evaluating predictions, but we would like to be consistent and 
+use the same segmentations for algorithm evaluation and inter-rater agreement.
+
+When generating sampled segmentations with the intent of computing the inter-rater variability we cannot compare
+samples segmentations that have an overlap between their instance annotations. To illustrate this, we use a simple
+example that only has a kindey label (no tumor and cyst). We use `kidney_i1a1` as abbreviation for kidney instance 1
+annotation 1.
+
+- computing the inter-rater variability between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a2` is valid because for none of the
+  instances there are shared annotations
+- computing the inter-rater variability between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a1` is not valid because i2a1 was
+  used to construct both segmentations. This would result in an underestimation of the inter-rater variability because
+  parts of the segmentations perfectly overlap
+
+To prevent underestimation of the inter-rater variability we generate 'groups' of sampled segmentations. Within each
+group, none of the annotations are shared and members of each group can be evaluated against each other (therefore
+each group has as many samples as there are annotations per instance). To get a more
+robust estimate of the inter-rater variability of a case, we generate multiple groups of sampled segmentations and
+average the inter-rater disagreement across groups.
+
+You can generate the groups yourself by running `python kits21/annotation/sample_segmentations.py`. Sampling is
+seeded to ensure that everyone uses the same samples.
 
 ## Code for metric computation
-We provide a full implementation of the metric implementation in `kits21/evaluation/evaluate_predictions.py`. Please run
+**Prerequisite**: You can only run our evaluation code after generating the segmentation samples yourself. Note that 
+each dataset update requires you to rerun the sampling, so please make sure that you rerun it after every pull from 
+GitHub! 
+
+You can run the sampling of segmentations on the training set by executing:
+
+`python kits21/annotation/sample_segmentations.py -num_processes XX`
+
+where XX is the number of CPU cores to be used (as many as possible). Sampling is seeded to ensure that everyone uses 
+the same samples.
+Once it is completed you can evaluate your training set predictions using the code provided by this repository. Please 
+run
 
 `python kits21/evaluation/evaluate_predictions.py -h`
 
@@ -32,33 +79,12 @@ to see usage instructions. Since we will be using this code to evaluate the test
 encouraged to use it for evaluating your own train:validation splits during model development (we recommend running 
 5-fold CV on the provided training cases).
 
-## Computing inter-rater variability as a reference measure
-Inter-rater varibility gives us an estimate of how close model performance is to human accuracy. We can use the 
-multiple annotations per instance and label that we have to generate fictive plausible complete 
-annotations which in turn allow us to estimate the inter-rater variability. Note that annotators are different for each 
-instance and label, so annotator 1 of kidney instance 1 is not the same person as annotator 1 of kidney instance 2. 
-
-When generating sampled segmentations with the intent of computing the inter-rater variability we cannot compare 
-samples segmentations that have an overlap between their instance annotations. To illustrate this, we use a simple 
-example that only has a kindey label (no tumor and cyst). We use `kidney_i1a1` as abbreviation for kidney instance 1 
-annotation 1.
-
-- computing the inter-rater variability between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a2` is valid because for none of the 
-  instances there are shared annotations
-- computing the inter-rater variability between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a1` is not valid because i2a1 was 
-  used to construct both segmentations. This would result in an underestimation of the inter-rater variability because 
-  parts of the segmentations perfectly overlap
-
-To prevent underestimation of the inter-rater variability we generate 'groups' of sampled segmentations. Within each 
-group, none of the annotations are shared and members of each group can be evaluated against each other (therefore 
-each group has as many samples as there are annotations per instance). To get a more 
-robust estimate of the inter-rater variability of a case, we generate multiple groups of sampled segmentations and 
-average the inter-rater disagreement across groups. 
-
-You can generate the groups yourself by running `python kits21/annotation/sample_segmentations.py`. Sampling is 
-seeded to ensure that everyone uses the same samples.
 
 ## Finding the tolerance for SD
+This section is for documentation purposes only. You do not need to run this yourself and should just use the 
+precomputed values located in `kits21/configuration/labels.py`. When running our evaluation code these values will 
+be picked automatically.
+
 We follow the procedure described by the paper that introduces the Surface Dice.
 
 [https://arxiv.org/pdf/1809.04430.pdf](https://arxiv.org/pdf/1809.04430.pdf) page 5:
@@ -68,10 +94,8 @@ We follow the procedure described by the paper that introduces the Surface Dice.
 > arbitrated by an oncologist, neither of whom had seen the scan previously.
 
 We use the same groups of sampled segmentations as are used to compute the inter-rater variability for computing the 
-tolerance. The tolerance is computed for each HEC individually and is averaged over all cases. The values are 
-precomputed by us - you do not have to rerun the computation. You can find the values in `kits21/configuration/labels.py`. 
-These values will automatically be used for metric computation.
+tolerance. The tolerance is computed for each HEC individually and is averaged over all cases. 
 
 If you still desire to rerun the computation of the tolerances, you can do so by running 
 `python kits21/evaluation/compute_tolerances.py`. Note that this requires you to have generated the sampled 
-segmentations first (see above).
+segmentations first (see [above](#sampling-realistic-segmentations-from-individual-annotations)).
