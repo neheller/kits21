@@ -2,7 +2,7 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-**Current dataset version: `2.1.1`** (see [changelog](changelog.md))
+**Current dataset version: `2.2`** (see [changelog](changelog.md))
 
 <img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
 
@@ -26,6 +26,12 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ## Usage
 
+### Installation
+1) Install dependency for surface dice:\
+`pip install git+https://github.com/JoHof/surface-distance.git` (the original DeepMind repository is currently broken...)
+2) Clone this repository
+3) Install this repository by running `pip install -e .` in the folder where the setup.py file is located
+   
 ### Download
 
 Start by cloning this repository, but note that **the imaging is not stored here**, it must be downloaded using one of the `get_imaging` scripts in the `starter_code` directory. Currently there are implementations in:
