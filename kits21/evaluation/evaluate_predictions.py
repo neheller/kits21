@@ -19,7 +19,7 @@ if __name__ == '__main__':
                         help="Set this flag to evaluate against the "
                              "majority voted segmentations (aggregated_MAJ_seg.nii.gz). This will be faster than "
                              "evaluating against the sampled segmentations, but keep in mind that this is not the way "
-                             "the test set will be evaluated. For the test set evaluation we will be unsing the "
+                             "the test set will be evaluated. For the test set evaluation we will be using the "
                              "samples as reference annotations.")
     args = parser.parse_args()
     if args.use_maj_voting_as_gt:
