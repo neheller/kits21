@@ -10,7 +10,7 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ## Timeline
 
-- **Mar 1 - Jul 1**: Annotation, Release, and Refinement of Training Data (*in progress*)
+- **Mar 1 - Jul 1**: Annotation, Release, and Refinement of Training Data (*in progress -- to be released later today*)
 - **Aug 9**: Deadline for Intention to Submit & Required Paper
 - **Aug 16 - 30**: Submissions Accepted
 - **Sep 1**: Results Announced
