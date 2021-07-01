@@ -12,7 +12,7 @@ if __name__ == '__main__':
                              'predictions are present and just evaluate what is in that folder. It is your '
                              'responsibility to verify that. Predicted segmentations MUST be named case_XXXXX.nii.gz '
                              'where XXXXX is the case id, for example case_00005.nii.gz.')
-    parser.add_argument('-num_processes', required=False, default=4, type=int,
+    parser.add_argument('-num_processes', required=False, default=12, type=int,
                         help="Number of CPU cores to be used for evaluation. We recommend to use as many as your "
                              "System supports. Default: 4")
     parser.add_argument('--use_maj_voting_as_gt', required=False, action='store_true',
