@@ -4,12 +4,13 @@ from typing import Tuple, Union, List
 
 import SimpleITK as sitk
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import subfiles, join
+from batchgenerators.utilities.file_and_folder_operations import subfiles, join, isdir, subdirs
 from medpy.metric import dc
 from surface_distance import compute_surface_distances
 
 from kits21.configuration.labels import KITS_HEC_LABEL_MAPPING, HEC_NAME_LIST, HEC_NSD_TOLERANCES_MM, GT_SEGM_FNAME
 from kits21.configuration.paths import TRAINING_DIR
+from time import time
 
 
 def construct_HEC_from_segmentation(segmentation: np.ndarray, label: Union[int, Tuple[int, ...]]) -> np.ndarray:
@@ -108,17 +109,17 @@ def compute_metrics_for_case(fname_pred: str, fname_ref: str) -> np.ndarray:
     return metrics
 
 
-def evaluate_predictions(folder_with_predictions: str, num_processes: int = 3) \
+def evaluate_predictions(folder_with_predictions: str, num_processes: int = 8, write_csv_file: bool = True,) \
         -> Tuple[np.ndarray, List[str]]:
     """
 
     :param folder_with_predictions: your predictions must be located in this folder. Predictions must be named
     case_XXXXX.nii.gz
     :param num_processes: number of CPU processes to use for metric computation. Watch out for RAM usage!
-    :param strict: if True, will throw an error if not all 210 training cases have been predicted. If False, it will
-    evaluate only the available predictions and ignore the missing ones
+    :param write_csv_file: if True, writes metrics to folder_with_predictions/evaluation.csv
     :return: metrics (num_predictions x num_HECs x num_metrics)
     """
+    start = time()
     p = Pool(num_processes)
 
     predicted_segmentation_files = subfiles(folder_with_predictions, suffix='.nii.gz', join=True)
@@ -134,23 +135,81 @@ def evaluate_predictions(folder_with_predictions: str, num_processes: int = 3) \
     metrics = np.vstack([i[None] for i in metrics])
     p.close()
     p.join()
+    end = time()
+    print('Evaluation took %f s. Num_processes: %d' % (np.round(end - start, 2), num_processes))
+
+    if write_csv_file:
+        # let's write a csv file
+        # for each case, metrics are a 3x2 array (num_HECs x num_metrics).
+        with open(join(folder_with_predictions, 'evaluation.csv'), "w") as f:
+            f.write("caseID,Dice_kidney,Dice_masses,Dice_tumor,SD_kidney,SD_masses,SD_tumor\n")
+            for i, c in enumerate(caseids):
+                f.write("%s,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f\n" % (
+                    c,
+                    metrics[i, 0, 0], metrics[i, 1, 0], metrics[i, 2, 0],
+                    metrics[i, 0, 1], metrics[i, 1, 1], metrics[i, 2, 1],
+                ))
+            mean_metrics = metrics.mean(0)
+            f.write("average,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f" % (
+                mean_metrics[0, 0], mean_metrics[1, 0], mean_metrics[2, 0],
+                mean_metrics[0, 1], mean_metrics[1, 1], mean_metrics[2, 1],
+            ))
     return metrics, predicted_segmentation_files
 
 
-if __name__ == '__main__':
-    from time import time
-
-    img_pred = '/home/fabian/http_git/kits21/data/case_00000/segmentation_samples/sample_0001.nii.gz'
-    res = []
-    p = Pool(3)
+def evaluate_predictions_on_samples(folder_with_predictions: str, num_processes: int = 8, write_csv_file: bool = True,) \
+        -> Tuple[np.ndarray, List[str]]:
     start = time()
-    for ref_id in range(10):
-        img_ref = '/home/fabian/http_git/kits21/data/case_00000/segmentation_samples/sample_%04.0d.nii.gz' % ref_id
-        res.append(p.starmap_async(compute_metrics_for_case, ((
-                                                                  img_pred, img_ref
-                                                              ), )))
-    res = np.vstack([np.array(i.get()) for i in res])
+    p = Pool(num_processes)
+
+    predicted_segmentation_files = subfiles(folder_with_predictions, suffix='.nii.gz', join=True)
+    caseids = [os.path.basename(i)[:-7] for i in predicted_segmentation_files]
+
+    metrics = p.map(evaluate_predicted_file_on_samples, predicted_segmentation_files)
+    metrics = np.vstack([i[None] for i in metrics])
     p.close()
     p.join()
     end = time()
-    print("This took %s seconds" % np.round((end - start), 4))
+    print('Evaluation on samples took %f s. Num_processes: %d' % (np.round(end - start, 2), num_processes))
+
+    if write_csv_file:
+        # let's write a csv file
+        # for each case, metrics are a 3x2 array (num_HECs x num_metrics).
+        with open(join(folder_with_predictions, 'evaluation_samples.csv'), "w") as f:
+            f.write("caseID,Dice_kidney,Dice_masses,Dice_tumor,SD_kidney,SD_masses,SD_tumor\n")
+            for i, c in enumerate(caseids):
+                f.write("%s,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f\n" % (
+                    c,
+                    metrics[i, 0, 0], metrics[i, 1, 0], metrics[i, 2, 0],
+                    metrics[i, 0, 1], metrics[i, 1, 1], metrics[i, 2, 1],
+                ))
+    return metrics, predicted_segmentation_files
+
+
+def evaluate_predicted_file_on_samples(filename_predicted: str):
+    assert os.path.basename(filename_predicted).startswith("case_") and filename_predicted.endswith('.nii.gz'), \
+        "filename_predicted must benamed case_xxxxx.nii.gz where xxxxx is the case id"
+    caseid = os.path.basename(filename_predicted)[:-7]
+    samples_folder = join(TRAINING_DIR, caseid, 'segmentation_samples')
+    if not isdir(samples_folder):
+        raise RuntimeError('segmentation_samples folder missing. Please run kits21/annotation/sample_segmentations.py')
+    groups = subdirs(samples_folder, prefix='group')
+    metrics = []
+    for g in groups:
+        nii_files = subfiles(g, suffix='.nii.gz')
+        for n in nii_files:
+            metrics.append(compute_metrics_for_case(filename_predicted, n)[None])
+    return np.mean(np.vstack(metrics), 0)
+
+
+def sort_by_worst_Dice(evaluation_csv_file: str, n_worst: int = 20):
+    loaded = np.loadtxt(evaluation_csv_file, dtype=str, skiprows=1, delimiter=',')
+    casenames = loaded[:, 0]
+    metrics = loaded[:, 1:].astype(float)
+    dice_scores = metrics[:, :3]
+    for i, hec in enumerate(HEC_NAME_LIST):
+        print(hec)
+        argsorted = np.argsort(dice_scores[:, i])
+        for a in argsorted[:n_worst]:
+            print(casenames[a], dice_scores[a, i])
+        print()
