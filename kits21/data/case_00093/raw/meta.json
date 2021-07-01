@@ -2,5 +2,20 @@
   "x_spacing": 0.91015625,
   "y_spacing": 0.91015625,
   "z_spacing": 0.5,
-  "num_images": 787
+  "num_images": 787,
+  "custom_hilums": [
+    {
+      "slice_index": 345,
+      "hilums": [
+        [
+          [214, 335],
+          [257, 341]
+        ],
+        [
+          [221, 171],
+          [256, 183]
+        ]
+      ]
+    }
+  ]
 }
