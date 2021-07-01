@@ -25,7 +25,7 @@ KITS_LABEL_NAMES = {
 HEC_NSD_TOLERANCES_MM = {
     'kidney_and_mass': 2.1780822681004897,
     'mass': 1.3929527150618852,
-    'tumor': 1.6697204261665635,
+    'tumor': 1.536272517110166,
 }
 
 # this determines which reference file we use for evaluation
