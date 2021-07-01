@@ -14,7 +14,7 @@ if __name__ == '__main__':
                              'where XXXXX is the case id, for example case_00005.nii.gz.')
     parser.add_argument('-num_processes', required=False, default=12, type=int,
                         help="Number of CPU cores to be used for evaluation. We recommend to use as many as your "
-                             "System supports. Default: 4")
+                             "System supports. Default: 12")
     parser.add_argument('--use_maj_voting_as_gt', required=False, action='store_true',
                         help="Set this flag to evaluate against the "
                              "majority voted segmentations (aggregated_MAJ_seg.nii.gz). This will be faster than "
