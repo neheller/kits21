@@ -4,6 +4,7 @@ import json
 import numpy as np
 import nibabel as nib
 from PIL import Image, ImageDraw
+from numpy.core.fromnumeric import cumsum
 import torch
 import torch.nn.functional
 from scipy import signal
@@ -591,7 +592,7 @@ def apply_hilum_to_slice(thresholded_c, blur_c, threshold, ind, hlm):
 
 # TODO allow for custom hilums to be specified in dln
 # Polygons will be allowed for logged-in users
-def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
+def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox, custom_hilums):
     first_hilum_slice = None
     last_hilum_slice = None
     for ann in lzn["annotations"]:
@@ -613,8 +614,17 @@ def add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox):
                 if last_hilum_slice is None or frame > last_hilum_slice:
                     last_hilum_slice = frame - cbox["zmin"]
 
-    if first_hilum_slice is not None and last_hilum_slice is not None:
-        for ind in range(max(first_hilum_slice, 0), min(last_hilum_slice+1, thresholded_c.shape[0]-1)):
+    for ind in range(thresholded_c.shape[0]):
+        if "slice_{}".format(ind) in custom_hilums:
+            for hlm in custom_hilums["slice_{}".format(ind)]:
+                apply_hilum_to_slice(thresholded_c, blr_c, threshold, ind, hlm)
+        elif (
+            (
+                first_hilum_slice is not None and ind >= first_hilum_slice
+            ) and (
+                last_hilum_slice is not None and ind <= last_hilum_slice
+            )
+        ):
             # TODO send dln here and use custom hilum if possible
             hlm = find_hilum_in_slice(thresholded_c[ind].copy(), side)
             apply_hilum_to_slice(thresholded_c, blr_c, threshold, ind, hlm)
@@ -633,7 +643,7 @@ def get_side(cbox):
     return "right"
 
 
-def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None, cbox=None):
+def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=None, lzn=None, cbox=None, custom_hilums={}):
     # Interpolate drawings
     cropped_drw = interpolate_drawings(cropped_drw, step)
 
@@ -660,7 +670,7 @@ def generate_segmentation(region_type, cropped_img, cropped_drw, step=1, affine=
     blr_c = blr_d.to("cpu").numpy()
     if region_type == "kidney":
         side = get_side(cbox)
-        thresholded_c = add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox)
+        thresholded_c = add_renal_hilum(thresholded_c, blr_c, threshold, lzn, side, cbox, custom_hilums)
 
     # Bring result back to cpu memory
     return thresholded_c
@@ -676,7 +686,37 @@ def inflate_seg_to_image_size(cbox, cropped_seg):
     return seg_np
 
 
-def delineation_to_seg(region_type, image_path, delineation_path, localization_path=None):
+def get_custom_hilums(meta, cbox):
+    ret = {}
+    if "custom_hilums" not in meta:
+        return ret
+
+    for ch in meta["custom_hilums"]:
+        if ch["slice_index"] < cbox["zmin"] or ch["slice_index"] > cbox["zmax"]:
+            continue
+
+        dct_key = "slice_{}".format(ch["slice_index"] - cbox["zmin"])
+        if dct_key not in ret:
+            ret[dct_key] = []
+
+        for hlm in ch["hilums"]:
+            ret[dct_key] += [
+                [
+                    (
+                        hlm[0][0] - cbox["xmin"],
+                        hlm[0][1] - cbox["ymin"]
+                    ),
+                    (
+                        hlm[1][0] - cbox["xmin"],
+                        hlm[1][1] - cbox["ymin"]
+                    )
+                ]
+            ]
+
+    return ret
+
+
+def delineation_to_seg(region_type, image_path, delineation_path, meta, localization_path=None):
     # Read and parse delination and (maybe) localization from file
     lzn = None
     if region_type == "kidney":
@@ -694,9 +734,12 @@ def delineation_to_seg(region_type, image_path, delineation_path, localization_p
     # Generate the drawing made by the annotator
     cropped_drw = generate_cropped_drawing_interior(cbox, dln)
 
+    # Get any custom hilums within the containing box
+    custom_hilums = get_custom_hilums(meta, cbox)
+
     # Apply heuristics to infer segmentation based on drawing and image
     cropped_seg = generate_segmentation(
-        region_type, cropped_img, cropped_drw, cbox["step"], img_nib.affine, lzn, cbox
+        region_type, cropped_img, cropped_drw, cbox["step"], img_nib.affine, lzn, cbox, custom_hilums
     )
 
     # Undo cropping to get final segmentation
