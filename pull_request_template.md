@@ -10,3 +10,4 @@
 - [ ] Updated version number in `README.md`
 - [ ] Ran `annotation.import` to completion
 - [ ] Added changes to `changelog.md`
+- [ ] Updated version number in `setup.py`
