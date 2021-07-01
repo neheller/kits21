@@ -55,8 +55,8 @@ def generate_samples(segmentations_folder: str, samples_output_folder: str, num_
     """
     We do this the stupid way, because the smart way is above my head right now.
 
-    Why groups? We can only determine the inter-rater variability within each group because otherwise we might see the
-    same annotation more than once. So we compute the inter-rater variability within each group, then average across
+    Why groups? We can only determine the inter-rater disagreement within each group because otherwise we might see the
+    same annotation more than once. So we compute the inter-rater disagreement within each group, then average across
     groups
 
     :param segmentations_folder:
@@ -129,8 +129,8 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
                 len(subfiles(join(TRAINING_DIR, case, 'segmentations'), suffix='.nii.gz')) > 0:
             if isdir(join(TRAINING_DIR, case, 'segmentation_samples')):
                 shutil.rmtree(join(TRAINING_DIR, case, 'segmentation_samples'))
-            if isfile(join(TRAINING_DIR, case, 'inter_rater_variability.json')):
-                os.remove(join(TRAINING_DIR, case, 'inter_rater_variability.json'))
+            if isfile(join(TRAINING_DIR, case, 'inter_rater_disagreement.json')):
+                os.remove(join(TRAINING_DIR, case, 'inter_rater_disagreement.json'))
             if isfile(join(TRAINING_DIR, case, 'tolerances.json')):
                 os.remove(join(TRAINING_DIR, case, 'tolerances.json'))
             res.append(p.starmap_async(

@@ -39,21 +39,21 @@ samples. In order to not underestimate the inter-rater disagreement, we need to 
 The following procedure is not strictly necessary for evaluating predictions, but we would like to be consistent and 
 use the same segmentations for algorithm evaluation and inter-rater agreement.
 
-When generating sampled segmentations with the intent of computing the inter-rater variability we cannot compare
+When generating sampled segmentations with the intent of computing the inter-rater disagreement we cannot compare
 samples segmentations that have an overlap between their instance annotations. To illustrate this, we use a simple
 example that only has a kindey label (no tumor and cyst). We use `kidney_i1a1` as abbreviation for kidney instance 1
 annotation 1.
 
-- computing the inter-rater variability between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a2` is valid because for none of the
+- computing the inter-rater disagreement between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a2` is valid because for none of the
   instances there are shared annotations
-- computing the inter-rater variability between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a1` is not valid because i2a1 was
-  used to construct both segmentations. This would result in an underestimation of the inter-rater variability because
+- computing the inter-rater disagreement between `kidney_i1a1_i2a1` and `kidney_i1a2_i2a1` is not valid because i2a1 was
+  used to construct both segmentations. This would result in an underestimation of the inter-rater disagreement because
   parts of the segmentations perfectly overlap
 
-To prevent underestimation of the inter-rater variability we generate 'groups' of sampled segmentations. Within each
+To prevent underestimation of the inter-rater disagreement we generate 'groups' of sampled segmentations. Within each
 group, none of the annotations are shared and members of each group can be evaluated against each other (therefore
 each group has as many samples as there are annotations per instance). To get a more
-robust estimate of the inter-rater variability of a case, we generate multiple groups of sampled segmentations and
+robust estimate of the inter-rater disagreement of a case, we generate multiple groups of sampled segmentations and
 average the inter-rater disagreement across groups.
 
 You can generate the groups yourself by running `python kits21/annotation/sample_segmentations.py`. Sampling is
@@ -93,7 +93,7 @@ We follow the procedure described by the paper that introduces the Surface Dice.
 > segmentations from a subset of seven TCIA scans, where each segmentation was performed by a radiographer and then 
 > arbitrated by an oncologist, neither of whom had seen the scan previously.
 
-We use the same groups of sampled segmentations as are used to compute the inter-rater variability for computing the 
+We use the same groups of sampled segmentations as are used to compute the inter-rater disagreement for computing the 
 tolerance. The tolerance is computed for each HEC individually and is averaged over all cases. 
 
 If you still desire to rerun the computation of the tolerances, you can do so by running 
