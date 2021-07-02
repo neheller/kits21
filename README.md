@@ -10,14 +10,16 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ## Timeline
 
-- **Mar 1 - Jul 1**: Annotation, Release, and Refinement of Training Data (*in progress -- to be released later today*)
-- **Aug 9**: Deadline for Intention to Submit & Required Paper
-- **Aug 16 - 30**: Submissions Accepted
-- **Sep 1**: Results Announced
-- **Sep 27 or Oct 1**: Satellite Event at MICCAI 2021
+- **Mar 1 - Jul 1**: Annotation, Release, and Refinement of Training Data (*now published!*)
+- **July 15**: Further refinement of training set will be complete
+- **Aug 23**: Deadline for Intention to Submit & Required Paper (formerly Aug 9)
+- **Aug 30 - Sep 13**: Submissions Accepted (formerly Aug 16 - 30)
+- **Sep 15**: Results Announced (formerly Sep 1)
+- **Sep 27**: Satellite Event at MICCAI 2021
 
 ## News
 
+- **July 1, 2021**: The training set has been released! Also we are adding a two-week buffer for final edits to be made based on community feedback, and we are pushing the challenge timeline by two weeks (see above).
 - **June 17, 2021**: We've changed the set of classes for the challenge. See [this forum post](https://discourse.kits-challenge.org/t/kits21-challenge-update/354) for details
 - **Apr 7, 2021**: We've started using tags and a changelog to keep track of the dataset version
 - **Mar 23, 2021**: A draft of the postprocessing code and some preliminary data has been merged into the master branch.
