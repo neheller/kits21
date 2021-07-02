@@ -1,6 +1,7 @@
 import argparse
 import shutil
 from pathlib import Path
+import json
 
 import nibabel as nib
 import numpy as np
@@ -75,11 +76,25 @@ def update_raw(delineation_path, case_id, in_test_set):
     if not destination_parent.exists():
         destination_parent.mkdir()
 
+    custom_hilums = None
+    if (destination_parent / "meta.json").exists():
+        with (destination_parent / "meta.json").open() as f:
+            old_meta = json.loads(f.read())
+            if "custom_hilums" in old_meta:
+                custom_hilums = old_meta["custom_hilums"]
+
     # Get source directory
     src = delineation_path.parent.parent.parent.parent
 
     # Copy all annotation files to destination
     shutil.copytree(str(src), str(destination_parent), dirs_exist_ok=True)
+
+    if custom_hilums is not None:
+        with (destination_parent / "meta.json").open() as f:
+            new_meta = json.loads(f.read())
+        with (destination_parent / "meta.json").open('w') as f:
+            new_meta["custom_hilums"] = custom_hilums
+            f.write(json.dumps(new_meta, indent=2))
 
 
 def get_localization(delineation_path):
@@ -140,8 +155,11 @@ def run_import(delineation_path):
     # Path to underlying CT scan stored as .nii.gz
     image_path = get_image_path(case_id, in_test_set)
 
+    meta_path = image_path.parent / "raw" / "meta.json"
+    meta = load_json(meta_path)
+
     # Compute and save segmentation based on delineation
-    seg_nib = delineation_to_seg(region_type, image_path, delineation_path, localization)
+    seg_nib = delineation_to_seg(region_type, image_path, delineation_path, meta, localization)
     save_segmentation(case_id, region_type, delineation_path, seg_nib, in_test_set)
 
 

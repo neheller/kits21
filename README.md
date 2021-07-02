@@ -2,7 +2,7 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-**Current dataset version: `2.2`** (see [changelog](changelog.md))
+**Current dataset version: `2.2.1`** (see [changelog](changelog.md))
 
 <img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
 
