@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(name='kits21',
       packages=find_namespace_packages(),
-      version='2.2',
+      version='2.2.1',
       description='',
       zip_safe=False,
       install_requires=[

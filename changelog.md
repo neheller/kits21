@@ -2,6 +2,10 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
+## [2.2.1] - July 1st, 2021: Training Set Release
+
+- Edits to nearly every case
+
 ## [2.2] - July 1st, 2021
 
 - Code for evaluation of segmentations has been added. Have a look at kits21/evaluation/readme.md
