@@ -183,6 +183,11 @@ def evaluate_predictions_on_samples(folder_with_predictions: str, num_processes:
                     metrics[i, 0, 0], metrics[i, 1, 0], metrics[i, 2, 0],
                     metrics[i, 0, 1], metrics[i, 1, 1], metrics[i, 2, 1],
                 ))
+            mean_metrics = metrics.mean(0)
+            f.write("average,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f" % (
+                mean_metrics[0, 0], mean_metrics[1, 0], mean_metrics[2, 0],
+                mean_metrics[0, 1], mean_metrics[1, 1], mean_metrics[2, 1],
+            ))
     return metrics, predicted_segmentation_files
 
 
