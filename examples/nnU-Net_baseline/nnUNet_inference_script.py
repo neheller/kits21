@@ -5,6 +5,10 @@ if __name__ == '__main__':
     
     For testing purposes we set the paths to something local, but once we pack it in a docker we need to adapt them of 
     course
+    
+    IMPORTANT: This script performs inference using one nnU-net configuration (3d_lowres, 3d_fullres, 2d OR 
+    3d_cascade_fullres). Within the /parameter folder, nnU-Net expects to find fold_X subfolders where X is the fold ID 
+    (typically [0-4]). These folds CANNOT originate from different configurations.
     """
 
     # this will be changed to /input for the docker
@@ -40,3 +44,4 @@ if __name__ == '__main__':
                   mixed_precision=mixed_precision, overwrite_existing=True, all_in_gpu=False, step_size=0.5)
 
     # done!
+    # (ignore the postprocessing warning!)
