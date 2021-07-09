@@ -12,7 +12,23 @@ if __name__ == '__main__':
     /parameter folder, this script expects to find a 3d_fullres and a 3d_lowres subfolder. Within each of these there 
     should be fold_X subfolders where X is the fold ID (typically [0-4]). These fold folder CANNOT originate from 
     different configurations (the fullres folds go into the 3d_fullres subfolder, the lowres folds go into the 
-    3d_lowres folder!)
+    3d_lowres folder!). There also needs to be the plans.pkl file that you find along with these fold_X folders in the 
+    corresponding nnunet training output directory.
+    
+    /parameters/
+        3d_fullres/
+        ├── fold_0
+        ├── fold_1
+        ├── ...
+        ├── plans.pkl
+        3d_lowres/
+        ├── fold_0
+        ├── fold_1
+        ├── ...
+        ├── plans.pkl
+    
+    Note: nnU-Net will read the correct nnU-Net trainer class from the plans.pkl file. Thus there is no need to 
+    specify it here.
     """
 
     # this will be changed to /input for the docker

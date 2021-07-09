@@ -8,7 +8,18 @@ if __name__ == '__main__':
     
     IMPORTANT: This script performs inference using one nnU-net configuration (3d_lowres, 3d_fullres, 2d OR 
     3d_cascade_fullres). Within the /parameter folder, nnU-Net expects to find fold_X subfolders where X is the fold ID 
-    (typically [0-4]). These folds CANNOT originate from different configurations.
+    (typically [0-4]). These folds CANNOT originate from different configurations. There also needs to be the plans.pkl 
+    file that you find along with these fold_X folders in the 
+    corresponding nnunet training output directory.
+    
+    /parameters/
+    ├── fold_0
+    ├── fold_1
+    ├── ...
+    ├── plans.pkl
+    
+    Note: nnU-Net will read the correct nnU-Net trainer class from the plans.pkl file. Thus there is no need to 
+    specify it here.
     """
 
     # this will be changed to /input for the docker
