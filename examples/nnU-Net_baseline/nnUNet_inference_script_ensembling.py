@@ -18,14 +18,16 @@ if __name__ == '__main__':
     /parameters/
         3d_fullres/
         ├── fold_0
+        │    ├── model_final_checkpoint.model
+        │    └── model_final_checkpoint.model.pkl
         ├── fold_1
         ├── ...
-        ├── plans.pkl
+        └── plans.pkl
         3d_lowres/
         ├── fold_0
         ├── fold_1
         ├── ...
-        ├── plans.pkl
+        └── plans.pkl
     
     Note: nnU-Net will read the correct nnU-Net trainer class from the plans.pkl file. Thus there is no need to 
     specify it here.
@@ -46,8 +48,6 @@ if __name__ == '__main__':
 
     input_files = subfiles(input_folder, suffix='.nii.gz', join=False)
 
-    input_files = [join(input_folder, i) for i in input_files]
-
     # in the parameters folder are five models (fold_X) traines as a cross-validation. We use them as an ensemble for
     # prediction
     folds_fullres = (0, 1, 2, 3, 4)
@@ -64,22 +64,22 @@ if __name__ == '__main__':
     # that ensembling the 5 folds of each configurationis done BEFORE saving the softmax probabilities
     save_npz = True
 
-    # predict with 3d_fullres
-    output_folder_fullres = join(output_folder, '3d_fullres')
-    maybe_mkdir_p(output_folder_fullres)
-    output_files_fullres = [join(output_folder_fullres, i) for i in input_files]
-
-    predict_cases(parameter_folder_fullres, [[i] for i in input_files], output_files_fullres, folds_fullres,
-                  save_npz=save_npz, num_threads_preprocessing=2, num_threads_nifti_save=2, segs_from_prev_stage=None,
-                  do_tta=do_tta, mixed_precision=mixed_precision, overwrite_existing=True, all_in_gpu=False,
-                  step_size=0.5)
-
     # predict with 3d_lowres
     output_folder_lowres = join(output_folder, '3d_lowres')
     maybe_mkdir_p(output_folder_lowres)
     output_files_lowres = [join(output_folder_lowres, i) for i in input_files]
 
-    predict_cases(parameter_folder_lowres, [[i] for i in input_files], output_files_lowres, folds_lowres,
+    predict_cases(parameter_folder_lowres, [[join(input_folder, i)] for i in input_files], output_files_lowres, folds_lowres,
+                  save_npz=save_npz, num_threads_preprocessing=2, num_threads_nifti_save=2, segs_from_prev_stage=None,
+                  do_tta=do_tta, mixed_precision=mixed_precision, overwrite_existing=True, all_in_gpu=False,
+                  step_size=0.5)
+
+    # predict with 3d_fullres
+    output_folder_fullres = join(output_folder, '3d_fullres')
+    maybe_mkdir_p(output_folder_fullres)
+    output_files_fullres = [join(output_folder_fullres, i) for i in input_files]
+
+    predict_cases(parameter_folder_fullres, [[join(input_folder, i)] for i in input_files], output_files_fullres, folds_fullres,
                   save_npz=save_npz, num_threads_preprocessing=2, num_threads_nifti_save=2, segs_from_prev_stage=None,
                   do_tta=do_tta, mixed_precision=mixed_precision, overwrite_existing=True, all_in_gpu=False,
                   step_size=0.5)

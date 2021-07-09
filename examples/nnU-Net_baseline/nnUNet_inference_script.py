@@ -14,6 +14,8 @@ if __name__ == '__main__':
     
     /parameters/
     ├── fold_0
+    │    ├── model_final_checkpoint.model
+    │    └── model_final_checkpoint.model.pkl
     ├── fold_1
     ├── ...
     ├── plans.pkl
