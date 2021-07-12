@@ -2,7 +2,7 @@
 
 Here is BLABLABLA
 
-###Step 1. Install Docker
+#Step 1. Install Docker
 To install docker use following instructions https://docs.docker.com/engine/install/ depending on your OS.
 
 ###Step 2. Creating Dockerfile
@@ -27,7 +27,7 @@ To run the script, one should execute following line **within the container**:
 ```console
 python inference_script.py
 ```
-###Spet 6. Save running container
+###Step 6. Save running container
 To import or save running container to test_container.tar file on your local machine, one should run following command in a terminal:
 ```console
 docker save -o test_container.tar YOUR_DOCKER_IMAGE_NAME
