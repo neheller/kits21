@@ -14,7 +14,7 @@ RUN pip3 install numpy nibabel
 ADD model /model/
 ADD inference_script.py ./
 
-# in case you want to run your script withing the container already by default, you can use following commands
-#CMD ["inference_script.py"]
-#ENTRYPOINT ["python3"]
+# run inference script that will populate /output folder
+CMD ["inference_script.py"]
+ENTRYPOINT ["python3"]
 
