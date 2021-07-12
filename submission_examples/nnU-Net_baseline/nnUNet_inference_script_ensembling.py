@@ -34,10 +34,10 @@ if __name__ == '__main__':
     """
 
     # this will be changed to /input for the docker
-    input_folder = '/home/input'
+    input_folder = '/input'
 
     # this will be changed to /output for the docker
-    output_folder = '/home/output'
+    output_folder = '/output'
 
     # this will be changed to /parameters/X for the docker
     parameter_folder_fullres = '/parameters_ensembling/3d_fullres'

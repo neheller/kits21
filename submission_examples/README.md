@@ -16,8 +16,6 @@ Please make sure your dockerfile is placed to the same folder as your python scr
 (inference_script.py file as a dummy example) and directory that contains your training weights (model/ folder for dummy
 example and parameters/ folder for nnUnet baseline example).
 
-Please note, that the dockerfiles here will execute a run of the specified python script by default.
-
 ### Step 3. Build a docker image from a dockerfile.
 
 Navigate to the directory with the dockerfile and run following command:
@@ -32,8 +30,9 @@ A container is a process which runs on a host. To run this process "docker run" 
 specifying docker image to derive the container from. For this, one needs to run the following:
 
 ```console
-docker run --rm -it --ipc=host -v LOCAL_PATH:/home --name YOUR_DOCKER_CONTAINER_NAME YOUR_DOCKER_IMAGE_NAME
+docker run --rm -it --ipc=host -v LOCAL_PATH_INPUT:/input -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python inference_script.py
 ```
+
 -v flag mounts the directories between your local host and the container. Make sure that LOCAL_PATH folder has /input
 and /output folders in place, with /input folder consisting of test cases you would want to test on yourself. After the
 submission, this command will be run on a private server managed by the organizers with mounting to the local folder
@@ -42,8 +41,9 @@ that has test data in the folder /input.
 In case you want to have it running on gpu, please specify --runtime=nvidia:
 
 ```console  
-docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH:/home --name YOUR_DOCKER_CONTAINER_NAME YOUR_DOCKER_IMAGE_NAME
+docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python nnUNet_inference_script.py      
 ```
+
 <!---
 ### (Optional) Step 5. Running script within the container
 To run any additional scripts, one can execute following line **within the container**:
@@ -73,5 +73,5 @@ docker load -i test_docker.tar
 And run loaded docker as previously with following command:
 
 ```console
-docker run --rm -it --ipc=host -v LOCAL_PATH:/home --name YOUR_DOCKER_CONTAINER_NAME YOUR_DOCKER_IMAGE_NAME
+docker run --rm -it --ipc=host -v LOCAL_PATH_INPUT:/input -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python inference_script.py
 ```

@@ -15,8 +15,3 @@ RUN pip3 install numpy nibabel
 # ADD model /model/
 
 ADD inference_script.py ./
-
-# run inference script that will populate /output folder
-CMD ["inference_script.py"]
-ENTRYPOINT ["python3"]
-

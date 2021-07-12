@@ -10,15 +10,18 @@ import nibabel as nib
 
 if __name__ == '__main__':
 
-    if not os.path.exists('/home/output'):
-        os.mkdir('/home/output')
+    input_folder = '/input'
+    output_folder = '/output'
+
+    if not os.path.exists(output_folder):
+        os.mkdir(output_folder)
 
     # Load model from /model folder. Here this part is skipped for simplicity reasons.
 
-    for filename in os.listdir('/home/input'):
+    for filename in os.listdir(input_folder):
         if filename.endswith(".nii.gz"):
-            img = nib.load(os.path.join('/home/input', filename))
+            img = nib.load(os.path.join(input_folder, filename))
             width, height, queue = img.dataobj.shape
             data = np.zeros((width, height, queue))
             img = nib.Nifti1Image(data, affine=np.eye(4))
-            nib.save(img, os.path.join('/home/output', filename))
+            nib.save(img, os.path.join(output_folder, filename))
