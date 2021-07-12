@@ -8,9 +8,7 @@ This folder consist of 2 examples that can be used as a base for docker submissi
   submission (run_inference.py) and ensemble of the models (run_inference_ensemble.py)
 
 We also prepared a quick guidelines for setting up a docker and using submission examples. Here are the steps to follow
-to install docker, create a docker image, run a container, save and load a docker image created. Here is a quick guide
-on how to install docker, build a docker image and run a container with mounting your local data for testing to the
-container folder.
+to install docker, build a docker image, run a container, save and load a docker image created.
 
 ### Step 1. Install Docker
 
@@ -24,6 +22,9 @@ found in nnU-Net_baseline/ folder, where we specified additional requirements ne
 Please make sure your dockerfile is placed to the same folder as your python script to run inference on the test data
 (run_inference.py file as a dummy example) and directory that contains your training weights (model/ folder for dummy
 example and parameters/ folder for nnUnet baseline example).
+
+Please make sure that the naming of your folder with a trained model is correctly specified in Dockerfile as well as in
+the inference script.
 
 ### Step 3. Build a docker image from a dockerfile.
 
