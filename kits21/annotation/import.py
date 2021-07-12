@@ -18,7 +18,7 @@ def get_case_dir(case):
     # TODO remove hardcoding -- test both to find it
     page = int(case // 50)
     tst = "training_data"
-    if case >= 210:
+    if case >= 300:
         tst = "testing_data"
     return (SRC_DIR / tst / "cases_{:05d}".format(page) / "case_{:05d}".format(case)).resolve(strict=True)
 
