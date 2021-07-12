@@ -13,7 +13,7 @@ A good practice when using docker is to create a dockerfile with all needed requ
 find a simple example of the dockerfile in the dummy_submission/ folder. More complicated example of a dockerfile can be
 found in nnU-Net_baseline/ folder, where we specified additional requirements needed for running nnUnet baseline model.
 Please make sure your dockerfile is placed to the same folder as your python script to run inference on the test data
-(inference_script.py file as a dummy example) and directory that contains your training weights (model/ folder for dummy
+(run_inference.py file as a dummy example) and directory that contains your training weights (model/ folder for dummy
 example and parameters/ folder for nnUnet baseline example).
 
 ### Step 3. Build a docker image from a dockerfile.
@@ -30,25 +30,19 @@ A container is a process which runs on a host. To run this process "docker run" 
 specifying docker image to derive the container from. For this, one needs to run the following:
 
 ```console
-docker run --rm -it --ipc=host -v LOCAL_PATH_INPUT:/input -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python inference_script.py
+docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
 ```
 
--v flag mounts the directories between your local host and the container. Make sure that LOCAL_PATH folder has /input
-and /output folders in place, with /input folder consisting of test cases you would want to test on yourself. After the
-submission, this command will be run on a private server managed by the organizers with mounting to the local folder
-that has test data in the folder /input.
-
-In case you want to have it running on gpu, please specify --runtime=nvidia:
-
-```console  
-docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python nnUNet_inference_script.py      
-```
+-v flag mounts the directories between your local host and the container. :ro addition to the -v flag for input folder
+specifies, that the input folder has read-only permissions. Make sure that LOCAL_PATH_INPUT contains your test
+samples, and LOCAL_PATH_OUTPUT is an output folder for saving the predictions. This command will be run on a private
+server managed by the organizers with mounting to the local folders.
 
 <!---
 ### (Optional) Step 5. Running script within the container
 To run any additional scripts, one can execute following line **within the container**:
 ```console
-python inference_script.py
+python run_inference.py
 ```
 """
 -->
@@ -70,8 +64,8 @@ To double check your saved container, one can load it with running:
 docker load -i test_docker.tar
 ```
 
-And run loaded docker as previously with following command:
+And run loaded docker as previously with following command identical to the Step 4:
 
 ```console
-docker run --rm -it --ipc=host -v LOCAL_PATH_INPUT:/input -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python inference_script.py
+docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
 ```

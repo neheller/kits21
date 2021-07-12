@@ -1,4 +1,4 @@
-# Here is an example of a Dockerfile to use. Please make sure this file is placed to the same folder as inference_script.py file and directory model/ that contains your training weights.
+# Here is an example of a Dockerfile to use. Please make sure this file is placed to the same folder as run_inference.py file and directory model/ that contains your training weights.
 
 FROM ubuntu:latest
 
@@ -14,4 +14,4 @@ RUN pip3 install numpy nibabel
 # Copy the folder with your pretrained model here to /model folder within the container. This part is skipped here due to simplicity reasons
 # ADD model /model/
 
-ADD inference_script.py ./
+ADD run_inference.py ./

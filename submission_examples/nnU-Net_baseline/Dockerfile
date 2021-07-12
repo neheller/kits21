@@ -12,8 +12,8 @@ RUN pip install nnunet
 
 # for single model inference
 ADD parameters /parameters/
-ADD nnUNet_inference_script.py ./
+ADD run_inference.py ./
 
 # for ensemble model inference
 # ADD parameters_ensembling /parameters_ensembling/
-# ADD nnUNet_inference_script_ensembling.py ./
+# ADD run_inference_ensembling.py ./
