@@ -25,13 +25,13 @@ if __name__ == '__main__':
     """
 
     # this will be changed to /input for the docker
-    input_folder = '/home/fabian/drives/E132-Projekte/Projects/2021_Isensee_Trofimova_KiTS_Challenge/input'
+    input_folder = '/home/input'
 
     # this will be changed to /output for the docker
-    output_folder = '/home/fabian/drives/E132-Projekte/Projects/2021_Isensee_Trofimova_KiTS_Challenge/output'
+    output_folder = '/home/output'
 
     # this will be changed to /parameters for the docker
-    parameter_folder = '/home/fabian/drives/E132-Projekte/Projects/2021_Isensee_Trofimova_KiTS_Challenge/parameters'
+    parameter_folder = '/parameters'
 
     from nnunet.inference.predict import predict_cases
     from batchgenerators.utilities.file_and_folder_operations import subfiles, join

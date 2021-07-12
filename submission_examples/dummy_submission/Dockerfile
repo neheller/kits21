@@ -11,7 +11,9 @@ RUN apt-get update \
 
 RUN pip3 install numpy nibabel
 
-ADD model /model/
+# Copy the folder with your pretrained model here to /model folder within the container. This part is skipped here due to simplicity reasons
+# ADD model /model/
+
 ADD inference_script.py ./
 
 # run inference script that will populate /output folder
