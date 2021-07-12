@@ -37,7 +37,9 @@ docker run --rm -it --ipc=host -v LOCAL_PATH:/home --name YOUR_DOCKER_CONTAINER_
 -v flag mounts the directories between your local host and the container. Make sure that LOCAL_PATH folder has /input
 and /output folders in place, with /input folder consisting of test cases you would want to test on yourself. After the
 submission, this command will be run on a private server managed by the organizers with mounting to the local folder
-that has test data in the folder /input. In case you want to have it running on gpu, please specify --runtime=nvidia:
+that has test data in the folder /input.
+
+In case you want to have it running on gpu, please specify --runtime=nvidia:
 
 ```console  
 docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH:/home --name YOUR_DOCKER_CONTAINER_NAME YOUR_DOCKER_IMAGE_NAME
