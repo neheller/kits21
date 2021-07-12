@@ -1,7 +1,16 @@
-# Guidelines for setting up and running docker
+# Submission examples
 
-Here is a quick guide on how to install docker, build a docker image and run a container with mounting your local data
-for testing to the container folder.
+This folder consist of 2 examples that can be used as a base for docker submission of the KiTS challenge 2021.
+
+- dummy_submission folder includes vanilla dockerfile and simplistic inference script for computing dummy output
+  segmentation (in current case its arrays filled with zeros).
+- nnU-Net_baseline folder has a dockerfile for running nnUnet baseline model along with 2 options: single model
+  submission (run_inference.py) and ensemble of the models (run_inference_ensemble.py)
+
+We also prepared a quick guidelines for setting up a docker and using submission examples. Here are the steps to follow
+to install docker, create a docker image, run a container, save and load a docker image created. Here is a quick guide
+on how to install docker, build a docker image and run a container with mounting your local data for testing to the
+container folder.
 
 ### Step 1. Install Docker
 
@@ -34,9 +43,9 @@ docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v
 ```
 
 -v flag mounts the directories between your local host and the container. :ro addition to the -v flag for input folder
-specifies, that the input folder has read-only permissions. Make sure that LOCAL_PATH_INPUT contains your test
-samples, and LOCAL_PATH_OUTPUT is an output folder for saving the predictions. This command will be run on a private
-server managed by the organizers with mounting to the local folders.
+specifies, that the input folder has read-only permissions. Make sure that LOCAL_PATH_INPUT contains your test samples,
+and LOCAL_PATH_OUTPUT is an output folder for saving the predictions. This command will be run on a private server
+managed by the organizers with mounting to the folders with final test data.
 
 <!---
 ### (Optional) Step 5. Running script within the container
@@ -49,16 +58,15 @@ python run_inference.py
 
 ### Step 5. Save docker image container
 
-To import or save docker image to test_docker.tar file on your local machine, one should run following command in a
-terminal:
+To save docker image to test_docker.tar file on your local machine, one should run following command in a terminal:
 
 ```console
 docker save -o test_docker.tar YOUR_DOCKER_IMAGE_NAME
 ```
 
-### Step 6. Load the container
+### Step 6. Load the image
 
-To double check your saved container, one can load it with running:
+To double check your saved image, one can load it with running:
 
 ```console
 docker load -i test_docker.tar
