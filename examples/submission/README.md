@@ -1,16 +1,18 @@
 # Submission examples
 
 ## Submission guidelines
-As the participants won't have access to the test dataset, the submission system will be managed through docker. The
-primary reasoning for that is to eliminate an occurrence of cheating e.g. designing the model specifically for test set.
-This year the submission takes place by uploading a saved docker image (single file), that would be loaded and run by
-organizers on a private servers. Uploaded docker images has to be able to access the folder with test samples called
-/input, the folder /output for writing out the predictions, your trained model as well as the inference python script.
+
+As the participants of KiTS 2021 challenge won't have access to the test dataset, the submission system will be managed
+through docker. The primary reasoning for that is to eliminate an occurrence of cheating e.g. designing the model
+specifically for test set. This year the submission takes place by uploading a saved docker image (single file), that
+would be loaded and run by organizers on a private servers. Uploaded docker images has to be able to access the folder
+with test samples called /input, the folder /output for writing out the predictions, your trained model as well as the
+inference python script.
 
 - **input and output folders**:
   Within the docker container the images from the test dataset would be placed in the folder /input without additional
-  nested folders. The file extension of the files in /input folder is ".nii.gz". The output folder should be populated
-  with filenames identical to the input folder filenames that consist computed segmentations. The structure of those
+  nested folders. The file extension of the files in /input folder is ".nii.gz". The /output folder should be populated
+  with computed segmentations saved to the filenames identical to the /input folder filenames. The structure of those
   folders is shown below with the example of two cases: \
   ── input\
   ├── case00000.nii.gz\
@@ -18,17 +20,17 @@ organizers on a private servers. Uploaded docker images has to be able to access
   ── output\
   ├── case00000.nii.gz\
   └── case00001.nii.gz \
-  Those folders will be mounted as volumes during docker run command (see Step 4).
+  Those folders will be mounted as volumes during docker run command (see Step 4 of Installation and running guidelines).
 - **trained model**:
   As your trained model has to be a part of submitted docker image, it has to be added at the stage of building a docker
   image. This is done by copying your local folder with the model weights to a specified folder within the container.
   For more information see the examples of the dockerfiles we prepared.
 - **python inference script**:
   The inference script for computing segmentation of test images has to be a part of the submitted docker image as well.
-  Hence, it has to be added at the stage of building a docker image. We ask to name this script "run_inference.py" as it
+  Hence, it has to be added at the stage of building a docker image. We ask to name this script *run_inference.py* as it
   will be executed by organizers while running a docker image. In this script, one can access the test images from the
   /input folder and predicted segmentation should be saved to the /output folder. The model should be loaded from the
-  folder that was specified to move your model weights during a docker image build.
+  folder that was specified for copying of your model weights at the stage of a docker image build.
 
 ## Folder structure
 
@@ -91,7 +93,7 @@ A container is a process which runs on a host. To run this process "docker run" 
 specifying docker image to derive the container from. For this, one needs to run the following:
 
 ```console
-docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
+docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
 ```
 
 -v flag mounts the directories between your local host and the container. :ro addition to the -v flag for input folder
@@ -127,5 +129,5 @@ docker load -i test_docker.tar
 And run loaded docker as previously with following command identical to the Step 4:
 
 ```console
-docker run --rm -it --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
+docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
 ```
