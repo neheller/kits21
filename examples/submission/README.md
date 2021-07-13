@@ -1,5 +1,6 @@
 # Submission examples
 
+## Submission guidelines
 As the participants won't have access to the test dataset, the submission system will be managed through docker. The
 primary reasoning for that is to eliminate an occurrence of cheating e.g. designing the model specifically for test set.
 This year the submission takes place by uploading a saved docker image (single file), that would be loaded and run by
@@ -29,6 +30,8 @@ organizers on a private servers. Uploaded docker images has to be able to access
   /input folder and predicted segmentation should be saved to the /output folder. The model should be loaded from the
   folder that was specified to move your model weights during a docker image build.
 
+## Folder structure
+
 This folder consist of 2 examples that can be used as a base for docker submission of the KiTS challenge 2021.
 
 - dummy_submission folder includes
@@ -49,8 +52,11 @@ This folder consist of 2 examples that can be used as a base for docker submissi
   Your docker run command has to be adapted accordingly. For final submission, however, your inference script should be
   always called *run_inference.py*.
 
-We also prepared a quick guidelines for setting up a docker and using submission examples. Here are the steps to follow
-to install docker, build a docker image, run a container, save and load a docker image created.
+## Installation and running guidelines
+
+We recognize that not all participants will have had experience with Docker, so we've prepared a quick guidelines for
+setting up a docker and using submission examples. Here are the steps to follow to install docker, build a docker image,
+run a container, save and load a docker image created.
 
 ### Step 1. Install Docker
 
