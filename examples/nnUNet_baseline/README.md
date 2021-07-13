@@ -10,7 +10,7 @@ developed model to nnUNet baseline.
 
 A documentation on how to run nnUNet on a new dataset is
 given [here](https://github.com/MIC-DKFZ/nnUNet#how-to-run-nnu-net-on-a-new-dataset). To simplify a number of the steps
-for the participants of KiTS 2021 Challenge, here we present a number of steps one needs to perform to train nnUNet
+for the participants of KiTS 2021 Challenge, here we highlight the steps one needs to perform to train nnUNet
 baseline model specifically on KiTS 2021 dataset:
 
 ### nnUNet setup
