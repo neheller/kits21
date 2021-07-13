@@ -47,18 +47,18 @@ This folder consist of 2 examples that can be used as a base for docker submissi
 - nnU-Net_baseline folder has
   a [dockerfile](https://github.com/trofimova/kits21/blob/master/examples/submission/nnU-Net_baseline/Dockerfile) for
   running nnUnet baseline model along with 2 options: single model
-  submission ([run_inference.py](https://github.com/trofimova/kits21/blob/master/examples/submission/nnU-Net_baseline/run_inference.py))
+  submission ([run_inference.py](https://github.com/trofimova/kits21/blob/master/examples/submission/nnUNet_submission/run_inference.py))
   and ensemble of the
-  models ([run_inference_ensemble.py](https://github.com/trofimova/kits21/blob/master/examples/submission/nnU-Net_baseline/run_inference_ensembling.py))
+  models ([run_inference_ensemble.py](https://github.com/trofimova/kits21/blob/master/examples/submission/nnUNet_submission/run_inference_ensembling.py))
   . Please note here, that to run the ensemble script locally, one need to change the naming of the parameters folder as
   well as script to run (as it's given in the comments of
-  the [dockerfile](https://github.com/trofimova/kits21/blob/master/examples/submission/nnU-Net_baseline/Dockerfile)).
+  the [dockerfile](https://github.com/trofimova/kits21/blob/master/examples/submission/nnUNet_submission/Dockerfile)).
   Your docker run command has to be adapted accordingly. For final submission, however, your inference script should be
   always called *run_inference.py*.
 
 ## Installation and running guidelines
 
-We recognize that not all participants will have had experience with Docker, so we've prepared a quick guidelines for
+We recognize that not all participants will have had experience with docker, so we've prepared a quick guidelines for
 setting up a docker and using submission examples. Here are the steps to follow to install docker, build a docker image,
 run a container, save and load a docker image created.
 
@@ -72,7 +72,7 @@ A good practice when using docker is to create a dockerfile with all needed requ
 find a simple example of the dockerfile in
 the [dummy_submission/](https://github.com/trofimova/kits21/tree/master/examples/submission/dummy_submission) folder.
 More complicated example of a dockerfile can be found
-in [nnU-Net_baseline/](https://github.com/trofimova/kits21/tree/master/examples/submission/nnU-Net_baseline) folder,
+in [nnU-Net_baseline/](https://github.com/trofimova/kits21/tree/master/examples/submission/nnUNet_submission) folder,
 where we specified additional requirements needed for running nnUnet baseline model. Please make sure that your
 dockerfile is placed to the same folder as your python script to run inference on the test data
 (*run_inference.py*) and directory that contains your training weights (model/ folder for dummy example and parameters/
