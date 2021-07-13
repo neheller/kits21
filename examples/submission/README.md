@@ -13,13 +13,16 @@ as the inference python script.
   Within the docker container the images from the test dataset would be placed in the folder /input without additional
   nested folders. The file extension of the files in /input folder is ".nii.gz". The /output folder should be populated
   with computed segmentations saved to the filenames identical to the /input folder filenames. The structure of those
-  folders is shown below with the example of two cases: \
-  ── input\
-  ├── case00000.nii.gz\
-  └── case00001.nii.gz\
-  ── output\
-  ├── case00000.nii.gz\
-  └── case00001.nii.gz \
+  folders is shown below with the example of two cases: 
+  
+      ├── input
+      │   └── case00000.nii.gz
+      │   └── case00001.nii.gz
+      ├── output
+      │   └── case00000.nii.gz
+      │   └── case00001.nii.gz
+
+
   Those folders will be mounted as volumes during docker run command (
   see [Step 4 of Installation and running guidelines](https://github.com/trofimova/kits21/tree/master/examples/submission#step-4-run-a-container-from-a-created-docker-image))
   .

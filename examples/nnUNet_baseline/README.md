@@ -64,7 +64,7 @@ For 3d_cascade_fullres training, one needs to run following command with FOLD be
 nnUNet_train 3d_cascade_fullres nnUNetTrainerV2CascadeFullRes Task135_KiTS2021 FOLD
 ```
 
-The trained models will we writen to the RESULTS_FOLDER/nnUNet folder. Each training obtains an automatically generated
+The trained models will be writen to the RESULTS_FOLDER/nnUNet folder. Each training obtains an automatically generated
 output folder name. Here we give an example of output folder for 3d_fullres:
 
     RESULTS_FOLDER/nnUNet/
