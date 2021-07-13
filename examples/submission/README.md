@@ -1,5 +1,34 @@
 # Submission examples
 
+As the participants won't have access to the test dataset, the submission system will be managed through docker. The
+primary reasoning for that is to eliminate an occurrence of cheating e.g. designing the model specifically for test set.
+This year the submission takes place by uploading a saved docker image (single file), that would be loaded and run by
+organizers on a private servers. Uploaded docker images has to be able to access the folder with test samples called
+/input, the folder /output for writing out the predictions, your trained model as well as the inference python script.
+
+- **input and output folders**:
+  Within the docker container the images from the test dataset would be placed in the folder /input without additional
+  nested folders. The file extension of the files in /input folder is ".nii.gz". The output folder should be populated
+  with filenames identical to the input folder filenames that consist computed segmentations. The structure of those
+  folders is shown below with the example of two cases: \
+  ── input\
+  ├── case00000.nii.gz\
+  └── case00001.nii.gz\
+  ── output\
+  ├── case00000.nii.gz\
+  └── case00001.nii.gz \
+  Those folders will be mounted as volumes during docker run command (see Step 4).
+- **trained model**:
+  As your trained model has to be a part of submitted docker image, it has to be added at the stage of building a docker
+  image. This is done by copying your local folder with the model weights to a specified folder within the container.
+  For more information see the examples of the dockerfiles we prepared.
+- **python inference script**:
+  The inference script for computing segmentation of test images has to be a part of the submitted docker image as well.
+  Hence, it has to be added at the stage of building a docker image. We ask to name this script "run_inference.py" as it
+  will be executed by organizers while running a docker image. In this script, one can access the test images from the
+  /input folder and predicted segmentation should be saved to the /output folder. The model should be loaded from the
+  folder that was specified to move your model weights during a docker image build.
+
 This folder consist of 2 examples that can be used as a base for docker submission of the KiTS challenge 2021.
 
 - dummy_submission folder includes
@@ -34,13 +63,13 @@ find a simple example of the dockerfile in
 the [dummy_submission/](https://github.com/trofimova/kits21/tree/master/examples/submission/dummy_submission) folder.
 More complicated example of a dockerfile can be found
 in [nnU-Net_baseline/](https://github.com/trofimova/kits21/tree/master/examples/submission/nnU-Net_baseline) folder,
-where we specified additional requirements needed for running nnUnet baseline model. Please make sure that your dockerfile is
-placed to the same folder as your python script to run inference on the test data
+where we specified additional requirements needed for running nnUnet baseline model. Please make sure that your
+dockerfile is placed to the same folder as your python script to run inference on the test data
 (*run_inference.py*) and directory that contains your training weights (model/ folder for dummy example and parameters/
 folder for nnUnet baseline example).
 
-Please double check that the naming of your folder with a trained model is correctly specified in a dockerfile as well as in
-the inference script.
+Please double check that the naming of your folder with a trained model is correctly specified in a dockerfile as well
+as in the inference script.
 
 ### Step 3. Build a docker image from a dockerfile.
 
