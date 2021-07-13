@@ -3,11 +3,11 @@
 ## Submission guidelines
 
 As the participants of KiTS 2021 challenge won't have access to the test dataset, the submission system will be managed
-through docker. The primary reasoning for that is to eliminate an occurrence of cheating e.g. designing the model
-specifically for test set. This year the submission takes place by uploading a saved docker image (single file), that
-would be loaded and run by organizers on a private servers. Uploaded docker images has to be able to access the folder
-with test samples called /input, the folder /output for writing out the predictions, your trained model as well as the
-inference python script.
+through docker. The primary reason for that is to eliminate an occurrence of cheating e.g. designing the model
+specifically for test dataset. This year the submission takes place by uploading a saved docker image (single file),
+that would be loaded and run by organizers on a private servers. Uploaded docker images has to be able to access the
+folder with test samples called /input, the folder /output for writing out the predictions, your trained model as well
+as the inference python script.
 
 - **input and output folders**:
   Within the docker container the images from the test dataset would be placed in the folder /input without additional
@@ -20,7 +20,9 @@ inference python script.
   ── output\
   ├── case00000.nii.gz\
   └── case00001.nii.gz \
-  Those folders will be mounted as volumes during docker run command (see Step 4 of Installation and running guidelines).
+  Those folders will be mounted as volumes during docker run command (
+  see [Step 4 of Installation and running guidelines](https://github.com/trofimova/kits21/tree/master/examples/submission#step-4-run-a-container-from-a-created-docker-image))
+  .
 - **trained model**:
   As your trained model has to be a part of submitted docker image, it has to be added at the stage of building a docker
   image. This is done by copying your local folder with the model weights to a specified folder within the container.
