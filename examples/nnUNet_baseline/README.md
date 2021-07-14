@@ -128,7 +128,8 @@ identifier. For KiTS there is just one modality (CT) so the files need to end wi
 
 The datset will be finalized by July 15th 2021. In order to upate the dataset within nnU-Net you HAVE TO delete not 
 only the content of `${nnUNet_raw_data_base}/nnUNet_raw_data` but also `${nnUNet_raw_data_base}/nnUNet_cropped_data` 
-and `${nnUNet_preprocessed}/Task137_KiTS2021`. Then rerun [experiment planning and preprocessing](#experiment-planning-and-preprocessing).
+and `${nnUNet_preprocessed}/Task137_KiTS2021`. Then rerun the conversion script again, followed by
+[experiment planning and preprocessing](#experiment-planning-and-preprocessing).
 
 # Extending nnU-Net for KiTS2021
 
