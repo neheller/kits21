@@ -28,7 +28,7 @@ NOT have access to the internet, so please make sure everything you need it incl
 
 
   Those folders will be mounted as volumes during docker run command (
-  see [Step 4 of Installation and running guidelines](#step-4-run-a-container-from-a-created-docker-image))
+  see [Step 4](#step-4-run-a-container-from-a-created-docker-image))
   .
 - **trained model**:
   Your trained model has to be part of the docker image and needs to have been added to the docker at the stage of 
@@ -45,13 +45,13 @@ NOT have access to the internet, so please make sure everything you need it incl
 
 This folder consist of 2 examples that can be used as a base for docker submission of the KiTS challenge 2021.
 
-- dummy_submission folder includes
-  vanilla [dockerfile](dummy_submission/Dockerfile)
+- the dummy_submission folder includes
+  a simple [dockerfile](dummy_submission/Dockerfile)
   and simplistic inference
   script [run_inference.py](dummy_submission/run_inference.py)
   for computing dummy output segmentation (in current case its arrays filled with zeros).
 
-- nnUNet_submission folder has
+- the nnUNet_submission folder has
   a [dockerfile](nnU-Net_baseline/Dockerfile) for
   running nnUNet baseline model along with 2 options: single model
   submission ([run_inference.py](nnUNet_submission/run_inference.py))
