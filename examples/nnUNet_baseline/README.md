@@ -97,7 +97,7 @@ output folder name. Here we give an example of output folder for 3d_fullres:
 
 Exactly this structure of those three folders (3d_fullres, 3d_lowres and 3d_cascade_fullres) is required for running 
 inference script presented in the example
-of [nnUNet docker submission](https://github.com/trofimova/kits21/tree/master/examples/submission/nnUNet_submission).
+of [nnUNet docker submission](../submission/nnUNet_submission).
 
 ### Best configuration
 

@@ -28,7 +28,7 @@ NOT have access to the internet, so please make sure everything you need it incl
 
 
   Those folders will be mounted as volumes during docker run command (
-  see [Step 4 of Installation and running guidelines](https://github.com/trofimova/kits21/tree/master/examples/submission#step-4-run-a-container-from-a-created-docker-image))
+  see [Step 4 of Installation and running guidelines](#step-4-run-a-container-from-a-created-docker-image))
   .
 - **trained model**:
   Your trained model has to be part of the docker image and needs to have been added to the docker at the stage of 
@@ -46,20 +46,20 @@ NOT have access to the internet, so please make sure everything you need it incl
 This folder consist of 2 examples that can be used as a base for docker submission of the KiTS challenge 2021.
 
 - dummy_submission folder includes
-  vanilla [dockerfile](https://github.com/trofimova/kits21/blob/master/examples/submission/dummy_submission/Dockerfile)
+  vanilla [dockerfile](dummy_submission/Dockerfile)
   and simplistic inference
-  script [run_inference.py](https://github.com/trofimova/kits21/blob/master/examples/submission/dummy_submission/run_inference.py)
+  script [run_inference.py](dummy_submission/run_inference.py)
   for computing dummy output segmentation (in current case its arrays filled with zeros).
 
 - nnUNet_submission folder has
-  a [dockerfile](https://github.com/trofimova/kits21/blob/master/examples/submission/nnU-Net_baseline/Dockerfile) for
+  a [dockerfile](nnU-Net_baseline/Dockerfile) for
   running nnUNet baseline model along with 2 options: single model
-  submission ([run_inference.py](https://github.com/trofimova/kits21/blob/master/examples/submission/nnUNet_submission/run_inference.py))
+  submission ([run_inference.py](nnUNet_submission/run_inference.py))
   and ensemble of the
-  models ([run_inference_ensemble.py](https://github.com/trofimova/kits21/blob/master/examples/submission/nnUNet_submission/run_inference_ensembling.py))
+  models ([run_inference_ensemble.py](nnUNet_submission/run_inference_ensembling.py))
   . Please note here, that to run the ensemble script locally, you need to change the naming of the parameters folder as
   well as the script to run (as outlines in the comments of
-  the [dockerfile](https://github.com/trofimova/kits21/blob/master/examples/submission/nnUNet_submission/Dockerfile)).
+  the [dockerfile](nnUNet_submission/Dockerfile)).
   Your docker run command has to be adapted accordingly. For final submission, your inference script should be
   always called *run_inference.py*.
 
@@ -77,9 +77,9 @@ To install docker use following instructions https://docs.docker.com/engine/inst
 
 A good practice when using docker is to create a dockerfile with all needed requirements and needed operations. You can
 find a simple example of the dockerfile in
-the [dummy_submission/](https://github.com/trofimova/kits21/tree/master/examples/submission/dummy_submission) folder.
+the [dummy_submission/](dummy_submission) folder.
 More complicated example of a dockerfile can be found
-in [nnUNet_submission/](https://github.com/trofimova/kits21/tree/master/examples/submission/nnUNet_submission) folder,
+in [nnUNet_submission/](nnUNet_submission) folder,
 where we specified additional requirements needed for running the nnUNet baseline model. Please make sure that your
 dockerfile is placed in the same folder as your python script to run inference on the test data
 (*run_inference.py*) and directory that contains your training weights (model/ folder for dummy example and parameters/
