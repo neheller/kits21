@@ -1,68 +1,67 @@
 # nnUNet baseline model
 
 We chose nnUNet as a model baseline for KiTS 2021 Challenge as it's well known as a framework for fast and effective
-development of segmentation methods. Users with various background and expertise level can use nnUNet out of the box for
+development of segmentation methods. Users with various background and expertise can use nnUNet out-of-the-box for
 their custom 3D segmentation problem without much need for manual intervention. It's publicly available and can be
 accessed via [MIC-DKFZ/nnUNet](https://github.com/MIC-DKFZ/nnUNet).
 
-We do not expect the participants to use it for model development but strongly encourage to compare the performance of
-developed model to nnUNet baseline.
+We do not expect the participants to use nnUNet for model development but strongly encourage to compare the performance of
+their developed model to the nnUNet baseline.
 
 A documentation on how to run nnUNet on a new dataset is
 given [here](https://github.com/MIC-DKFZ/nnUNet#how-to-run-nnu-net-on-a-new-dataset). To simplify a number of the steps
-for the participants of KiTS 2021 Challenge, here we highlight the steps one needs to perform to train nnUNet
-baseline model specifically on KiTS 2021 dataset:
+for the participants of KiTS 2021 Challenge, here we highlight the steps needed to train nnUNet on the KiTS 2021 dataset:
+
+**IMPORTANT: nnU-Net only works on Linux-based operating systems!**
 
 ### nnUNet setup
 
-Please follow the instruction to set up nnUNet and some environment variables following the
-instructions [here](https://github.com/MIC-DKFZ/nnUNet#installation).
+Please follow the installation instructions [here](https://github.com/MIC-DKFZ/nnUNet#installation). Please follow the 
+instructions for installing nnU-Net as an integrative framework (not via `pip install nnunet`).
 
 ### Dataset preparation
 
-As nnUNet expects datasets in a structured format, one needs to convert the dataset to be compatible with nnUNet format.
-For that one should
-run [Task135_KiTS2021.py](https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunet/dataset_conversion/Task135_KiTS2021.py)
-file locally.
+This section requires you to have downloaded the KiTS2021 dataset already.
+
+As nnUNet expects datasets in a structured format, you need to convert the dataset to be compatible with nnUNet. We
+provide a script to to this: [Task135_KiTS2021.py](https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunet/dataset_conversion/Task135_KiTS2021.py)
+
+Please adapt this script to your system and simply execute it with python. This will convert the KiTS dataset into 
+nnU-Net's data format.
 
 ### Experiment planning and preprocessing
+In order to train the nnU-Net models all you need to do is run the standard nnU-Net steps:
 
-For nnUNet to extract a fingerprint of the dataset, one should run nnUNet_plan_and_preprocess function that would
-estimate a dataset specific properties. This information would be used to create all possible configurations of nnUNet:
-
-- 2d (2d UNet - dropped in further instructions)
-- 3d_fullres (operates on full resolution images)
-- 3d_lowres (operates on downsampled images)
-- 3d_cascade_fullres (creates a coarse segmentation map in downsampled images which is then refined by 3d_fullres)
-
-You can run this step with a following command (number 135 is a task name here and would be set to this value for
-following commands as well):
-
+The following command will extract the dataset fingerprint and based on that configure nnU-Net's configurations.
 ```console
-nnUNet_plan_and_preprocess -t 135 --verify_dataset_integrity
+nnUNet_plan_and_preprocess -t 135 -pl2d None -tl 4 -tf 2
 ```
+
+`-pl2d None` makes nnU-Net ignore the 2D configuration which is unlikely to perform well on the KiTS task. You can 
+omit this part if you would like to use it.
+
+Setting `-tf 2` and `-tl 4` is necessary to keep RAM utilization low during preprocessing. The provided numbers work 
+well with 64GB RAM. If you find yourself running out of memory or if the preprocessing gets stuck, consider setting 
+these lower. If you have more RAM (and CPU cores), set them higher.
+
+Running preprocessing will take a while - so sit back and relax!
 
 ### Training of the model
+Once preprocessing is completed you can run the nnU-net configurations you would like to use as baselines. Note that 
+we will be providing pretrained model weights shortly after the dataset freeze so that you don't have to train nnU-Net yourself!
 
-nnUNet trains all possible configurations in 5-fold cross-validation. This enables nnU-Net to determine the
-postprocessing and ensembling on the training dataset. Training models is done with the nnUNet_train command. For
-3d_fullres training, one needs to run following command with FOLD being [0, 1, 2, 3, 4]:
-
-```console
-nnUNet_train 3d_fullres nnUNetTrainerV2 Task135_KiTS2021 FOLD
-```
-
-For 3d_lowres training, one needs to run following command with FOLD being [0, 1, 2, 3, 4]:
+In nnU-Net, the default is to train each configuration via cross-validation. This is the setting we recommend you use 
+as well, regardless of whether you use nnU-Net for your submission or not. Running cross-validation gives you the most 
+stable estimate of model performance on the training set. To run training, use the following command:
 
 ```console
-nnUNet_train 3d_lowres nnUNetTrainerV2 Task135_KiTS2021 FOLD
+nnUNet_train CONFIGURATION nnUNetTrainerV2 137 FOLD
 ```
 
-For 3d_cascade_fullres training, one needs to run following command with FOLD being [0, 1, 2, 3, 4]:
-
-```console
-nnUNet_train 3d_cascade_fullres nnUNetTrainerV2CascadeFullRes Task135_KiTS2021 FOLD
-```
+`CONFIGURATION` is hereby the nnU-Net configuration you would like to use (`2d`, `3d_lowres`, `3d_fullres`, 
+`3d_cascade_fullres`; remember that we do nto have preprocessed data for `2d` by default). Run this command 5 times 
+for `FOLD` 0, 1, 2, 3, 4. If have multiple GPUs you can run these simultaneously BUT you need to start one of the folds 
+first and wait till it utilizes the GPU before starting the others (this has to do with unpacking the data for training).
 
 The trained models will be writen to the RESULTS_FOLDER/nnUNet folder. Each training obtains an automatically generated
 output folder name. Here we give an example of output folder for 3d_fullres:
@@ -102,17 +101,37 @@ of [nnUNet docker submission](https://github.com/trofimova/kits21/tree/master/ex
 
 ### Best configuration
 
-Once the models are trained, one can run nnUNet_find_best_configuration command to determine what configuration to use
-for test set prediction
+Once the models are trained, you can either choose manually which one you would like to use, or use the 
+`nnUNet_find_best_configuration` command to automatically determine the best configuration. Since this command does not 
+understand the HECs, we recommend to evaluate the different configurations manually with the evaluation scripts 
+provided in the kits21 repository and selecting the best performing model based on that.
 
+Should you still with to use `nnUNet_find_best_configuration`, this is how you do it:
 ```console
 nnUNet_find_best_configuration -m 3d_fullres 3d_lowres 3d_cascade_fullres -t 135 
 ```
 
+Note: adapt the `-m` part to the configurations that you actually have trained!
+
 ### Inference
 
-For running the predictions on specific folder one can either make use of the scripts
-prepared for docker submission or run nnUNet_predict command: 
+For running the predictions on specific folder you can either make use of the scripts
+prepared for docker submission or run `nnUNet_predict` command: 
 ```console
 nnUNet_predict -i INPUT_FOLDER -o OUTPUT_FOLDER -t 135 -m 3d_fullres 
 ```
+
+IMPORTANT: nnU-Net expects the filenames in the input folder to end with _XXXX.nii.gz where _XXXX is a modality 
+identifier. For KiTS there is just one modality (CT) so the files need to end with _0000.nii.gz
+
+## Updating the KiTS21 dataset within nnU-Net
+
+The datset will be finalized by July 15th 2021. In order to upate the dataset within nnU-Net you HAVE TO delete not 
+only the content of `${nnUNet_raw_data_base}/nnUNet_raw_data` but also `${nnUNet_raw_data_base}/nnUNet_cropped_data` 
+and `${nnUNet_preprocessed}/Task137_KiTS2021`. Then rerun [experiment planning and preprocessing](#experiment-planning-and-preprocessing).
+
+# Extending nnU-Net for KiTS2021
+
+[Here](https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/extending_nnunet.md) are instructions on how to 
+change and adapt nnU-Net. In order to keep things fair between participants **WE WILL NOT PROVIDE SUPPORT FOR IMPROVING 
+nnU-Net FOR KITS2021**. You are on your own! 
