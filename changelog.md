@@ -2,8 +2,9 @@
 
 This file is meant to keep track of which annotations were changed in each dataset version. Broadly, the *major* version will be incremented with any change to the postprocessing code that causes every region to be regenerated (starting at `v1.x.x`). The *minor* version will be incremented with the addition of new **imaging**, and the *patch* version will be incremented with new **annotations** for the existing imaging.
 
-## [2.2.2] - *Not yet released*: Official Dataset Freeze
+## [2.2.2] - Official Dataset Freeze
 
+- Merged in work by Fabian and Dasha on example Docker submissions
 - Revisions to
   - `case_00000`
   - `case_00006`
@@ -13,10 +14,16 @@ This file is meant to keep track of which annotations were changed in each datas
   - `case_00076`
   - `case_00081`
   - `case_00113`
+  - `case_00120`
+  - `case_00127`
   - `case_00129`
   - `case_00133`
   - `case_00153`
   - `case_00154`
+  - `case_00155`
+  - `case_00176`
+  - `case_00192`
+  - `case_00194`
   - `case_00201`
   - `case_00205`
   - `case_00211`
@@ -25,6 +32,7 @@ This file is meant to keep track of which annotations were changed in each datas
   - `case_00246`
   - `case_00247`
   - `case_00254`
+  - `case_00281`
 
 ## [2.2.1] - July 1st, 2021: Training Set Release
 
