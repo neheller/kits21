@@ -19,6 +19,7 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 
 ## News
 
+- **July 15, 2021**: The training set has been frozen!
 - **July 1, 2021**: The training set has been released! Also we are adding a two-week buffer for final edits to be made based on community feedback, and we are pushing the challenge timeline by two weeks (see above).
 - **June 17, 2021**: We've changed the set of classes for the challenge. See [this forum post](https://discourse.kits-challenge.org/t/kits21-challenge-update/354) for details
 - **Apr 7, 2021**: We've started using tags and a changelog to keep track of the dataset version
