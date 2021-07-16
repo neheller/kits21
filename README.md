@@ -2,9 +2,9 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-**Current dataset version: `2.2.1` -- Official Training Set** (see [changelog](changelog.md))
+**Current dataset version: `2.2.2` -- Official Training Set** (see [changelog](changelog.md))
 
-<img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering.png" width="400" />
+<img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering_dimmed.png" width="400" />
 
 [Challenge Homepage](https://kits21.kits-challenge.org/)
 
@@ -29,11 +29,12 @@ The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challen
 ## Usage
 
 ### Installation
+
 1) Install dependency for surface dice:\
 `pip install git+https://github.com/JoHof/surface-distance.git` (the original [DeepMind repository](https://github.com/deepmind/surface-distance) is currently not working due to a [missing line comment](https://github.com/deepmind/surface-distance/blob/4315531eb2d449310d47c0850f334cc6a6580543/surface_distance/metrics.py#L102))
 2) Clone this repository
 3) Install this repository by running `pip install -e .` in the folder where the setup.py file is located
-   
+
 ### Download
 
 Start by cloning this repository, but note that **the imaging is not stored here**, it must be downloaded using one of the `get_imaging` scripts in the `starter_code` directory. Currently there are implementations in:
@@ -41,6 +42,7 @@ Start by cloning this repository, but note that **the imaging is not stored here
 - **python3**: `python3 kits21/starter_code/get_imaging.py`
 - **MATLAB**: `matlab kits21/starter_code/get_imaging.m`
 - **bash**: `bash kits21/starter_code/get_imaging.sh`
+- **julia**: `julia kits21/starter_code/get_imaging.jl`
 
 If you would like to request another implementation of `get_imaging`, please [submit an issue](https://github.com/neheller/kits21/issues/new).
 
@@ -68,14 +70,14 @@ kits21
 |   |   ├── aggregated_AND_seg.nii.gz
 |   |   └── aggregated_MAJ_seg.nii.gz
 ...
-|   ├── case_00209/
+|   ├── case_00299/
 |   |   ├── raw/
 |   |   ├── segmentations/
 |   |   ├── imaging.nii.gz
 |   |   ├── aggregated_OR_seg.nii.gz
 |   |   ├── aggregated_AND_seg.nii.gz
 |   |   └── aggregated_MAJ_seg.nii.gz
-└── ├── clinical_data.json
+└── ├── kits.json
 ```
 
 This is different from [KiTS19](https://github.com/neheller/kits19) because unlike 2019, we now have multiple annotations per "instance" and multiple instances per region.

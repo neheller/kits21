@@ -18,7 +18,7 @@ def get_case_dir(case):
     # TODO remove hardcoding -- test both to find it
     page = int(case // 50)
     tst = "training_data"
-    if case >= 210:
+    if case >= 300:
         tst = "testing_data"
     return (SRC_DIR / tst / "cases_{:05d}".format(page) / "case_{:05d}".format(case)).resolve(strict=True)
 
@@ -42,6 +42,12 @@ def get_instance_dir(region_dir, instance):
 
 def get_all_instance_dirs(region_dir):
     return [i for i in region_dir.glob("*")]
+
+
+def get_existing_instances(region_dir):
+    case_id = region_dir.parent.name
+    seg_dir = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
+    return [x for x in seg_dir.glob("*{}*".format(region_dir.name))]
 
 
 def get_delineation(instance_dir, delineation):
@@ -297,6 +303,14 @@ def main(args):
                         cache[cache_key] = dln_file.name
                         write_json(CACHE_FILE, cache)
                         reaggregate = True
+
+            # Delete any instances that were generated before but don't exist anymore
+            generated_instances = get_existing_instances(region_dir)
+            for gi in generated_instances:
+                if int(gi.stem.split("instance-")[1][0]) not in [int(x.name)+1 for x in instance_dirs]:
+                    print("Deleting legacy file:", str(gi.name))
+                    gi.unlink()
+                    reaggregate = True
 
         if reaggregate:
             aggregate_case(case_dir.name)
