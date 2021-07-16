@@ -22,6 +22,7 @@ if __name__ == '__main__':
         if filename.endswith(".nii.gz"):
             img = nib.load(os.path.join(input_folder, filename))
             width, height, queue = img.dataobj.shape
-            data = np.zeros((width, height, queue))
-            img = nib.Nifti1Image(data, affine=np.eye(4))
-            nib.save(img, os.path.join(output_folder, filename))
+            # create random noise as segmentation
+            data = np.round(np.random.uniform(low=0, high=1, size=(width, height, queue))).astype(np.uint8)
+            dummy_segmentation = nib.Nifti1Image(data, affine=img.affine)
+            nib.save(dummy_segmentation, os.path.join(output_folder, filename))
