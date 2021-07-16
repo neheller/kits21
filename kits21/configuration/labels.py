@@ -23,9 +23,9 @@ KITS_LABEL_NAMES = {
 
 # values are determined by kits21/evaluation/compute_tolerances.py
 HEC_SD_TOLERANCES_MM = {
-    'kidney_and_mass': 2.1780822681004897,
-    'mass': 1.3929527150618852,
-    'tumor': 1.536272517110166,
+    'kidney_and_mass': 1.0334745403689385,
+    'mass': 1.1318924856566661,
+    'tumor': 1.1471222356588677,
 }
 
 # this determines which reference file we use for evaluation
