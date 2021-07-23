@@ -80,13 +80,15 @@ run
 
 `python kits21/evaluation/evaluate_predictions.py -h`
 
-to see usage instructions. Since we will be using this code to evaluate the test cases as well, you are
+to see usage instructions. Running evaluation takes ~30 minutes on a Ryzen 7 5800X (`-num_processes 12`). Be patient :-)
+
+Since we will be using this code to evaluate the test cases as well, you are
 encouraged to use it for evaluating your own train:validation splits during model development (we recommend running
 5-fold CV on the provided training cases).
 
 Note that this procedure will evaluate all cases present in the input folder and not return an error if segmentations 
 are missing. It is up to you to verify that all segmentations were predicted properly. Only ever compare the scores 
-from models for which you evaluated the same set of predictions! 
+from models for which you evaluated the same set of predictions!
 
 ## Finding the tolerance for SD
 
