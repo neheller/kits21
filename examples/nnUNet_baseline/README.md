@@ -15,6 +15,9 @@ for the participants of KiTS 2021 Challenge, here we highlight the steps needed 
 
 **IMPORTANT: nnU-Net only works on Linux-based operating systems!**
 
+Note that our nnU-Net baseline uses the majority voted segmentations as ground truth for training and does not make
+use of the sampled segmentations. 
+
 ### nnUNet setup
 
 Please follow the installation instructions [here](https://github.com/MIC-DKFZ/nnUNet#installation). Please install 
@@ -31,6 +34,7 @@ provide a script to do this as part of the nnU-Net repository: [Task135_KiTS2021
 
 Please adapt this script to your system and simply execute it with python. This will convert the KiTS dataset into 
 nnU-Net's data format.
+
 
 ### Experiment planning and preprocessing
 In order to train the nnU-Net models all you need to do is run the standard nnU-Net steps:
@@ -108,15 +112,25 @@ of [nnUNet docker submission](../submission/nnUNet_submission).
 
 Once the models are trained, you can either choose manually which one you would like to use, or use the 
 `nnUNet_find_best_configuration` command to automatically determine the best configuration. Since this command does not 
-understand the KiTS2021 HECs, we recommend evaluating the different configurations manually with the evaluation scripts 
-provided in the kits21 repository and selecting the best performing model based on that.
+understand the KiTS2021 HECs, we recommend evaluating the different configurations manually with the 
+evaluation scripts provided in the kits21 repository and selecting the best performing model based on that.
 
-Should you still wish to use `nnUNet_find_best_configuration`, this is how you do it:
-```console
-nnUNet_find_best_configuration -m 3d_fullres 3d_lowres 3d_cascade_fullres -t 135 
-```
+In order to evaluate a nnU-Net model with the kits21 repository you first need to gather the validation set 
+predictions from the five folds into a single folder. These are located here:
+`${RESULTS_FOLDER}/nnUNet/CONFIGURATION/Task135_KiTS21/TRAINERCLASS__PLANSIDENTIFIER/fold_X/validation_raw`
+Note that we are using the `validation_raw` and not the `validation_raw_postprocessed` folder. That is because 
+a) nnU-Net prostprocessing needs to be executed for the entire cross validation using `nnUNet_determine_postprocessing` 
+(`validation_raw_postprocessed` is for development purposes only) and b) the nnU-Net postprocessing is not useful for 
+KiTS2021 anyways so it can safely be omitted.
 
-Note: adapt the `-m` part to the configurations that you actually have trained!
+Once you have all validation set predictions of the desired nnU-Net run in one folder, double check that all 300 KiTS21 
+training cases are present. Then run 
+
+`python kits21/evaluation/evaluate_predictions.py FOLDER -num_processes XX`
+
+(note that you need to have generated the sampled segmentations first, see [here](../../kits21/evaluation))
+
+Once that is completed there will be a file in `FOLDER` with the kits metrics. 
 
 ### Inference
 
@@ -137,6 +151,22 @@ The datset will be finalized by July 15th 2021. In order to update the dataset w
 only the content of `${nnUNet_raw_data_base}/nnUNet_raw_data` but also `${nnUNet_raw_data_base}/nnUNet_cropped_data` 
 and `${nnUNet_preprocessed}/Task135_KiTS2021`. Then rerun the conversion script again, followed by
 [experiment planning and preprocessing](#experiment-planning-and-preprocessing).
+
+# nnU-Net baseline results
+Pretrained model weights and predicted segmentation masks from the training set are provided here: https://zenodo.org/record/5126443
+If you would like to use the pretrained weights, download the [Task135_KiTS21.zip](https://zenodo.org/record/5126443/files/Task135_KiTS2021.zip?download=1) 
+file and import it with `nnUNet_install_pretrained_model_from_zip Task135_KiTS21.zip`.
+
+
+Here are the results obtained with our nnU-Net baseline on the 300 training cases (5-fold cross-validation):
+
+|                    | Dice_kidney | Dice_masses | Dice_tumor | Dice_average |   | SurfDice_kidney | SurfDice_masses | SurfDice_tumor | SurfDice_average |
+|--------------------|-------------|-------------|------------|--------------|---|-----------------|-----------------|----------------|------------------|
+| 3d_fullres         | 0.9666      | 0.8618      | 0.8493     | 0.8926       |   | 0.9336          | 0.7532          | 0.7371         | 0.8080           |
+| 3d_lowres          | 0.9683      | 0.8702      | 0.8508     | 0.8964       |   | 0.9272          | 0.7507          | 0.7347         | 0.8042           |
+| 3d_cascade_fullres | 0.9747      | 0.8799      | 0.8491     | 0.9012       |   | 0.9453          | 0.7714          | 0.7393         | 0.8187           |
+
+As you can see, the `3d_cascade_fullres` configuration performed best, both in thers of average Dice score and average Surface Dice.
 
 # Extending nnU-Net for KiTS2021
 
