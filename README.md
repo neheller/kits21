@@ -51,8 +51,6 @@ If you would like to request another implementation of `get_imaging`, please [su
 
 ### `data/`
 
-**NOTE** at present, no data has been imported yet, but the imaging for the first 300 training cases can still be retrieved using any of the `get_imaging` scripts.
-
 ```text
 kits21
 ├──data/
