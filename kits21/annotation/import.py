@@ -25,7 +25,7 @@ def get_case_dir(case):
 
 def get_all_case_dirs():
     # TODO set this number dynamically
-    return [get_case_dir(i) for i in range(300)]
+    return [get_case_dir(i) for i in range(400)]
 
 
 def get_region_dir(case_dir, region):
