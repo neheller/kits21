@@ -111,7 +111,9 @@ docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOC
 
 `-v` flag mounts the directories between your local host and the container. `:ro` specifies that the folder mounted
 with `-v` has read-only permissions. Make sure that `LOCAL_PATH_INPUT` contains your test samples,
-and `LOCAL_PATH_OUTPUT` is an output folder for saving the predictions. During test set submission this command will
+and `LOCAL_PATH_OUTPUT` is an output folder for saving the predictions. 
+IMPORTANT: `LOCAL_PATH_INPUT` and `LOCAL_PATH_OUTPUT` must be full paths! Relative paths do not work.
+During test set submission this command will
 be run on a private server managed by the organizers with mounting to the folders with final test data. Please test
 the docker on your local computer using the command above before uploading!
 
