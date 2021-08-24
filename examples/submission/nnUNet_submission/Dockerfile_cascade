@@ -17,3 +17,4 @@ RUN pip install git+https://github.com/MIC-DKFZ/nnUNet.git
 # needed for the cascade trainer, otherwise it will crash. Dumb coding on Fabians part
 RUN mkdir /results
 ENV RESULTS_FOLDER="/results"
+ENV OMP_NUM_THREADS=1

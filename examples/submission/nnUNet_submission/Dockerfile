@@ -17,3 +17,5 @@ ADD run_inference.py ./
 # for ensemble model inference
 # ADD parameters_ensembling /parameters_ensembling/
 # ADD run_inference_ensembling.py ./run_inference.py
+
+ENV OMP_NUM_THREADS=1
