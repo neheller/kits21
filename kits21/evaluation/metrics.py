@@ -144,13 +144,13 @@ def evaluate_predictions(folder_with_predictions: str, num_processes: int = 8, w
         with open(join(folder_with_predictions, 'evaluation.csv'), "w") as f:
             f.write("caseID,Dice_kidney,Dice_masses,Dice_tumor,SD_kidney,SD_masses,SD_tumor\n")
             for i, c in enumerate(caseids):
-                f.write("%s,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f\n" % (
+                f.write("%s,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f\n" % (
                     c,
                     metrics[i, 0, 0], metrics[i, 1, 0], metrics[i, 2, 0],
                     metrics[i, 0, 1], metrics[i, 1, 1], metrics[i, 2, 1],
                 ))
             mean_metrics = metrics.mean(0)
-            f.write("average,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f" % (
+            f.write("average,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f" % (
                 mean_metrics[0, 0], mean_metrics[1, 0], mean_metrics[2, 0],
                 mean_metrics[0, 1], mean_metrics[1, 1], mean_metrics[2, 1],
             ))
@@ -178,13 +178,13 @@ def evaluate_predictions_on_samples(folder_with_predictions: str, num_processes:
         with open(join(folder_with_predictions, 'evaluation_samples.csv'), "w") as f:
             f.write("caseID,Dice_kidney,Dice_masses,Dice_tumor,SD_kidney,SD_masses,SD_tumor\n")
             for i, c in enumerate(caseids):
-                f.write("%s,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f\n" % (
+                f.write("%s,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f\n" % (
                     c,
                     metrics[i, 0, 0], metrics[i, 1, 0], metrics[i, 2, 0],
                     metrics[i, 0, 1], metrics[i, 1, 1], metrics[i, 2, 1],
                 ))
             mean_metrics = metrics.mean(0)
-            f.write("average,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f,%0.4f" % (
+            f.write("average,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f,%0.8f" % (
                 mean_metrics[0, 0], mean_metrics[1, 0], mean_metrics[2, 0],
                 mean_metrics[0, 1], mean_metrics[1, 1], mean_metrics[2, 1],
             ))

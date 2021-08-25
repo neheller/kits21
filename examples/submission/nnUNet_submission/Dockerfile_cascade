@@ -7,15 +7,14 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip
 
-# install nnunet
-RUN pip install nnunet
-
 # for single model inference
+ADD run_inference_cascade.py ./run_inference.py
 ADD parameters /parameters/
-ADD run_inference.py ./
 
-# for ensemble model inference
-# ADD parameters_ensembling /parameters_ensembling/
-# ADD run_inference_ensembling.py ./run_inference.py
+# install nnunet
+RUN pip install git+https://github.com/MIC-DKFZ/nnUNet.git
 
+# needed for the cascade trainer, otherwise it will crash. Dumb coding on Fabians part
+RUN mkdir /results
+ENV RESULTS_FOLDER="/results"
 ENV OMP_NUM_THREADS=1
