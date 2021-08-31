@@ -1,3 +1,5 @@
+from pathlib import Path
+
 if __name__ == '__main__':
     """
     This inference script is intended to be used within a Docker container as part of the KiTS Test set submission. It
@@ -25,10 +27,12 @@ if __name__ == '__main__':
     """
 
     # this will be changed to /input for the docker
-    input_folder = '/input'
+    input_folder = '/input/images/ct/'
 
     # this will be changed to /output for the docker
-    output_folder = '/output'
+    output_folder = '/output/images/kidney-tumor-and-cyst/'
+    outpth = Path(output_folder)
+    outpth.mkdir(parents=True, exist_ok=True)
 
     # this will be changed to /parameters for the docker
     parameter_folder = '/parameters'
@@ -36,7 +40,7 @@ if __name__ == '__main__':
     from nnunet.inference.predict import predict_cases
     from batchgenerators.utilities.file_and_folder_operations import subfiles, join
 
-    input_files = subfiles(input_folder, suffix='.nii.gz', join=False)
+    input_files = subfiles(input_folder, suffix='.mha', join=False)
 
     output_files = [join(output_folder, i) for i in input_files]
     input_files = [join(input_folder, i) for i in input_files]

@@ -1,4 +1,6 @@
 import shutil
+from pathlib import Path
+
 
 if __name__ == '__main__':
     """
@@ -34,10 +36,12 @@ if __name__ == '__main__':
     """
 
     # this will be changed to /input for the docker
-    input_folder = '/input'
+    input_folder = '/input/images/ct/'
 
     # this will be changed to /output for the docker
-    output_folder = '/output'
+    output_folder = '/output/images/kidney-tumor-and-cyst/'
+    outpth = Path(output_folder)
+    outpth.mkdir(parents=True, exist_ok=True)
 
     # this will be changed to /parameters/X for the docker
     parameter_folder_fullres = '/parameters_ensembling/3d_fullres'
@@ -46,7 +50,7 @@ if __name__ == '__main__':
     from nnunet.inference.predict import predict_cases
     from batchgenerators.utilities.file_and_folder_operations import subfiles, join, maybe_mkdir_p
 
-    input_files = subfiles(input_folder, suffix='.nii.gz', join=False)
+    input_files = subfiles(input_folder, suffix='.mha', join=False)
 
     # in the parameters folder are five models (fold_X) traines as a cross-validation. We use them as an ensemble for
     # prediction

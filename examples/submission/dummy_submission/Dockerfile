@@ -9,9 +9,16 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip
 
-RUN pip3 install numpy nibabel
+RUN pip3 install numpy simpleitk nibabel
 
 # Copy the folder with your pretrained model here to /model folder within the container. This part is skipped here due to simplicity reasons
 # ADD model /model/
 
 ADD run_inference.py ./
+
+RUN groupadd -r myuser -g 433 && \
+    useradd -u 431 -r -g myuser -s /sbin/nologin -c "Docker image user" myuser
+
+USER myuser
+
+CMD python3 ./run_inference.py
