@@ -17,3 +17,11 @@ ADD run_inference.py ./
 # for ensemble model inference
 # ADD parameters_ensembling /parameters_ensembling/
 # ADD run_inference_ensembling.py ./
+
+RUN groupadd -r myuser -g 433 && \
+    useradd -u 431 -r -g myuser -s /sbin/nologin -c "Docker image user" myuser
+
+USER myuser
+
+CMD python3 ./run_inference.py
+# or CMD python3 ./run_inference_ensembling.py

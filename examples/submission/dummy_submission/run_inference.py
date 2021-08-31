@@ -26,13 +26,19 @@ def load_file_as_nifti(filename):
     reader.SetFileName(os.path.join(INPUT_FOLDER, filename))
     image = reader.Execute()
     nda = sitk.GetArrayFromImage(image)
-    affine = None
     mha_meta = {
         "origin": image.GetOrigin(),
         "spacing": image.GetSpacing(),
         "direction": image.GetDirection(),
         "filename": filename
     }
+
+    affine = np.array(
+       [[0.0, 0.0, -1*mha_meta["spacing"][2], 0.0],
+        [0.0, -1*mha_meta["spacing"][1], 0.0, 0.0],
+        [-1*mha_meta["spacing"][0], 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]]
+    )
 
     return nib.Nifti1Image(nda, affine), mha_meta
 

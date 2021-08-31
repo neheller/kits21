@@ -9,7 +9,7 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip
 
-RUN pip3 install numpy simpleitk
+RUN pip3 install numpy simpleitk nibabel
 
 # Copy the folder with your pretrained model here to /model folder within the container. This part is skipped here due to simplicity reasons
 # ADD model /model/
