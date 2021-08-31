@@ -14,19 +14,22 @@ The primary reason for that is to eliminate
 any possibility of cheating e.g. designing the model specifically for test dataset or manually correcting test set 
 predictions.
 
-On our servers, the containers will be mounted such that two specific folders are available, `/input` and `/output` (see also [Step 4](#step-4-run-a-container-from-a-created-docker-image)).
-The `/input` folder contains the test set. There are no subfolders - 
-  merely a bunch of `*.nii.gz` files containing the test images. Your docker is expected to produce equivalently 
-  named segmentation files (also ending with .nii.gz) in the /output folder. The structure of those folders is shown 
+On our servers, the containers will be mounted such that two specific folders are available, `/input/images/ct/` and `/output/images/kidney-and-tumor-and-cyst/` (see also [Step 4](#step-4-run-a-container-from-a-created-docker-image)).
+The `/input/images/ct/` folder contains the test set. There are no subfolders - 
+  merely a bunch of `*.mha` files containing the test images. Your docker is expected to produce equivalently 
+  named segmentation files (also ending with .mha) in the /output/images/kidney-and-tumor-and-cyst/ folder. The structure of those folders is shown 
   below with the example of two cases: 
   
       ├── input
-      │   └── case00000.nii.gz
-      │   └── case00001.nii.gz
+      │   └── case00000.mha
+      │   └── case00001.mha
       ├── output
-      │   └── case00000.nii.gz
-      │   └── case00001.nii.gz
+      │   └── case00000.mha
+      │   └── case00001.mha
 
+In reality, the cases will not be named with this predictable numbering system. They can have arbitrary file names.
+
+NOTE: The dataset was released in .nii.gz format but grand-challenge.org is only able to work with .mha files, so our .nii.gz collection has been converted to .mha files on the backend, and these are the files that your docker container must know how to read and write. Please see the dummy submission's updated "run_inference.py" for an example of how you can do this.
 
 In order to run the inference, your trained model has to be part of the docker image and needs to have been added to 
 the docker at the stage of building the image. Transferring parameter files is simply done by copying them to a 
@@ -36,7 +39,7 @@ For more information see the examples of the dockerfiles we prepared.
 Your docker image needs to expose the inference functionality via an inference script which must be named 
 `run_inference.py` and take no additional arguments (must be executable with `python run_inference.py`). 
 This script needs to use the images
-provided in `/input` and write your segmentation predictions into the `/output` folder (using the same name as the 
+provided in `/input/images/ct/` and write your segmentation predictions into the `/output/images/kidney-and-tumor-and-cyst/` folder (using the same name as the 
 corresponding input file). **IMPORTANT: Following best practices, your predictions must have the same geometry 
 (same shape + same affine) as the corresponding raw image!**
 
@@ -106,7 +109,7 @@ Note that the nnU-Net docker requires the parameters to build. The pretrained pa
 To run a container the `docker run` command is used:
 
 ```console
-docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
+docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input/images/ct/:ro -v LOCAL_PATH_OUTPUT:/output/images/kidney-and-tumor-and-cyst/ YOUR_DOCKER_IMAGE_NAME
 ```
 
 `-v` flag mounts the directories between your local host and the container. `:ro` specifies that the folder mounted
@@ -129,27 +132,21 @@ python run_inference.py
 To save your docker image to a file on your local machine, you can run the following command in a terminal:
 
 ```console
-docker save -o test_docker.tar YOUR_DOCKER_IMAGE_NAME
+docker save YOUR_DOCKER_IMAGE_NAME | gzip -c > test_docker.tar.gz
 ```
 
-This will create a file named `test_docker.tar` containing your image.
+This will create a file named `test_docker.tar.gz` containing your image.
 
 ### Step 6. Load the image
 
 To double check your saved image, you can load it with:
 
 ```console
-docker load -i test_docker.tar
+docker load -i test_docker.tar.gz
 ```
 
 and run the loaded docker as outlined above with the following command (see Step 4):
 
 ```console
-docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
+docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input/images/ct/:ro -v LOCAL_PATH_OUTPUT:/output/images/kidney-and-tumor-and-cyst/ YOUR_DOCKER_IMAGE_NAME
 ```
-
-
-
-
-
-docker run -v /home/helle246/Desktop/kits21_submission_sandbox/input/:/input/images/ct/:ro -v /home/helle246/Desktop/kits21_submission_sandbox/output/:/output/images/kidney-and-tumor-and-cyst/ dummy
