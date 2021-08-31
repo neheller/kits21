@@ -147,3 +147,9 @@ and run the loaded docker as outlined above with the following command (see Step
 ```console
 docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input:ro -v LOCAL_PATH_OUTPUT:/output YOUR_DOCKER_IMAGE_NAME python run_inference.py
 ```
+
+
+
+
+
+docker run -v /home/helle246/Desktop/kits21_submission_sandbox/input/:/input/images/ct/:ro -v /home/helle246/Desktop/kits21_submission_sandbox/output/:/output/images/kidney-and-tumor-and-cyst/ dummy
