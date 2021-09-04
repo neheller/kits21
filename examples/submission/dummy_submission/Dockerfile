@@ -19,6 +19,8 @@ ADD run_inference.py ./
 RUN groupadd -r myuser -g 433 && \
     useradd -u 431 -r -g myuser -s /sbin/nologin -c "Docker image user" myuser
 
+RUN mkdir /input_nifti && mkdir /output_nifti && chown -R myuser /input_nifti && chown -R myuser /output_nifti
+
 USER myuser
 
 CMD python3 ./run_inference.py
