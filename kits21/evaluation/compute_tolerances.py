@@ -5,10 +5,11 @@ import SimpleITK as sitk
 import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import join, subfolders, subfiles, save_json, isfile, \
     load_json, isdir
+from numpy.lib.utils import source
 from surface_distance import compute_surface_distances
 
 from kits21.configuration.labels import HEC_NAME_LIST, KITS_HEC_LABEL_MAPPING
-from kits21.configuration.paths import TRAINING_DIR
+from kits21.configuration.paths import TRAINING_DIR, TESTING_DIR
 from kits21.evaluation.metrics import construct_HEC_from_segmentation
 
 
@@ -65,9 +66,9 @@ def determine_tolerances_case(case_folder):
     save_json({"tolerances": {HEC_NAME_LIST[i]: j for i, j in enumerate(np.mean(tolerances, 0))}}, join(case_folder, 'tolerances.json'))
 
 
-def compute_tolerances_for_SD(num_proceses: int = 12, overwrite_existing=False):
+def compute_tolerances_for_SD(num_proceses: int = 12, overwrite_existing=False, source_dir=TRAINING_DIR):
     p = Pool(num_proceses)
-    case_folders = subfolders(TRAINING_DIR, prefix='case_')
+    case_folders = subfolders(source_dir, prefix='case_')
     if not overwrite_existing:
         c = []
         for cs in case_folders:
@@ -83,11 +84,11 @@ def compute_tolerances_for_SD(num_proceses: int = 12, overwrite_existing=False):
     p.join()
 
     # load and aggregate
-    case_folders = subfolders(TRAINING_DIR, prefix='case_')
+    case_folders = subfolders(source_dir, prefix='case_')
     tolerances = {i: [] for i in HEC_NAME_LIST}
     for c in case_folders:
-        if isfile(join(TRAINING_DIR, c, 'tolerances.json')):
-            tolerances_here = load_json(join(TRAINING_DIR, c, 'tolerances.json'))
+        if isfile(join(source_dir, c, 'tolerances.json')):
+            tolerances_here = load_json(join(source_dir, c, 'tolerances.json'))
             for i, hec in enumerate(HEC_NAME_LIST):
                 tolerances[hec].append(tolerances_here['tolerances'][hec])
     tolerances = {i: np.nanmean(j) for i, j in tolerances.items()}
@@ -99,5 +100,9 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-num_processes', required=False, default=12, type=int)
+    parser.add_argument('-testing', required=False, default=False, type=bool)
     args = parser.parse_args()
-    compute_tolerances_for_SD(args.num_processes)
+    source_dir = TRAINING_DIR
+    if args.testing:
+        source_dir = TESTING_DIR
+    compute_tolerances_for_SD(args.num_processes, False, source_dir)

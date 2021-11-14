@@ -46,7 +46,10 @@ def get_all_instance_dirs(region_dir):
 
 def get_existing_instances(region_dir):
     case_id = region_dir.parent.name
-    seg_dir = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
+    base_dir = Path(__file__).resolve().parent.parent / "data"
+    if int(case_id.split("_")[-1]) >= 300:
+        base_dir = TESTING_DIR
+    seg_dir = base_dir / case_id / "segmentations"
     return [x for x in seg_dir.glob("*{}*".format(region_dir.name))]
 
 
@@ -215,7 +218,11 @@ def aggregate(parent, region, idnum, agg, affine, agtype="maj"):
 
 
 def aggregate_case(case_id):
-    segs = Path(__file__).resolve().parent.parent / "data" / case_id / "segmentations"
+    base_dir = Path(__file__).resolve().parent.parent / "data"
+    if int(case_id.split("_")[-1]) >= 300:
+        base_dir = TESTING_DIR
+
+    segs =  base_dir / case_id / "segmentations"
 
     affine = None
     agg = None
@@ -224,7 +231,7 @@ def aggregate_case(case_id):
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
-            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_OR_seg.nii.gz")
+            str(base_dir / case_id / "aggregated_OR_seg.nii.gz")
         )
 
     affine = None
@@ -234,7 +241,7 @@ def aggregate_case(case_id):
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
-            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_AND_seg.nii.gz")
+            str(base_dir / case_id / "aggregated_AND_seg.nii.gz")
         )
 
     affine = None
@@ -244,12 +251,15 @@ def aggregate_case(case_id):
     if agg is not None:
         nib.save(
             nib.Nifti1Image(agg.astype(np.int32), affine),
-            str(Path(__file__).resolve().parent.parent / "data" / case_id / "aggregated_MAJ_seg.nii.gz")
+            str(base_dir / case_id / "aggregated_MAJ_seg.nii.gz")
         )
 
 
 def cleanup(case_dir):
-    case_dir = Path(__file__).parent.parent / "data" / case_dir.name / "raw"
+    base_dir = Path(__file__).resolve().parent.parent / "data"
+    if int(case_dir.name.split("_")[-1]) >= 300:
+        base_dir = TESTING_DIR
+    case_dir = base_dir / case_dir.name / "raw"
     region_dirs = get_all_region_dirs(case_dir)
     for region_dir in region_dirs:
         instance_dirs = get_all_instance_dirs(region_dir)
@@ -313,7 +323,7 @@ def main(args):
                     reaggregate = True
 
         if reaggregate:
-            aggregate_case(case_dir.name)
+            aggregate_case(case_dir.name, )
         
         # Clean up all unused raw files
         cleanup(case_dir)

@@ -6,7 +6,7 @@ import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import *
 
 from kits21.configuration.labels import LABEL_AGGREGATION_ORDER, NUMBER_OF_GROUPS
-from kits21.configuration.paths import TRAINING_DIR
+from kits21.configuration.paths import TRAINING_DIR, TESTING_DIR
 
 
 def get_number_of_instances(segmentations_folder: str, label_name: str = 'kidney'):
@@ -112,7 +112,7 @@ def generate_samples(segmentations_folder: str, samples_output_folder: str, num_
             build_segmentation(kidney_files, tumor_files, cyst_files, join(output_folder, output_filename))
 
 
-def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int = 5) -> None:
+def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int = 5, testing: bool = True) -> None:
     """
     THIS WILL DELETE PREVIOUSLY EXISTING SAMPLES! BEWARE!
 
@@ -120,22 +120,26 @@ def generate_samples_for_all_cases(num_processes: int, num_groups_per_case: int 
     :param num_groups_per_case:
     :return:
     """
-    cases = subfolders(TRAINING_DIR, prefix='case_', join=False)
+    source_dir = TRAINING_DIR
+    if testing:
+        source_dir = TESTING_DIR
+
+    cases = subfolders(source_dir, prefix='case_', join=False)
     case_ids = [int(i.split('_')[-1]) for i in cases]
     p = Pool(num_processes)
     res = []
     for case, caseid in zip(cases, case_ids):
-        if isdir(join(TRAINING_DIR, case, 'segmentations')) and \
-                len(subfiles(join(TRAINING_DIR, case, 'segmentations'), suffix='.nii.gz')) > 0:
-            if isdir(join(TRAINING_DIR, case, 'segmentation_samples')):
-                shutil.rmtree(join(TRAINING_DIR, case, 'segmentation_samples'))
-            if isfile(join(TRAINING_DIR, case, 'inter_rater_disagreement.json')):
-                os.remove(join(TRAINING_DIR, case, 'inter_rater_disagreement.json'))
-            if isfile(join(TRAINING_DIR, case, 'tolerances.json')):
-                os.remove(join(TRAINING_DIR, case, 'tolerances.json'))
+        if isdir(join(source_dir, case, 'segmentations')) and \
+                len(subfiles(join(source_dir, case, 'segmentations'), suffix='.nii.gz')) > 0:
+            if isdir(join(source_dir, case, 'segmentation_samples')):
+                shutil.rmtree(join(source_dir, case, 'segmentation_samples'))
+            if isfile(join(source_dir, case, 'inter_rater_disagreement.json')):
+                os.remove(join(source_dir, case, 'inter_rater_disagreement.json'))
+            if isfile(join(source_dir, case, 'tolerances.json')):
+                os.remove(join(source_dir, case, 'tolerances.json'))
             res.append(p.starmap_async(
-                generate_samples, ((join(TRAINING_DIR, case, 'segmentations'),
-                                    join(TRAINING_DIR, case, 'segmentation_samples'),
+                generate_samples, ((join(source_dir, case, 'segmentations'),
+                                    join(source_dir, case, 'segmentation_samples'),
                                     num_groups_per_case,
                                     caseid), )
             ))
@@ -149,5 +153,6 @@ if __name__ == '__main__':
         import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-num_processes', required=False, default=12, type=int)
+    parser.add_argument('-testing', required=False, default=False, type=bool)
     args = parser.parse_args()
-    generate_samples_for_all_cases(args.num_processes, NUMBER_OF_GROUPS)
+    generate_samples_for_all_cases(args.num_processes, NUMBER_OF_GROUPS, args.testing)
