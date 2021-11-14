@@ -14,10 +14,10 @@ The primary reason for that is to eliminate
 any possibility of cheating e.g. designing the model specifically for test dataset or manually correcting test set 
 predictions.
 
-On our servers, the containers will be mounted such that two specific folders are available, `/input/images/ct/` and `/output/images/kidney-and-tumor-and-cyst/` (see also [Step 4](#step-4-run-a-container-from-a-created-docker-image)).
+On our servers, the containers will be mounted such that two specific folders are available, `/input/images/ct/` and `/output/images/kidney-tumor-and-cyst/` (see also [Step 4](#step-4-run-a-container-from-a-created-docker-image)).
 The `/input/images/ct/` folder contains the test set. There are no subfolders - 
   merely a bunch of `*.mha` files containing the test images. Your docker is expected to produce equivalently 
-  named segmentation files (also ending with .mha) in the /output/images/kidney-and-tumor-and-cyst/ folder. The structure of those folders is shown 
+  named segmentation files (also ending with .mha) in the /output/images/kidney-tumor-and-cyst/ folder. The structure of those folders is shown 
   below with the example of two cases: 
   
       ├── input
@@ -39,7 +39,7 @@ For more information see the examples of the dockerfiles we prepared.
 Your docker image needs to expose the inference functionality via an inference script which must be named 
 `run_inference.py` and take no additional arguments (must be executable with `python run_inference.py`). 
 This script needs to use the images
-provided in `/input/images/ct/` and write your segmentation predictions into the `/output/images/kidney-and-tumor-and-cyst/` folder (using the same name as the 
+provided in `/input/images/ct/` and write your segmentation predictions into the `/output/images/kidney-tumor-and-cyst/` folder (using the same name as the 
 corresponding input file). **IMPORTANT: Following best practices, your predictions must have the same geometry 
 (same shape + same affine) as the corresponding raw image!**
 
@@ -109,7 +109,7 @@ Note that the nnU-Net docker requires the parameters to build. The pretrained pa
 To run a container the `docker run` command is used:
 
 ```console
-docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input/images/ct/:ro -v LOCAL_PATH_OUTPUT:/output/images/kidney-and-tumor-and-cyst/ YOUR_DOCKER_IMAGE_NAME
+docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input/images/ct/:ro -v LOCAL_PATH_OUTPUT:/output/images/kidney-tumor-and-cyst/ YOUR_DOCKER_IMAGE_NAME
 ```
 
 `-v` flag mounts the directories between your local host and the container. `:ro` specifies that the folder mounted
@@ -148,5 +148,5 @@ docker load -i test_docker.tar.gz
 and run the loaded docker as outlined above with the following command (see Step 4):
 
 ```console
-docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input/images/ct/:ro -v LOCAL_PATH_OUTPUT:/output/images/kidney-and-tumor-and-cyst/ YOUR_DOCKER_IMAGE_NAME
+docker run --rm --runtime=nvidia --ipc=host -v LOCAL_PATH_INPUT:/input/images/ct/:ro -v LOCAL_PATH_OUTPUT:/output/images/kidney-tumor-and-cyst/ YOUR_DOCKER_IMAGE_NAME
 ```
