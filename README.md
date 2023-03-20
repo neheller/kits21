@@ -2,7 +2,7 @@
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
 
-**Current dataset version: `2.2.2` -- Official Frozen Training Set** (see [changelog](changelog.md))
+**Current dataset version: `2.2.3` -- Official Frozen Training Set** (see [changelog](changelog.md))
 
 <img src="https://kits21.kits-challenge.org/public/site_media/figures/rendering_dimmed.png" width="400" />
 
