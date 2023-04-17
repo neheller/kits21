@@ -1,3 +1,10 @@
+## NEW: The KiTS23 Challenge is Underway!
+
+See the [KiTS23 Homepage](https://kits-challenge.org/kits23/) for more details, including:
+
+- A larger dataset
+- Additional contrast phases
+
 # KiTS21
 
 The official repository of the 2021 Kidney and Kidney Tumor Segmentation Challenge
