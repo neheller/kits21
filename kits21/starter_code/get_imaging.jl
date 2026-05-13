@@ -19,10 +19,10 @@ function get_destination(i, create)
 end
 
 function download(i)
-  imaging_url = @sprintf("https://kits19.sfo2.digitaloceanspaces.com/master_%05d.nii.gz", i)
-  tmp = tempdir()
+  imaging_url = @sprintf("https://huggingface.co/datasets/neheller/KiTS-Challenge-Imaging/resolve/main/images/case_%05d.nii.gz", i)
+  tmp = joinpath(tempdir(), @sprintf("case_%05d.nii.gz", i))
   HTTP.download(imaging_url, tmp)
-  mv(joinpath(tmp, @sprintf("master_%05d.nii.gz", i)), get_destination(i, true))
+  mv(tmp, get_destination(i, true))
 end
 
 n_to_download = 0

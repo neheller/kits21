@@ -7,5 +7,5 @@ for i = 0:299
     if ~exist(case_dir, 'dir')
         mkdir(case_dir);
     end
-    websave(fullfile(case_dir, 'imaging.nii.gz'), sprintf('https://kits19.sfo2.digitaloceanspaces.com/master_%05d.nii.gz', i), 'timeout',20);
+    websave(fullfile(case_dir, 'imaging.nii.gz'), sprintf('https://huggingface.co/datasets/neheller/KiTS-Challenge-Imaging/resolve/main/images/case_%05d.nii.gz', i), 'timeout',20);
 end

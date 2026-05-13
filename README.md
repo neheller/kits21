@@ -54,6 +54,10 @@ Start by cloning this repository, but note that **the imaging is not stored here
 
 If you would like to request another implementation of `get_imaging`, please [submit an issue](https://github.com/neheller/kits21/issues/new).
 
+These scripts download imaging from the
+[`neheller/KiTS-Challenge-Imaging`](https://huggingface.co/datasets/neheller/KiTS-Challenge-Imaging)
+Hugging Face dataset into the local `data/` folder.
+
 ## Folder Structure
 
 ### `data/`

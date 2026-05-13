@@ -14,7 +14,6 @@ do
   fi
   if [ ! -f $DSTF ]
   then
-    wget https://kits19.sfo2.digitaloceanspaces.com/master_$(printf "%05d" $I).nii.gz
-    mv master_$(printf "%05d" $I).nii.gz $DSTF
+    wget -O "$DSTF" https://huggingface.co/datasets/neheller/KiTS-Challenge-Imaging/resolve/main/images/case_$(printf "%05d" $I).nii.gz
   fi
 done
